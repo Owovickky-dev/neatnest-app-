@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/controller/edit_profile_controller.dart';
 import 'package:neat_nest/screens/user/utilities/auth_text_filed.dart';
@@ -20,8 +22,24 @@ class PersonalInfoEdit extends StatefulWidget {
 
 class _PersonalInfoEditState extends State<PersonalInfoEdit> {
   late EditProfileController _editProfileController;
-  final List<String> gender = const ["Male", "Female"];
-  String? position;
+
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    // Auto refresh countdown for UI
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted) {
+        setState(() {});
+      }
+      // stop the timer when both cooldowns are done
+      if (_editProfileController.canEditDetails() &&
+          _editProfileController.canUserNameDetails()) {
+        timer.cancel();
+      }
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -31,115 +49,119 @@ class _PersonalInfoEditState extends State<PersonalInfoEdit> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    // Auto refresh countdown for UI
-    Timer.periodic(Duration(seconds: 1), (timer) {
-      if (mounted) setState(() {});
-      if (_editProfileController.canEditDetails()) timer.cancel();
-      if (_editProfileController.canUserNameDetails()) timer.cancel();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBarHolder(title: "Personal Information"),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
-        child: Column(
-          children: [
-            10.ht,
-            secondaryText(
-              text:
-                  "Kindly note that your FullName and UserName can only be edited once in 90 days and also will need re-verification",
-              color: Colors.red,
-            ),
-            20.ht,
-            AuthTextFiled(
-              titleText: "Full Name",
-              hintText: "Name",
-              textEditingController: _editProfileController.fNameController,
-              readOnly: !_editProfileController.canEditDetails(),
-              onTap: () {
-                if (!_editProfileController.canEditDetails()) {
-                  showErrorNotification(
-                    context: context,
-                    message:
-                        "Name can't be edited for security reasons. Wait ${_editProfileController.timeLeft()}s",
-                  );
-                }
-              },
-            ),
-            20.ht,
-            AuthTextFiled(
-              titleText: "Username",
-              hintText: "Username",
-              textEditingController: _editProfileController.userNameController,
-              readOnly: !_editProfileController.canUserNameDetails(),
-              onTap: () {
-                if (!_editProfileController.canUserNameDetails()) {
-                  showErrorNotification(
-                    context: context,
-                    message:
-                        "UserName can't be edited for security reasons. Wait ${_editProfileController.userNameTimeLeft()}s",
-                  );
-                }
-              },
-            ),
-            20.ht,
-            AuthTextFiled(
-              titleText: "Telephone",
-              hintText: "telephone",
-              textEditingController:
-                  _editProfileController.phoneNumberController,
-            ),
-            20.ht,
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                primaryText(text: "Gender", fontSize: 14.sp),
-                5.ht,
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 8.w),
-                  decoration: BoxDecoration(
-                    color: AppColors.textFieldBckColor.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: DropdownButton(
-                    hint: secondaryText(text: "Select Gender"),
-                    icon: Icon(Icons.keyboard_arrow_down_outlined),
-                    isExpanded: true,
-                    value: position,
-                    underline: SizedBox(),
-                    items: gender.map((gender) {
-                      return DropdownMenuItem(
-                        value: gender,
-                        child: secondaryText(text: gender),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() {
-                          position = value;
-                        });
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-            30.ht,
-            AppButton(
-              text: "continue",
-              bckColor: AppColors.primaryColor,
-              textColor: Colors.white,
-              width: double.infinity,
-              fontSize: 23.sp,
-              function: () {},
-            ),
-          ],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              10.ht,
+              secondaryText(
+                text:
+                    "Kindly note that your FullName and UserName can only be edited once in 90 days and also will need re-verification",
+                color: Colors.red,
+              ),
+              20.ht,
+              AuthTextFiled(
+                titleText: "Full Name",
+                hintText: "Name",
+                textInputType: TextInputType.name,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
+                ],
+                textEditingController: _editProfileController.fNameController,
+                readOnly: !_editProfileController.canEditDetails(),
+                onTap: () {
+                  if (!_editProfileController.canEditDetails()) {
+                    showErrorNotification(
+                      context: context,
+                      message:
+                          "Name can't be edited for security reasons. Wait ${_editProfileController.timeLeft()}s",
+                    );
+                  }
+                },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Full name is required cant be empty";
+                  }
+                  return null;
+                },
+              ),
+              20.ht,
+              AuthTextFiled(
+                titleText: "Username",
+                hintText: "Username",
+                textInputType: TextInputType.name,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
+                ],
+                textEditingController:
+                    _editProfileController.userNameController,
+                readOnly: !_editProfileController.canUserNameDetails(),
+                onTap: () {
+                  if (!_editProfileController.canUserNameDetails()) {
+                    showErrorNotification(
+                      context: context,
+                      message:
+                          "UserName can't be edited for security reasons. Wait ${_editProfileController.userNameTimeLeft()}s",
+                    );
+                  }
+                },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "User name is required cant be empty";
+                  }
+                  return null;
+                },
+              ),
+              20.ht,
+              AuthTextFiled(
+                titleText: "Telephone",
+                hintText: "telephone",
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                textEditingController:
+                    _editProfileController.phoneNumberController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Phone number is required cant be empty";
+                  }
+                  return null;
+                },
+              ),
+              20.ht,
+              AuthTextFiled(
+                titleText: "Email",
+                hintText: "Email",
+                textEditingController: _editProfileController.emailController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Email is required cant be empty";
+                  }
+                  if (!EmailValidator.validate(value)) {
+                    return "Kindly enter a valid mail";
+                  }
+                  return null;
+                },
+              ),
+              30.ht,
+              AppButton(
+                text: "continue",
+                bckColor: AppColors.primaryColor,
+                textColor: Colors.white,
+                width: double.infinity,
+                fontSize: 23.sp,
+                function: () {
+                  if (_formKey.currentState!.validate()) {
+                    _editProfileController.continueButton();
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

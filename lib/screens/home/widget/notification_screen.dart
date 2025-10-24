@@ -41,7 +41,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(notificationStateNotifierProvider.notifier).defaultData();
+      ref.read(notificationStateProvider.notifier).defaultData();
     });
   }
 
@@ -58,7 +58,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final notification = ref.watch(notificationStateNotifierProvider);
+    final notification = ref.watch(notificationStateProvider);
     final groupedNotification = groupNotifications(notification);
     final keys = groupedNotification.keys.toList()
       ..sort((a, b) => b.compareTo(a));
@@ -80,13 +80,11 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
             icon: AppBarIcon(icons: Icons.more_vert),
             onSelected: (value) {
               if (value == "Mark All") {
-                ref
-                    .read(notificationStateNotifierProvider.notifier)
-                    .markAllAsRead();
+                ref.read(notificationStateProvider.notifier).markAllAsRead();
               }
               if (value == "Delete All") {
                 ref
-                    .read(notificationStateNotifierProvider.notifier)
+                    .read(notificationStateProvider.notifier)
                     .emptyNotification();
               }
             },
@@ -136,9 +134,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
                           return GestureDetector(
                             onTap: () {
                               ref
-                                  .read(
-                                    notificationStateNotifierProvider.notifier,
-                                  )
+                                  .read(notificationStateProvider.notifier)
                                   .markAsRead(notif.id);
                             },
                             child: NotificationScreenHolder(

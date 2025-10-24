@@ -35,7 +35,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoute.bottomNavigation.path,
         name: AppRoute.bottomNavigation.name,
-        builder: (context, state) => BottomNavigationScreen(),
+        builder: (context, state) {
+          final extraData = state.extra as Map<String, dynamic>?;
+          final yesData = extraData?['yesData'] ?? false;
+          return BottomNavigationScreen(yesData: yesData);
+        },
       ),
       GoRoute(
         path: AppRoute.signUp.path,

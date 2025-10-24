@@ -6,156 +6,96 @@ part of 'rooms_count_state.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$roomsCountStateHash() => r'f605cc3f52d844bf6641cf1748ded64bdd8c640b';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-abstract class _$RoomsCountState extends BuildlessNotifier<int> {
-  late final int index;
-
-  int build(int index);
-}
-
-/// See also [RoomsCountState].
 @ProviderFor(RoomsCountState)
-const roomsCountStateProvider = RoomsCountStateFamily();
+const roomsCountStateProvider = RoomsCountStateFamily._();
 
-/// See also [RoomsCountState].
-class RoomsCountStateFamily extends Family<int> {
-  /// See also [RoomsCountState].
-  const RoomsCountStateFamily();
+final class RoomsCountStateProvider
+    extends $NotifierProvider<RoomsCountState, int> {
+  const RoomsCountStateProvider._({
+    required RoomsCountStateFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'roomsCountStateProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [RoomsCountState].
-  RoomsCountStateProvider call(int index) {
-    return RoomsCountStateProvider(index);
+  @override
+  String debugGetCreateSourceHash() => _$roomsCountStateHash();
+
+  @override
+  String toString() {
+    return r'roomsCountStateProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  RoomsCountStateProvider getProviderOverride(
-    covariant RoomsCountStateProvider provider,
-  ) {
-    return call(provider.index);
-  }
+  RoomsCountState create() => RoomsCountState();
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'roomsCountStateProvider';
-}
-
-/// See also [RoomsCountState].
-class RoomsCountStateProvider
-    extends NotifierProviderImpl<RoomsCountState, int> {
-  /// See also [RoomsCountState].
-  RoomsCountStateProvider(int index)
-    : this._internal(
-        () => RoomsCountState()..index = index,
-        from: roomsCountStateProvider,
-        name: r'roomsCountStateProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$roomsCountStateHash,
-        dependencies: RoomsCountStateFamily._dependencies,
-        allTransitiveDependencies:
-            RoomsCountStateFamily._allTransitiveDependencies,
-        index: index,
-      );
-
-  RoomsCountStateProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.index,
-  }) : super.internal();
-
-  final int index;
-
-  @override
-  int runNotifierBuild(covariant RoomsCountState notifier) {
-    return notifier.build(index);
-  }
-
-  @override
-  Override overrideWith(RoomsCountState Function() create) {
-    return ProviderOverride(
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(int value) {
+    return $ProviderOverride(
       origin: this,
-      override: RoomsCountStateProvider._internal(
-        () => create()..index = index,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        index: index,
-      ),
+      providerOverride: $SyncValueProvider<int>(value),
     );
   }
 
   @override
-  NotifierProviderElement<RoomsCountState, int> createElement() {
-    return _RoomsCountStateProviderElement(this);
-  }
-
-  @override
   bool operator ==(Object other) {
-    return other is RoomsCountStateProvider && other.index == index;
+    return other is RoomsCountStateProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, index.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin RoomsCountStateRef on NotifierProviderRef<int> {
-  /// The parameter `index` of this provider.
-  int get index;
-}
+String _$roomsCountStateHash() => r'f605cc3f52d844bf6641cf1748ded64bdd8c640b';
 
-class _RoomsCountStateProviderElement
-    extends NotifierProviderElement<RoomsCountState, int>
-    with RoomsCountStateRef {
-  _RoomsCountStateProviderElement(super.provider);
+final class RoomsCountStateFamily extends $Family
+    with $ClassFamilyOverride<RoomsCountState, int, int, int, int> {
+  const RoomsCountStateFamily._()
+    : super(
+        retry: null,
+        name: r'roomsCountStateProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  RoomsCountStateProvider call(int index) =>
+      RoomsCountStateProvider._(argument: index, from: this);
 
   @override
-  int get index => (origin as RoomsCountStateProvider).index;
+  String toString() => r'roomsCountStateProvider';
 }
 
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$RoomsCountState extends $Notifier<int> {
+  late final _$args = ref.$arg as int;
+  int get index => _$args;
+
+  int build(int index);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build(_$args);
+    final ref = this.ref as $Ref<int, int>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<int, int>,
+              int,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

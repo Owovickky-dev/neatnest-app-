@@ -85,17 +85,32 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 children: [
                   Row(
                     children: [
-                      Container(
-                        height: 40.h,
-                        width: 40.w,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25.r),
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(
-                              'https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL3BsYXlcLzBiN2Y0ZTliLWY1OWMtNDAyNC05ZjA2LWIzZGMxMjg1MGFiNy0xOTIwLTEwODAuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo4Mjh9fX0=',
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(20.r),
+                        child: CachedNetworkImage(
+                          height: 40.h,
+                          width: 40.w,
+                          placeholder: (context, url) => Container(
+                            height: 40.h,
+                            width: 40.w,
+                            color: Colors.grey.shade200,
+                            child: CircularProgressIndicator.adaptive(
+                              backgroundColor: AppColors.primaryColor,
                             ),
                           ),
+                          errorWidget: (context, url, error) => Container(
+                            color: Colors.grey.shade200,
+                            child: Icon(
+                              Icons.person,
+                              size: 40.sp,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          fit: BoxFit.cover,
+                          fadeInDuration: Duration(milliseconds: 500),
+                          fadeOutDuration: Duration(milliseconds: 300),
+                          imageUrl:
+                              'https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL3BsYXlcLzBiN2Y0ZTliLWY1OWMtNDAyNC05ZjA2LWIzZGMxMjg1MGFiNy0xOTIwLTEwODAuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo4Mjh9fX0=',
                         ),
                       ),
                       10.wt,

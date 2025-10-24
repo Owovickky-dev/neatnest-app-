@@ -6,21 +6,58 @@ part of 'data_flow_state.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dataFlowStateHash() => r'09b7a4668862589d9a19eda89ca826c35c5ad0c1';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [DataFlowState].
 @ProviderFor(DataFlowState)
-final dataFlowStateProvider =
-    AutoDisposeNotifierProvider<DataFlowState, List<DataflowModel>>.internal(
-      DataFlowState.new,
-      name: r'dataFlowStateProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$dataFlowStateHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+const dataFlowStateProvider = DataFlowStateProvider._();
 
-typedef _$DataFlowState = AutoDisposeNotifier<List<DataflowModel>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class DataFlowStateProvider
+    extends $NotifierProvider<DataFlowState, List<DataflowModel>> {
+  const DataFlowStateProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'dataFlowStateProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$dataFlowStateHash();
+
+  @$internal
+  @override
+  DataFlowState create() => DataFlowState();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<DataflowModel> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<DataflowModel>>(value),
+    );
+  }
+}
+
+String _$dataFlowStateHash() => r'4bf0de17312e2315323aa1845315f0b4a876b001';
+
+abstract class _$DataFlowState extends $Notifier<List<DataflowModel>> {
+  List<DataflowModel> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<List<DataflowModel>, List<DataflowModel>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<List<DataflowModel>, List<DataflowModel>>,
+              List<DataflowModel>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

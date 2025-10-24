@@ -6,26 +6,66 @@ part of 'verification_state_set.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(VerificationStateSet)
+const verificationStateSetProvider = VerificationStateSetProvider._();
+
+final class VerificationStateSetProvider
+    extends
+        $NotifierProvider<VerificationStateSet, List<VerificationStateModel>> {
+  const VerificationStateSetProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'verificationStateSetProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$verificationStateSetHash();
+
+  @$internal
+  @override
+  VerificationStateSet create() => VerificationStateSet();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<VerificationStateModel> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<VerificationStateModel>>(value),
+    );
+  }
+}
+
 String _$verificationStateSetHash() =>
     r'31db7ceacf2e55398d23707c631ddf07577bcfdb';
 
-/// See also [VerificationStateSet].
-@ProviderFor(VerificationStateSet)
-final verificationStateSetProvider =
-    AutoDisposeNotifierProvider<
-      VerificationStateSet,
-      List<VerificationStateModel>
-    >.internal(
-      VerificationStateSet.new,
-      name: r'verificationStateSetProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$verificationStateSetHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$VerificationStateSet =
-    AutoDisposeNotifier<List<VerificationStateModel>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$VerificationStateSet
+    extends $Notifier<List<VerificationStateModel>> {
+  List<VerificationStateModel> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref =
+        this.ref
+            as $Ref<List<VerificationStateModel>, List<VerificationStateModel>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                List<VerificationStateModel>,
+                List<VerificationStateModel>
+              >,
+              List<VerificationStateModel>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

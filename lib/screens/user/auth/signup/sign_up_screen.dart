@@ -26,6 +26,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final List<String> roles = const ["User", "Service Provider"];
+  final List<String> gender = const ["Male", "Female"];
+  String? positionGen;
   String? position;
   String? onChange;
 
@@ -61,9 +63,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   8.ht,
                   AuthTextFiled(
                     titleText: 'Name',
+                    textInputType: TextInputType.name,
                     hintText: 'Enter Full Name',
                     textEditingController: _signUpController.nameController,
-                    inputFormatter: [
+                    inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
                     ],
                     validator: (value) {
@@ -148,6 +151,46 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       }
                       return null;
                     },
+                  ),
+                  8.ht,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      primaryText(text: "Gender", fontSize: 14.sp),
+                      5.ht,
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 5.h,
+                          horizontal: 8.w,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.textFieldBckColor.withValues(
+                            alpha: 0.3,
+                          ),
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: DropdownButton(
+                          hint: secondaryText(text: "Select Gender"),
+                          icon: Icon(Icons.keyboard_arrow_down_outlined),
+                          isExpanded: true,
+                          value: position,
+                          underline: SizedBox(),
+                          items: gender.map((gender) {
+                            return DropdownMenuItem(
+                              value: gender,
+                              child: secondaryText(text: gender),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() {
+                                position = value;
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                   8.ht,
                   AuthTextFiled(

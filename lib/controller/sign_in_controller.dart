@@ -1,9 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:neat_nest/utilities/bottom_nav/bottom_navigation_screen.dart';
+import 'package:neat_nest/data/repo/auth_repo.dart';
+import 'package:neat_nest/widget/notificaiton_content.dart';
+
+import '../utilities/route/app_naviation_helper.dart';
+import '../utilities/route/app_route_names.dart';
 
 class SignInController {
   SignInController();
+  AuthRepo authRepo = AuthRepo();
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -17,30 +22,26 @@ class SignInController {
     }
   }
 
-  void submitData(BuildContext context) {
-    String email;
-    String password;
+  void submitData(BuildContext context) async {
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
 
-    email = emailController.text;
-    password = passwordController.text;
+    bool success = await authRepo.signIn(email: email, password: password);
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BottomNavigationScreen(yesData: true),
-      ),
-    );
-    // if (email.isEmpty || password.isEmpty) {
-    //   debugPrint("Please kindly provide valid login details");
-    // } else if (!EmailValidator.validate(email)) {
-    //   debugPrint("Please kindly enter a valid mail");
-    // } else {
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (context) => BottomNavigationScreen(yesData: true),
-    //     ),
-    //   );
-    // }
+    if (!context.mounted) return;
+
+    if (success) {
+      showSuccessNotification(
+        context: context,
+        message: "Successfully Signin In",
+      );
+      AppNavigatorHelper.go(
+        context,
+        AppRoute.bottomNavigation,
+        extra: {'yesData': true}, // 👈 Pass yesData: true
+      );
+    } else {
+      showErrorNotification(context: context, message: "Failed to login");
+    }
   }
 }

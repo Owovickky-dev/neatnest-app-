@@ -104,13 +104,29 @@ class BookingScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          HomeScreenIcons(icons: Icons.web, text: "website"),
-                          HomeScreenIcons(icons: Icons.phone, text: "Call"),
-                          HomeScreenIcons(
-                            icons: Icons.location_on,
-                            text: "Osun",
+                          Row(
+                            children: [
+                              primaryText(text: "Joined:", fontSize: 16.sp),
+                              10.wt,
+                              secondaryText(
+                                text: "Sept, 2025",
+                                fontSize: 16.sp,
+                              ),
+                            ],
                           ),
-                          HomeScreenIcons(icons: Icons.share, text: "share"),
+                          Row(
+                            children: [
+                              HomeScreenIcons(
+                                icons: Icons.location_on,
+                                text: "Nigeria, Osun",
+                              ),
+                              10.wt,
+                              HomeScreenIcons(
+                                icons: Icons.share,
+                                text: "share",
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                       20.ht,

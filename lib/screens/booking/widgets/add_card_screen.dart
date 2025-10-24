@@ -66,7 +66,7 @@ class _AddCardScreenState extends ConsumerState<AddCardScreen> {
                 titleText: "Card Number",
                 containerHeight: 50.h,
                 hintText: "Number",
-                inputFormatter: [
+                inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
                   LengthLimitingTextInputFormatter(16),
                 ],

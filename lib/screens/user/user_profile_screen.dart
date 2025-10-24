@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:neat_nest/data/repo/auth_repo.dart';
 import 'package:neat_nest/screens/user/widgets/row_data_holder.dart';
 import 'package:neat_nest/utilities/app_button.dart';
 import 'package:neat_nest/utilities/bottom_nav/widget/bottom_nav_notifiers.dart';
@@ -19,13 +20,14 @@ import '../../widget/app_text.dart';
 import '../../widget/notificaiton_content.dart';
 
 class UserProfileScreen extends ConsumerWidget {
-  const UserProfileScreen({super.key});
+  UserProfileScreen({super.key});
+  final AuthRepo _authRepo = AuthRepo();
 
   final String role = "Worker";
 
   Future<void> _logOut(BuildContext context) async {
     LoadingScreen();
-    await Future.delayed(const Duration(seconds: 2));
+    await _authRepo.signOut();
     if (!context.mounted) return; // 🧠 always check before using context
     showSuccessNotification(
       context: context,

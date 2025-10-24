@@ -15,7 +15,7 @@ class AuthTextFiled extends StatefulWidget {
     this.maxLine = 1,
     this.containerHeight,
     this.textInputType,
-    this.inputFormatter,
+    this.inputFormatters,
     this.onChanged,
     this.validator,
     this.readOnly = false,
@@ -29,7 +29,7 @@ class AuthTextFiled extends StatefulWidget {
   final int? maxLine;
   final double? containerHeight;
   final TextInputType? textInputType;
-  final List<TextInputFormatter>? inputFormatter;
+  final List<TextInputFormatter>? inputFormatters;
   final void Function(String)? onChanged;
   final String? Function(String?)? validator;
   final bool readOnly;
@@ -55,7 +55,7 @@ class _AuthTextFiledState extends State<AuthTextFiled> {
           onTap: widget.onTap,
           keyboardType: widget.textInputType ?? TextInputType.multiline,
           maxLines: widget.maxLine,
-          inputFormatters: widget.inputFormatter,
+          inputFormatters: widget.inputFormatters,
           style: TextStyle(
             color: AppColors.blackTextColor,
             fontWeight: FontWeight.bold,
