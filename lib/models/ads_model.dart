@@ -1,10 +1,12 @@
+import 'package:neat_nest/models/job_poster_model.dart';
+
 class AdsModel {
   final String id;
   final String title;
   final String about;
   final int basePrice;
   final String image;
-  final String jobPoster;
+  final JobPosterModel jobPoster;
   final String category;
   final bool isActive;
 
@@ -39,7 +41,7 @@ class AdsModel {
       category: json["category"] ?? "",
       image: json["image"] ?? "",
       isActive: json["isActive"] ?? "",
-      jobPoster: json["jobPoster"] ?? "",
+      jobPoster: JobPosterModel.fromJson(json["jobPoster"] ?? {}),
     );
   }
 }

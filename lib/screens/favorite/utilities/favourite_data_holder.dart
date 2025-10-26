@@ -3,17 +3,18 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:neat_nest/models/ads_model.dart';
 import 'package:neat_nest/screens/booking/booking_screen.dart';
-import 'package:neat_nest/utilities/app_data.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 
 import '../../../widget/app_text.dart';
 
 class FavouriteDataHolder extends StatefulWidget {
-  const FavouriteDataHolder({super.key, required this.index});
+  const FavouriteDataHolder({super.key, required this.index, this.adsModel});
 
   final int index;
+  final AdsModel? adsModel;
 
   @override
   State<FavouriteDataHolder> createState() => _FavouriteDataHolderState();
@@ -60,7 +61,7 @@ class _FavouriteDataHolderState extends State<FavouriteDataHolder> {
                 borderRadius: BorderRadius.circular(2.r),
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
-                  imageUrl: AppData.popularImagesPath[widget.index],
+                  imageUrl: widget.adsModel!.image,
                 ),
               ),
             ),
@@ -76,7 +77,7 @@ class _FavouriteDataHolderState extends State<FavouriteDataHolder> {
                       Expanded(
                         child: SizedBox(
                           child: primaryText(
-                            text: AppData.serviceName[widget.index],
+                            text: widget.adsModel!.jobPoster.name,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             fontSize: 16.sp, // Reduced font size
@@ -101,7 +102,7 @@ class _FavouriteDataHolderState extends State<FavouriteDataHolder> {
                   SizedBox(
                     width: double.infinity,
                     child: secondaryText(
-                      text: AppData.serviceProviderName[widget.index],
+                      text: widget.adsModel!.category,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),
@@ -119,7 +120,7 @@ class _FavouriteDataHolderState extends State<FavouriteDataHolder> {
                           child: Row(
                             children: [
                               primaryText(
-                                text: '\$${AppData.price[widget.index]}',
+                                text: '\$${widget.adsModel!.basePrice}',
                                 fontSize: 13.sp,
                               ),
                               secondaryText(text: '/hour', fontSize: 12.sp),

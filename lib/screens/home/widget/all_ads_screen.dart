@@ -17,32 +17,68 @@ class AllAdsScreen extends ConsumerStatefulWidget {
 }
 
 class _AllAdsScreenState extends ConsumerState<AllAdsScreen> {
+  bool _initialLoad = false;
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => _loadAds());
+  }
+
+  void _loadAds() {
+    if (!_initialLoad) {
       ref.read(queryDataControllerProvider.notifier).getAdsData();
-    });
+      _initialLoad = true;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final adsData = ref.watch(queryDataControllerProvider);
-    return SizedBox(
-      height: MediaQuery.of(context).size.height,
-      child: Column(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Column(
         children: [
           Expanded(
-            child: GridView.builder(
-              itemCount: 3,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 20,
-                childAspectRatio: 0.6,
+            child: adsData.when(
+              loading: () {
+                print("Loading screen first");
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.primaryColor,
+                  ),
+                );
+              },
+              error: (error, stack) => Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Error loading ads: $error'),
+                    SizedBox(height: 10.h),
+                    ElevatedButton(
+                      onPressed: () {
+                        ref
+                            .read(queryDataControllerProvider.notifier)
+                            .getAdsData();
+                      },
+                      child: Text('Retry'),
+                    ),
+                  ],
+                ),
               ),
-              itemBuilder: (context, index) {
-                return FavouriteDataHolder(index: index);
+              data: (ads) {
+                return GridView.builder(
+                  itemCount: ads.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10.w,
+                    mainAxisSpacing: 20.h,
+                    childAspectRatio: 0.6,
+                  ),
+                  itemBuilder: (context, index) {
+                    final ad = ads[index];
+                    return FavouriteDataHolder(index: index, adsModel: ad);
+                  },
+                );
               },
             ),
           ),
@@ -52,8 +88,6 @@ class _AllAdsScreenState extends ConsumerState<AllAdsScreen> {
               ref
                   .read(homeDisplayDataStateProvider.notifier)
                   .displayData(false);
-
-              print("The avablae ads lenght is, ${adsData.value?.length}");
             },
             child: Container(
               height: 30.h,

@@ -14,6 +14,7 @@ enum AppRoute {
   personalInfoEdit,
   inReg,
   userScreenLog,
+  allAdsScreen,
 }
 
 extension AppRouteNamesExtension on AppRoute {
@@ -49,6 +50,8 @@ extension AppRouteNamesExtension on AppRoute {
         return "/inReg";
       case AppRoute.userScreenLog:
         return "/userScreenLog";
+      case AppRoute.allAdsScreen:
+        return "/allAdsScreen";
     }
   }
 }

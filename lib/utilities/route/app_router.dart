@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:neat_nest/screens/booking/widgets/booking_form_screen.dart';
 import 'package:neat_nest/screens/home/filter/filter_screen.dart';
+import 'package:neat_nest/screens/home/widget/all_ads_screen.dart';
 import 'package:neat_nest/screens/home/widget/notification_screen.dart';
 import 'package:neat_nest/screens/onboarding/welcome_screen.dart';
 import 'package:neat_nest/screens/user/auth/signin/sign_in_screen.dart';
@@ -85,6 +86,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoute.userProfile.path,
         name: AppRoute.userProfile.name,
         builder: (context, state) => UserProfileScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.allAdsScreen.path,
+        name: AppRoute.allAdsScreen.name,
+        builder: (context, state) => AllAdsScreen(),
       ),
       GoRoute(
         path: AppRoute.personalInfoEdit.path,
