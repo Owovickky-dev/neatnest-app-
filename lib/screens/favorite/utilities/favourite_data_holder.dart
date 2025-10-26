@@ -23,7 +23,7 @@ class _FavouriteDataHolderState extends State<FavouriteDataHolder> {
   bool isClicked = false;
 
   String randNumber() {
-    final rating = Random().nextDouble() * 5;
+    final rating = (Random().nextDouble() * 4) + 1;
     return rating.toStringAsFixed(1);
   }
 

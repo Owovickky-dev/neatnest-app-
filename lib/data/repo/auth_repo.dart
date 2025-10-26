@@ -6,24 +6,15 @@ import 'package:neat_nest/utilities/constant/constant_data.dart';
 class AuthRepo {
   final Dio _dio = dioClient.dio;
 
-  Future<bool> signIn({required String email, required String password}) async {
-    try {
-      final response = await _dio.post(
-        ConstantData.LOGIN,
-        data: {"email": email, "password": password},
-      );
-      final token = response.data['data']['token'];
-
-      if (token != null) {
-        await SecureStorageHelper.saveToken(token);
-        print("Token Saved Succesfully, $token");
-        return true;
-      } else {
-        throw Exception("Token not found in response");
-      }
-    } catch (e) {
-      return false;
-    }
+  Future<Response> signIn({
+    required String email,
+    required String password,
+  }) async {
+    final response = await _dio.post(
+      ConstantData.LOGIN,
+      data: {"email": email, "password": password},
+    );
+    return response;
   }
 
   Future<void> signOut() async {

@@ -10,7 +10,7 @@ class LoadingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: AppColors.primaryColor.withValues(alpha: 0.5),
+        color: Colors.white60,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -20,7 +20,7 @@ class LoadingScreen extends StatelessWidget {
                 width: 80,
                 child: FittedBox(
                   child: CircularProgressIndicator.adaptive(
-                    backgroundColor: Colors.white,
+                    backgroundColor: AppColors.primaryColor,
                     strokeWidth: 6,
                   ),
                 ),
