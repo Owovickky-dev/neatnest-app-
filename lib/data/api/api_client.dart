@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:neat_nest/data/storage/secure_storage_helper.dart';
 import 'package:neat_nest/utilities/constant/constant_data.dart';
 
@@ -20,15 +21,18 @@ class DioClient {
           if (token != null) {
             options.headers["Authorization"] = "Bearer $token";
           }
-          print("🚀 Request → ${options.method} ${options.path}");
+          if (kDebugMode) {
+            print("🚀 Request → ${options.method} ${options.path}");
+          }
           return handler.next(options);
         },
         onResponse: (response, handler) {
-          //print("✅ Response → ${response.statusCode}");
           return handler.next(response);
         },
         onError: (DioException e, handler) {
-          print("❌ Error → ${e.message}");
+          if (kDebugMode) {
+            print("❌ Error → ${e.message}");
+          }
           return handler.next(e);
         },
       ),

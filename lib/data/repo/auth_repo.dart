@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:neat_nest/data/api/api_client.dart';
-import 'package:neat_nest/data/storage/secure_storage_helper.dart';
+import 'package:neat_nest/models/user_model.dart';
 import 'package:neat_nest/utilities/constant/constant_data.dart';
 
 class AuthRepo {
@@ -17,8 +17,11 @@ class AuthRepo {
     return response;
   }
 
-  Future<void> signOut() async {
-    await SecureStorageHelper.deleteToken();
-    print("Logged out successfully");
+  Future<Response> signUp(UserModel userModel) async {
+    final response = await _dio.post(
+      ConstantData.REGISTER,
+      data: userModel.toJson(),
+    );
+    return response;
   }
 }

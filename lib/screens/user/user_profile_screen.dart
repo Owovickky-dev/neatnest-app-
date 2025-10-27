@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:neat_nest/data/repo/auth_repo.dart';
+import 'package:neat_nest/controller/sign_in_controller.dart';
+import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
 import 'package:neat_nest/screens/user/widgets/row_data_holder.dart';
 import 'package:neat_nest/utilities/app_button.dart';
 import 'package:neat_nest/utilities/bottom_nav/widget/bottom_nav_notifiers.dart';
@@ -13,33 +14,18 @@ import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/app_bar_holder.dart';
-import 'package:neat_nest/widget/loading_screen.dart';
 
 import '../../utilities/app_data.dart';
 import '../../widget/app_text.dart';
-import '../../widget/notificaiton_content.dart';
 
 class UserProfileScreen extends ConsumerWidget {
   UserProfileScreen({super.key});
-  final AuthRepo _authRepo = AuthRepo();
 
-  final String role = "Worker";
-
-  Future<void> _logOut(BuildContext context) async {
-    LoadingScreen();
-    await _authRepo.signOut();
-    if (!context.mounted) return; // 🧠 always check before using context
-    showSuccessNotification(
-      context: context,
-      message: "Successfully logged out",
-    );
-    await Future.delayed(const Duration(milliseconds: 600));
-    if (!context.mounted) return; // 🧠 check again before navigating
-    AppNavigatorHelper.push(context, AppRoute.bottomNavigation);
-  }
+  final SignInController _signInController = SignInController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userData = ref.watch(userControllerStateProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBarHolder(
@@ -81,8 +67,8 @@ class UserProfileScreen extends ConsumerWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      primaryText(text: AppData.serviceProviderName[1]),
-                      secondaryText(text: 'username'),
+                      primaryText(text: userData?.name ?? "User"),
+                      secondaryText(text: userData?.username ?? "Username"),
                     ],
                   ),
                 ],
@@ -107,12 +93,14 @@ class UserProfileScreen extends ConsumerWidget {
               ),
               20.ht,
               RowDataHolder(
-                text: role == "Worker" ? "Verification" : 'Payment Methods',
-                icons: role == "Worker"
+                text: userData?.role == "Worker"
+                    ? "Verification"
+                    : 'Payment Methods',
+                icons: userData?.role == "Worker"
                     ? FontAwesomeIcons.addressCard
                     : FontAwesomeIcons.creditCard,
                 function: () {
-                  if (role == "Worker") {
+                  if (userData?.role == "Worker") {
                     AppNavigatorHelper.push(
                       context,
                       AppRoute.workerVerificationScreen,
@@ -124,7 +112,9 @@ class UserProfileScreen extends ConsumerWidget {
               ),
               20.ht,
               RowDataHolder(
-                text: role == "Worker" ? "My Account Summary" : 'My booking',
+                text: userData?.role == "Worker"
+                    ? "My Account Summary"
+                    : 'My booking',
                 icons: Icons.calendar_month_outlined,
                 function: () {},
               ),
@@ -147,7 +137,7 @@ class UserProfileScreen extends ConsumerWidget {
                 textColor: Colors.white,
                 width: double.infinity,
                 fontSize: 20.sp,
-                function: () => _logOut(context),
+                function: () => _signInController.logout(context, ref),
               ),
             ],
           ),

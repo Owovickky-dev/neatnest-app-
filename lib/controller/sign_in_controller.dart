@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
 import 'package:neat_nest/data/repo/auth_repo.dart';
-import 'package:neat_nest/data/storage/secure_storage_helper.dart';
 import 'package:neat_nest/widget/loading_screen.dart';
 import 'package:neat_nest/widget/notificaiton_content.dart';
 
@@ -26,7 +27,7 @@ class SignInController {
     }
   }
 
-  void submitData(BuildContext context) async {
+  void submitData(BuildContext context, WidgetRef ref) async {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
@@ -37,32 +38,19 @@ class SignInController {
     );
 
     try {
-      final response = await authRepo.signIn(email: email, password: password);
+      await ref
+          .read(userControllerStateProvider.notifier)
+          .login(email, password);
       if (!context.mounted) return;
       context.pop();
-      if (response.statusCode == 200) {
-        final token = response.data['data']['token'];
-        if (token != null) {
-          await SecureStorageHelper.saveToken(token);
+      if (!context.mounted) return;
+      showSuccessNotification(context: context, message: "Login Successful");
 
-          if (!context.mounted) return;
-          showSuccessNotification(
-            context: context,
-            message: "Successfully Signing In",
-          );
-          AppNavigatorHelper.go(
-            context,
-            AppRoute.bottomNavigation,
-            extra: {'yesData': true}, // 👈 Pass yesData: true
-          );
-        } else {
-          if (!context.mounted) return;
-          showErrorNotification(
-            context: context,
-            message: "Failed to log you in",
-          );
-        }
-      }
+      AppNavigatorHelper.go(
+        context,
+        AppRoute.bottomNavigation,
+        extra: {'yesData': true},
+      );
     } catch (e) {
       if (!context.mounted) return;
       context.pop();
@@ -79,6 +67,28 @@ class SignInController {
           }
         }
       }
+    }
+  }
+
+  void logout(BuildContext context, WidgetRef ref) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => LoadingScreen(),
+    );
+    try {
+      await ref.read(userControllerStateProvider.notifier).logOut();
+      if (!context.mounted) return;
+      showSuccessNotification(
+        context: context,
+        message: "Successfully logged out",
+      );
+      if (!context.mounted) return;
+      AppNavigatorHelper.push(context, AppRoute.bottomNavigation);
+    } catch (e) {
+      if (!context.mounted) return;
+      context.pop();
+      showErrorNotification(context: context, message: "Logout failed");
     }
   }
 }

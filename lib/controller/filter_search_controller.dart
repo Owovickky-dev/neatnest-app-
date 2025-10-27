@@ -38,10 +38,6 @@ class FilterSearchController {
     } else {
       navigate.push(MaterialPageRoute(builder: (_) => LoadingScreen()));
 
-      print(
-        '$category $rating $location ${minPrice?.toInt().round()} ${maxPrice?.toInt().round()} ',
-      );
-
       Future.delayed(Duration(milliseconds: 500), () {
         navigate.pushReplacement(
           MaterialPageRoute(builder: (_) => FilterResultScreen()),

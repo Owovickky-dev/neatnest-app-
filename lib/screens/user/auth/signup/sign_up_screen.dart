@@ -2,6 +2,7 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/controller/sign_up_controller.dart';
 import 'package:neat_nest/screens/user/auth/icon_holder.dart';
@@ -13,19 +14,19 @@ import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/app_text.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   late SignUpController _signUpController;
   bool isChecked = false;
   final _formKey = GlobalKey<FormState>();
 
-  final List<String> roles = const ["User", "Service Provider"];
+  final List<String> roles = const ["User", "Worker"];
   final List<String> gender = const ["Male", "Female"];
   String? positionGen;
   String? position;
@@ -173,7 +174,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           hint: secondaryText(text: "Select Gender"),
                           icon: Icon(Icons.keyboard_arrow_down_outlined),
                           isExpanded: true,
-                          value: position,
+                          value: positionGen,
                           underline: SizedBox(),
                           items: gender.map((gender) {
                             return DropdownMenuItem(
@@ -184,9 +185,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           onChanged: (value) {
                             if (value != null) {
                               setState(() {
-                                position = value;
+                                positionGen = value;
                               });
                             }
+                            _signUpController.setGender(value!);
                           },
                         ),
                       ),
@@ -265,7 +267,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     fontSize: 18.sp,
                     function: () {
                       if (_formKey.currentState!.validate()) {
-                        _signUpController.testingData(context);
+                        _signUpController.submit(context, ref);
                       }
                     },
                   ),

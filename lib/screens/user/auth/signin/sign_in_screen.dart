@@ -1,6 +1,7 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/controller/sign_in_controller.dart';
 import 'package:neat_nest/screens/user/auth/icon_holder.dart';
@@ -14,14 +15,14 @@ import 'package:neat_nest/widget/app_text.dart';
 import '../../../../utilities/route/app_naviation_helper.dart';
 import '../../../../utilities/route/app_route_names.dart';
 
-class SignInScreen extends StatefulWidget {
+class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  ConsumerState<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignInScreenState extends ConsumerState<SignInScreen> {
   late SignInController _signInScreenController;
   bool isChecked = false;
   final _formKey = GlobalKey<FormState>();
@@ -128,7 +129,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     fontSize: 18.sp,
                     function: () {
                       if (_formKey.currentState!.validate()) {
-                        _signInScreenController.submitData(context);
+                        _signInScreenController.submitData(context, ref);
                       }
                     },
                   ),

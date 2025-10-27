@@ -53,8 +53,5 @@ class EditProfileController {
     updatedEmail = emailController.text.trim();
     updatedPhoneNumber = phoneNumberController.text.trim();
     updatedUserName = userNameController.text.trim();
-    print(
-      "$updatedPhoneNumber , $updatedUserName, $updatedEmail, $updatedFullName",
-    );
   }
 }

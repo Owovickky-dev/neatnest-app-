@@ -38,6 +38,5 @@ class InRegScreen extends StatelessWidget {
         ],
       ),
     );
-    ;
   }
 }
