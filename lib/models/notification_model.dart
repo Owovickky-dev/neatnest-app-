@@ -30,4 +30,13 @@ class NotificationModel {
       id: id ?? this.id,
     );
   }
+
+  factory NotificationModel.fromJson(Map<String, dynamic> json) {
+    return NotificationModel(
+      title: json["title"] ?? "",
+      datetime: json["datetime"] ?? "",
+      message: json["message"] ?? "",
+      id: json["_id"] ?? "",
+    );
+  }
 }

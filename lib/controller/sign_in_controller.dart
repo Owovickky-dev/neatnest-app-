@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
 import 'package:neat_nest/data/repo/auth_repo.dart';
+import 'package:neat_nest/providers/is_logged_in_state.dart';
 import 'package:neat_nest/widget/loading_screen.dart';
 import 'package:neat_nest/widget/notificaiton_content.dart';
 
@@ -31,6 +32,8 @@ class SignInController {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
+    final userNotifier = ref.read(userControllerStateProvider.notifier);
+
     showDialog(
       context: context,
       barrierDismissible: false, // Prevent user from dismissing
@@ -38,19 +41,14 @@ class SignInController {
     );
 
     try {
-      await ref
-          .read(userControllerStateProvider.notifier)
-          .login(email, password);
+      await userNotifier.login(email, password);
       if (!context.mounted) return;
+      ref.read(isLoggedInStateProvider.notifier).yesLogged(true);
       context.pop();
       if (!context.mounted) return;
       showSuccessNotification(context: context, message: "Login Successful");
-
-      AppNavigatorHelper.go(
-        context,
-        AppRoute.bottomNavigation,
-        extra: {'yesData': true},
-      );
+      if (!context.mounted) return;
+      AppNavigatorHelper.pushReplacement(context, AppRoute.bottomNavigation);
     } catch (e) {
       if (!context.mounted) return;
       context.pop();
@@ -83,8 +81,9 @@ class SignInController {
         context: context,
         message: "Successfully logged out",
       );
+      ref.read(isLoggedInStateProvider.notifier).yesLogged(false);
       if (!context.mounted) return;
-      AppNavigatorHelper.push(context, AppRoute.bottomNavigation);
+      AppNavigatorHelper.pushReplacement(context, AppRoute.bottomNavigation);
     } catch (e) {
       if (!context.mounted) return;
       context.pop();

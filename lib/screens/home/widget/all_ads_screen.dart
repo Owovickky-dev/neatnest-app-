@@ -10,7 +10,9 @@ import '../../favorite/utilities/favourite_data_holder.dart';
 import '../notifier/home_display_data_state.dart';
 
 class AllAdsScreen extends ConsumerStatefulWidget {
-  const AllAdsScreen({super.key});
+  const AllAdsScreen({super.key, this.yesBackButton = true});
+
+  final bool yesBackButton;
 
   @override
   ConsumerState<AllAdsScreen> createState() => _AllAdsScreenState();
@@ -43,8 +45,22 @@ class _AllAdsScreenState extends ConsumerState<AllAdsScreen> {
               loading: () {
                 print("Loading screen first");
                 return Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.primaryColor,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 80,
+                        width: 80,
+                        child: FittedBox(
+                          child: CircularProgressIndicator.adaptive(
+                            backgroundColor: AppColors.primaryColor,
+                            strokeWidth: 6,
+                          ),
+                        ),
+                      ),
+                      20.ht,
+                      primaryText(text: "loading........"),
+                    ],
                   ),
                 );
               },
@@ -83,31 +99,33 @@ class _AllAdsScreenState extends ConsumerState<AllAdsScreen> {
             ),
           ),
           10.ht,
-          GestureDetector(
-            onTap: () {
-              ref
-                  .read(homeDisplayDataStateProvider.notifier)
-                  .displayData(false);
-            },
-            child: Container(
-              height: 30.h,
-              width: MediaQuery.of(context).size.width * 0.55,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.r),
-                color: Colors.black12,
-                // color: AppColors.primaryColor.withValues(
-                //   alpha: 0.5,
-                // ),
-              ),
-              child: Center(
-                child: primaryText(
-                  text: "Back to main page",
-                  textAlign: TextAlign.center,
-                  color: AppColors.blackTextColor.withValues(alpha: 0.6),
-                ),
-              ),
-            ),
-          ),
+          widget.yesBackButton
+              ? GestureDetector(
+                  onTap: () {
+                    ref
+                        .read(homeDisplayDataStateProvider.notifier)
+                        .displayData(false);
+                  },
+                  child: Container(
+                    height: 30.h,
+                    width: MediaQuery.of(context).size.width * 0.55,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.r),
+                      color: Colors.black12,
+                      // color: AppColors.primaryColor.withValues(
+                      //   alpha: 0.5,
+                      // ),
+                    ),
+                    child: Center(
+                      child: primaryText(
+                        text: "Back to main page",
+                        textAlign: TextAlign.center,
+                        color: AppColors.blackTextColor.withValues(alpha: 0.6),
+                      ),
+                    ),
+                  ),
+                )
+              : Container(),
         ],
       ),
     );

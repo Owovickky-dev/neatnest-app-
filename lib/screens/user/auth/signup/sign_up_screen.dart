@@ -145,10 +145,38 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "You need to enter Name";
+                        return "UserName is required";
                       }
                       if (value.length < 3) {
-                        return "Password must be more than 3 character";
+                        return "UserName must be more than 3 character";
+                      }
+                      return null;
+                    },
+                  ),
+                  8.ht,
+                  AuthTextFiled(
+                    titleText: 'Phone Number',
+                    hintText: 'Enter Phone Number',
+                    textInputType: TextInputType.phone,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r'[0-9()+\-\s]'),
+                      ),
+                      LengthLimitingTextInputFormatter(20),
+                    ],
+                    textEditingController:
+                        _signUpController.phoneNumberController,
+                    onChanged: (val) {
+                      setState(() {
+                        onChange = val;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Your phone number is required";
+                      }
+                      if (value.length < 7 && value.length > 20) {
+                        return "Phone  must be between 7 and 20 digits";
                       }
                       return null;
                     },

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/controller/edit_profile_controller.dart';
 import 'package:neat_nest/screens/user/utilities/auth_text_filed.dart';
@@ -13,14 +14,14 @@ import 'package:neat_nest/widget/app_bar_holder.dart';
 import 'package:neat_nest/widget/app_text.dart';
 import 'package:neat_nest/widget/notificaiton_content.dart';
 
-class PersonalInfoEdit extends StatefulWidget {
+class PersonalInfoEdit extends ConsumerStatefulWidget {
   const PersonalInfoEdit({super.key});
 
   @override
-  State<PersonalInfoEdit> createState() => _PersonalInfoEditState();
+  ConsumerState<PersonalInfoEdit> createState() => _PersonalInfoEditState();
 }
 
-class _PersonalInfoEditState extends State<PersonalInfoEdit> {
+class _PersonalInfoEditState extends ConsumerState<PersonalInfoEdit> {
   late EditProfileController _editProfileController;
 
   final _formKey = GlobalKey<FormState>();
@@ -44,7 +45,7 @@ class _PersonalInfoEditState extends State<PersonalInfoEdit> {
   @override
   void didChangeDependencies() {
     _editProfileController = EditProfileController();
-    _editProfileController.verifiedDetails();
+    _editProfileController.verifiedDetails(ref);
     super.didChangeDependencies();
   }
 
@@ -62,7 +63,7 @@ class _PersonalInfoEditState extends State<PersonalInfoEdit> {
               10.ht,
               secondaryText(
                 text:
-                    "Kindly note that your FullName and UserName can only be edited once in 90 days and also will need re-verification",
+                    "Kindly note that your FullName and UserName can only be edited once in 90 days and also will need re-verification and kindly remember to click the all chnages to make the changes take effect",
                 color: Colors.red,
               ),
               20.ht,
@@ -149,7 +150,7 @@ class _PersonalInfoEditState extends State<PersonalInfoEdit> {
               ),
               30.ht,
               AppButton(
-                text: "continue",
+                text: "Save Personal Info",
                 bckColor: AppColors.primaryColor,
                 textColor: Colors.white,
                 width: double.infinity,

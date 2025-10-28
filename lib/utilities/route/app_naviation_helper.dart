@@ -51,6 +51,22 @@ class AppNavigatorHelper {
     );
   }
 
+  // ✅ Push Replacement (replace current screen with new one)
+  static void pushReplacement(
+    BuildContext context,
+    AppRoute appRoute, {
+    Map<String, String>? pathParameters,
+    Map<String, dynamic>? extra,
+    Map<String, String>? queryParameters,
+  }) {
+    context.pushReplacementNamed(
+      appRoute.name,
+      pathParameters: pathParameters ?? {},
+      queryParameters: queryParameters ?? {},
+      extra: extra,
+    );
+  }
+
   // ✅ Go back
   static void back(BuildContext context) {
     context.pop();

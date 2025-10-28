@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
 import 'package:neat_nest/models/user_model.dart';
+import 'package:neat_nest/providers/is_logged_in_state.dart';
 import 'package:neat_nest/widget/notificaiton_content.dart';
 
 import '../utilities/route/app_naviation_helper.dart';
@@ -19,6 +20,7 @@ class SignUpController {
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController userNameController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
 
   bool isChecked = false;
   String? role;
@@ -42,12 +44,14 @@ class SignUpController {
     final String confirmPassword;
     final String name;
     final String username;
+    final String phoneNumber;
 
     mail = emailController.text;
     password = passwordController.text;
     name = nameController.text;
     confirmPassword = confirmPasswordController.text;
     username = userNameController.text;
+    phoneNumber = phoneNumberController.text;
 
     if (role == null || role!.isEmpty) {
       showErrorNotification(
@@ -70,6 +74,7 @@ class SignUpController {
         gender: gender!,
         role: role!,
         username: username,
+        phoneNumber: phoneNumber,
       );
       showDialog(
         context: context,
@@ -86,12 +91,8 @@ class SignUpController {
           context: context,
           message: "Registration Successful",
         );
-
-        AppNavigatorHelper.go(
-          context,
-          AppRoute.bottomNavigation,
-          extra: {'yesData': true},
-        );
+        ref.read(isLoggedInStateProvider.notifier).yesLogged(true);
+        AppNavigatorHelper.pushReplacement(context, AppRoute.bottomNavigation);
       } catch (e) {
         if (!context.mounted) return;
         context.pop();

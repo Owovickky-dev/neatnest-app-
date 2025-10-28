@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:neat_nest/providers/is_logged_in_state.dart';
 import 'package:neat_nest/screens/favorite/favorite_screen.dart';
 import 'package:neat_nest/screens/history/history_screen.dart';
 import 'package:neat_nest/screens/home/home_screen.dart';
@@ -9,21 +10,39 @@ import 'package:neat_nest/screens/user/user_screen.dart';
 import 'package:neat_nest/utilities/bottom_nav/widget/bottom_nav_notifiers.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 
-class BottomNavigationScreen extends ConsumerWidget {
-  const BottomNavigationScreen({super.key, this.yesData = false});
-
-  final bool yesData;
-  List<Widget> get screens => [
-    HomeScreen(),
-    HistoryScreen(),
-    FavoriteScreen(),
-    MessagesScreen(),
-    UserScreen(isDataAvailable: yesData),
-  ];
+class BottomNavigationScreen extends ConsumerStatefulWidget {
+  const BottomNavigationScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<BottomNavigationScreen> createState() =>
+      _BottomNavigationScreenState();
+}
+
+class _BottomNavigationScreenState
+    extends ConsumerState<BottomNavigationScreen> {
+  // List<Widget> get screens => [
+  //   HomeScreen(),
+  //   HistoryScreen(),
+  //   FavoriteScreen(),
+  //   MessagesScreen(),
+  //   UserScreen(isDataAvailable: ref.watch(isLoggedInStateProvider)),
+  // ];
+  List<Widget> _buildScreens(bool isLoggedIn) {
+    return [
+      HomeScreen(),
+      HistoryScreen(),
+      FavoriteScreen(),
+      MessagesScreen(),
+      UserScreen(isDataAvailable: isLoggedIn),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final index = ref.watch(bottomNavNotifiersProvider);
+    final isLoggedIn = ref.watch(isLoggedInStateProvider);
+    print(" is logged value is $isLoggedIn");
+    final screens = _buildScreens(isLoggedIn);
     return Scaffold(
       body: screens[index],
       bottomNavigationBar: BottomNavigationBar(

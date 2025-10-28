@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
 import 'package:neat_nest/screens/home/notifier/home_display_data_state.dart';
 import 'package:neat_nest/screens/home/utilities/home_screen_index_state.dart';
 import 'package:neat_nest/screens/home/widget/all_ads_screen.dart';
@@ -77,6 +78,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final indexProv = ref.watch(homeScreenIndexStateProvider);
     final homePageDisplay = ref.watch(homeDisplayDataStateProvider);
+    final userData = ref.watch(userControllerStateProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -85,80 +87,92 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(20.r),
-                        child: CachedNetworkImage(
-                          height: 40.h,
-                          width: 40.w,
-                          placeholder: (context, url) => Container(
-                            height: 40.h,
-                            width: 40.w,
-                            color: Colors.grey.shade200,
-                            child: CircularProgressIndicator.adaptive(
-                              backgroundColor: AppColors.primaryColor,
-                            ),
-                          ),
-                          errorWidget: (context, url, error) => Container(
-                            color: Colors.grey.shade200,
-                            child: Icon(
-                              Icons.person,
-                              size: 40.sp,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          fit: BoxFit.cover,
-                          fadeInDuration: Duration(milliseconds: 500),
-                          fadeOutDuration: Duration(milliseconds: 300),
-                          imageUrl:
-                              'https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL3BsYXlcLzBiN2Y0ZTliLWY1OWMtNDAyNC05ZjA2LWIzZGMxMjg1MGFiNy0xOTIwLTEwODAuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo4Mjh9fX0=',
-                        ),
-                      ),
-                      10.wt,
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          secondaryText(text: 'hi, Owovickky', fontSize: 12),
-                          primaryText(text: 'Osun, Nigeria', fontSize: 14),
-                        ],
-                      ),
-                    ],
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      AppNavigatorHelper.push(context, AppRoute.notification);
-                    },
-                    child: Stack(
+              userData != null
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(Icons.notifications_none),
-                        Positioned(
-                          left: 13.w,
-                          top: 1.h,
-                          child: Container(
-                            height: 10,
-                            width: 10,
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(5.r),
-                            ),
-                            child: Center(
-                              child: secondaryText(
-                                text: '2',
-                                fontSize: 5,
-                                color: Colors.white,
+                        Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(20.r),
+                              child: CachedNetworkImage(
+                                height: 40.h,
+                                width: 40.w,
+                                placeholder: (context, url) => Container(
+                                  height: 40.h,
+                                  width: 40.w,
+                                  color: Colors.grey.shade200,
+                                  child: CircularProgressIndicator.adaptive(
+                                    backgroundColor: AppColors.primaryColor,
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  color: Colors.grey.shade200,
+                                  child: Icon(
+                                    Icons.person,
+                                    size: 40.sp,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                fit: BoxFit.cover,
+                                fadeInDuration: Duration(milliseconds: 500),
+                                fadeOutDuration: Duration(milliseconds: 300),
+                                imageUrl:
+                                    'https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL3BsYXlcLzBiN2Y0ZTliLWY1OWMtNDAyNC05ZjA2LWIzZGMxMjg1MGFiNy0xOTIwLTEwODAuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo4Mjh9fX0=',
                               ),
                             ),
+                            10.wt,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                secondaryText(
+                                  text:
+                                      'hi, ${userData.username.toUpperCase()}',
+                                  fontSize: 12,
+                                ),
+                                primaryText(
+                                  text: 'Osun, Nigeria',
+                                  fontSize: 14,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            AppNavigatorHelper.push(
+                              context,
+                              AppRoute.notification,
+                            );
+                          },
+                          child: Stack(
+                            children: [
+                              Icon(Icons.notifications_none),
+                              Positioned(
+                                left: 13.w,
+                                top: 1.h,
+                                child: Container(
+                                  height: 10,
+                                  width: 10,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(5.r),
+                                  ),
+                                  child: Center(
+                                    child: secondaryText(
+                                      text: '2',
+                                      fontSize: 5,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                ],
-              ),
+                    )
+                  : Container(),
               5.ht,
               AppTextField(
                 hintText: 'Search...',

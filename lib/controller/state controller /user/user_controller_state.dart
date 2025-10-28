@@ -11,7 +11,24 @@ class UserControllerState extends _$UserControllerState {
   @override
   UserModel? build() {
     _authRepo = AuthRepo();
+    loadUserData();
     return null;
+  }
+
+  Future<void> loadUserData() async {
+    try {
+      final user = await SecureStorageHelper.getUserData();
+      if (user != null) {
+        if (ref.mounted) {
+          state = user;
+          print("Data loaded successfully: ${user.name}");
+        } else {
+          print("⚠️ Provider disposed, but user data saved to storage");
+        }
+      }
+    } catch (e) {
+      print("Error loading the user data from local storage $e");
+    }
   }
 
   Future<void> register(UserModel userModel) async {
@@ -25,6 +42,7 @@ class UserControllerState extends _$UserControllerState {
         if (token != null) {
           await SecureStorageHelper.saveToken(token);
           final user = UserModel.fromJson(responseData["data"]["user"]);
+          await SecureStorageHelper.saveUserData(user);
           if (!ref.mounted) return;
           state = user;
           return;
@@ -42,23 +60,32 @@ class UserControllerState extends _$UserControllerState {
   Future<void> login(String email, String password) async {
     try {
       final response = await _authRepo.signIn(email: email, password: password);
-
       final responseData = response.data;
 
       if (response.statusCode == 200) {
         final token = responseData['data']['token'];
         if (token != null) {
           await SecureStorageHelper.saveToken(token);
+          print("✅ Token saved successfully");
+
           final user = UserModel.fromJson(responseData["data"]["loginUser"]);
-          if (!ref.mounted) return;
-          state = user;
+          await SecureStorageHelper.saveUserData(user);
+          print("Data succesfully save to the secure folder helper");
+
+          if (ref.mounted) {
+            state = user;
+            print("🎯 STATE UPDATED SUCCESSFULLY - User: ${user.name}");
+          } else {
+            print("⚠️ Provider disposed,  for the normal state");
+          }
+
           return;
         } else {
-          throw Exception("No token receive");
+          throw Exception("No token received");
         }
       }
     } catch (e, stack) {
-      print("❌ ERROR in UserControllerState.register(): $e");
+      print("❌ ERROR in UserControllerState.login(): $e");
       print("❌ Stack trace: $stack");
       rethrow;
     }
@@ -66,6 +93,13 @@ class UserControllerState extends _$UserControllerState {
 
   Future<void> logOut() async {
     await SecureStorageHelper.deleteToken();
+    await SecureStorageHelper.deleteUserData();
     state = null;
   }
+
+  Future<void> refreshUserData() async {
+    await loadUserData();
+  }
+
+  Map<String, dynamic> pendingUserUpdate = {};
 }

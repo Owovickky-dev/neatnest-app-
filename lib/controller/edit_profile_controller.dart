@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
 
 class EditProfileController {
   EditProfileController();
@@ -15,11 +17,12 @@ class EditProfileController {
   late String updatedEmail;
   late String updatedPhoneNumber;
 
-  void verifiedDetails() {
-    fNameController.text = "Owolola Adedeji";
-    userNameController.text = "Owovickky";
-    emailController.text = "owovickky@gmail.com";
-    phoneNumberController.text = "08911177171717";
+  void verifiedDetails(WidgetRef ref) {
+    final preData = ref.watch(userControllerStateProvider);
+    fNameController.text = preData!.name;
+    userNameController.text = preData.username;
+    emailController.text = preData.email;
+    phoneNumberController.text = preData.phoneNumber;
   }
 
   bool canEditDetails() {

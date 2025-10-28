@@ -40,9 +40,7 @@ class AccountVerificationController {
     } else {
       Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (context) => BottomNavigationScreen(yesData: true),
-        ),
+        MaterialPageRoute(builder: (context) => BottomNavigationScreen()),
       );
     }
   }

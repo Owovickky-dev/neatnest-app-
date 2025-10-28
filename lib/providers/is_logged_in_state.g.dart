@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_repo_state.dart';
+part of 'is_logged_in_state.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,52 +9,52 @@ part of 'auth_repo_state.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(AuthRepoState)
-const authRepoStateProvider = AuthRepoStateProvider._();
+@ProviderFor(IsLoggedInState)
+const isLoggedInStateProvider = IsLoggedInStateProvider._();
 
-final class AuthRepoStateProvider
-    extends $NotifierProvider<AuthRepoState, AuthRepo> {
-  const AuthRepoStateProvider._()
+final class IsLoggedInStateProvider
+    extends $NotifierProvider<IsLoggedInState, bool> {
+  const IsLoggedInStateProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'authRepoStateProvider',
+        name: r'isLoggedInStateProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$authRepoStateHash();
+  String debugGetCreateSourceHash() => _$isLoggedInStateHash();
 
   @$internal
   @override
-  AuthRepoState create() => AuthRepoState();
+  IsLoggedInState create() => IsLoggedInState();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(AuthRepo value) {
+  Override overrideWithValue(bool value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<AuthRepo>(value),
+      providerOverride: $SyncValueProvider<bool>(value),
     );
   }
 }
 
-String _$authRepoStateHash() => r'8614340dd5166fd3147d0ea8960b7d5ac712b662';
+String _$isLoggedInStateHash() => r'5e1f28fa0f886c975f6f5aa628c4ac3d679138b4';
 
-abstract class _$AuthRepoState extends $Notifier<AuthRepo> {
-  AuthRepo build();
+abstract class _$IsLoggedInState extends $Notifier<bool> {
+  bool build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AuthRepo, AuthRepo>;
+    final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AuthRepo, AuthRepo>,
-              AuthRepo,
+              AnyNotifier<bool, bool>,
+              bool,
               Object?,
               Object?
             >;
