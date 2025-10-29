@@ -157,7 +157,7 @@ class _PersonalInfoEditState extends ConsumerState<PersonalInfoEdit> {
                 fontSize: 23.sp,
                 function: () {
                   if (_formKey.currentState!.validate()) {
-                    _editProfileController.continueButton();
+                    _editProfileController.continueButton(context, ref);
                   }
                 },
               ),

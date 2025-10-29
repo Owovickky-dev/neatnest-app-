@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
+import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
+import 'package:neat_nest/utilities/route/app_route_names.dart';
+import 'package:neat_nest/widget/notificaiton_content.dart';
 
 class EditProfileController {
   EditProfileController();
@@ -51,10 +54,21 @@ class EditProfileController {
     return resetIn > 0 ? resetIn : 0;
   }
 
-  void continueButton() {
+  void continueButton(BuildContext context, WidgetRef ref) {
     updatedFullName = fNameController.text.trim();
     updatedEmail = emailController.text.trim();
     updatedPhoneNumber = phoneNumberController.text.trim();
     updatedUserName = userNameController.text.trim();
+
+    ref
+        .read(userControllerStateProvider.notifier)
+        .updatePersonalInformation(
+          name: updatedFullName,
+          email: updatedEmail,
+          phoneNumber: updatedPhoneNumber,
+          userName: updatedUserName,
+        );
+    showSuccessNotification(context: context, message: "Data Temporary Saved");
+    AppNavigatorHelper.push(context, AppRoute.editProfile);
   }
 }
