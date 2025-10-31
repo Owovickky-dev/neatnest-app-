@@ -13,6 +13,9 @@ import 'package:neat_nest/screens/user/user_screen.dart';
 import 'package:neat_nest/screens/user/widgets/edit_profile/edit_profile_screen.dart';
 import 'package:neat_nest/screens/user/widgets/edit_profile/widget/personal_info_edit.dart';
 import 'package:neat_nest/screens/user/widgets/in_reg_screen.dart';
+import 'package:neat_nest/screens/user/widgets/payment/user_payment_method.dart';
+import 'package:neat_nest/screens/user/widgets/payment/widgets/add_payment_method.dart';
+import 'package:neat_nest/screens/user/widgets/payment/worker_payment_method.dart';
 import 'package:neat_nest/screens/user/widgets/verification/worker_verification_screen.dart';
 import 'package:neat_nest/utilities/bottom_nav/bottom_navigation_screen.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
@@ -108,6 +111,21 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           final isDataAvailable = extraData?['isDataAvailable'] ?? false;
           return UserScreen(isDataAvailable: isDataAvailable);
         },
+      ),
+      GoRoute(
+        path: AppRoute.workerPaymentMethod.path,
+        name: AppRoute.workerPaymentMethod.name,
+        builder: (context, state) => WorkerPaymentMethod(),
+      ),
+      GoRoute(
+        path: AppRoute.userPaymentMethod.path,
+        name: AppRoute.userPaymentMethod.name,
+        builder: (context, state) => UserPaymentMethod(),
+      ),
+      GoRoute(
+        path: AppRoute.addPaymentMethod.path,
+        name: AppRoute.addPaymentMethod.name,
+        builder: (context, state) => AddPaymentMethod(),
       ),
     ],
   );

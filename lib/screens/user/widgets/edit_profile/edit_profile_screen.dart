@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
 import 'package:neat_nest/screens/user/widgets/row_data_holder.dart';
 import 'package:neat_nest/utilities/app_button.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
@@ -14,7 +16,7 @@ import 'package:neat_nest/widget/notificaiton_content.dart';
 
 import '../../../../widget/app_text.dart';
 
-class EditProfileScreen extends StatelessWidget {
+class EditProfileScreen extends ConsumerWidget {
   const EditProfileScreen({super.key});
 
   Future<void> _handleSave(BuildContext context) async {
@@ -29,7 +31,8 @@ class EditProfileScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userControllerStateProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBarHolder(title: 'Edit Profile'),
@@ -124,9 +127,19 @@ class EditProfileScreen extends StatelessWidget {
                     ),
                     15.ht,
                     RowDataHolder(
-                      text: 'Bank Information',
+                      text: 'Payment Methods',
                       icons: FontAwesomeIcons.buildingColumns,
-                      function: () {},
+                      function: () {
+                        user?.role == "Worker"
+                            ? AppNavigatorHelper.push(
+                                context,
+                                AppRoute.workerPaymentMethod,
+                              )
+                            : AppNavigatorHelper.push(
+                                context,
+                                AppRoute.userPaymentMethod,
+                              );
+                      },
                     ),
                     15.ht,
                     RowDataHolder(
@@ -136,17 +149,11 @@ class EditProfileScreen extends StatelessWidget {
                     ),
                     15.ht,
                     RowDataHolder(
-                      text: 'Change Password',
-                      icons: FontAwesomeIcons.unlockKeyhole,
+                      text: 'About MySelf',
+                      icons: FontAwesomeIcons.user,
                       function: () {},
                     ),
-                    15.ht,
-                    RowDataHolder(
-                      text: 'Change Email  Address',
-                      icons: FontAwesomeIcons.envelope,
-                      function: () {},
-                    ),
-                    15.ht,
+                    30.ht,
                     AppButton(
                       text: "Save All Changes",
                       fontSize: 18.sp,

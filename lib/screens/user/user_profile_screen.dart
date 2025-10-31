@@ -26,8 +26,6 @@ class UserProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userData = ref.watch(userControllerStateProvider);
-
-    print("The login user info is ${userData?.name} and ${userData?.username}");
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBarHolder(

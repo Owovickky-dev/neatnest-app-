@@ -18,7 +18,6 @@ class AppData {
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2oalXc_RFT5e8kuHHcIxQ8HQGierWrbEpCA&s',
     'https://www.shutterstock.com/image-photo/portrait-happy-excited-smiling-young-600nw-2471642495.jpg',
   ];
-
   static const List<String> imagePathWelcome = [
     'https://cdn.prod.website-files.com/662a9a0b1860cf22db41bd69/662ff7377dec6027e008a4ac_Professional%20cleaning%20service%20(1).webp',
     'https://media.istockphoto.com/id/906777508/photo/portrait-of-diverse-janitors.jpg?s=612x612&w=0&k=20&c=egjW49zTzRtNqvq1tCVYzmxq8SJW4GK0dRGaJ7aet90=',
@@ -100,4 +99,45 @@ class AppData {
     "2.0 - 2.9",
     "1.0 - 1.9",
   ];
+
+  static Map<String, List<String>> desireMethod = {
+    "USA": ["Bank Name", "Routing Number", "Account Number", "Account Type"],
+    "PayPal": ["Email"],
+    "International UK": [
+      "Account Number",
+      "IBAN",
+      "Address",
+      "Swift Code or BIC",
+      "Bank Name",
+      "Bank Address",
+      "Country",
+    ],
+    "International USA": [
+      "Account Number",
+      "Address",
+      "Routing Number",
+      "SWIFT or BIC Code",
+      "Bank Name",
+      "Bank Address",
+      "Country",
+    ],
+    "International EU": [
+      "Account Number",
+      "Bank Address",
+      "IBAN",
+      "SWIFT or BIC Code",
+      "Bank Name",
+      "Bank Address",
+      "Country",
+    ],
+    "International Africa": [
+      "Account Number",
+      "Bank Address",
+      "SWIFT or BIC Code",
+      "Bank Name",
+      "Bank Address",
+      "Country",
+      "Currency",
+    ],
+  };
 }

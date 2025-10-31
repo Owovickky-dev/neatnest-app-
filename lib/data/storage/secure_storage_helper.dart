@@ -45,6 +45,11 @@ class SecureStorageHelper {
     return null;
   }
 
+  static Future<bool> isDataStored() async {
+    final isData = await getUserData();
+    return isData != null;
+  }
+
   static Future<void> deleteUserData() async {
     await _storage.delete(key: _userDataKey);
   }

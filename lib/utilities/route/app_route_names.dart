@@ -15,6 +15,9 @@ enum AppRoute {
   inReg,
   userScreenLog,
   allAdsScreen,
+  workerPaymentMethod,
+  userPaymentMethod,
+  addPaymentMethod,
 }
 
 extension AppRouteNamesExtension on AppRoute {
@@ -52,6 +55,12 @@ extension AppRouteNamesExtension on AppRoute {
         return "/userScreenLog";
       case AppRoute.allAdsScreen:
         return "/allAdsScreen";
+      case AppRoute.userPaymentMethod:
+        return "/userPaymentScreen";
+      case AppRoute.workerPaymentMethod:
+        return "/workerPaymentScreen";
+      case AppRoute.addPaymentMethod:
+        return "/addPaymentMethod";
     }
   }
 }

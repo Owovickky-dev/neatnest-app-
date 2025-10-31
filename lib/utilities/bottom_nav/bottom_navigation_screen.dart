@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:neat_nest/data/storage/secure_storage_helper.dart';
 import 'package:neat_nest/providers/is_logged_in_state.dart';
 import 'package:neat_nest/screens/favorite/favorite_screen.dart';
 import 'package:neat_nest/screens/history/history_screen.dart';
@@ -20,13 +21,17 @@ class BottomNavigationScreen extends ConsumerStatefulWidget {
 
 class _BottomNavigationScreenState
     extends ConsumerState<BottomNavigationScreen> {
-  // List<Widget> get screens => [
-  //   HomeScreen(),
-  //   HistoryScreen(),
-  //   FavoriteScreen(),
-  //   MessagesScreen(),
-  //   UserScreen(isDataAvailable: ref.watch(isLoggedInStateProvider)),
-  // ];
+  @override
+  void initState() {
+    super.initState();
+    loadUser();
+  }
+
+  Future<void> loadUser() async {
+    final hasData = await SecureStorageHelper.isDataStored();
+    ref.read(isLoggedInStateProvider.notifier).yesLogged(hasData);
+  }
+
   List<Widget> _buildScreens(bool isLoggedIn) {
     return [
       HomeScreen(),
@@ -41,7 +46,7 @@ class _BottomNavigationScreenState
   Widget build(BuildContext context) {
     final index = ref.watch(bottomNavNotifiersProvider);
     final isLoggedIn = ref.watch(isLoggedInStateProvider);
-    print(" is logged value is $isLoggedIn");
+
     final screens = _buildScreens(isLoggedIn);
     return Scaffold(
       body: screens[index],
