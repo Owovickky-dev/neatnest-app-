@@ -37,7 +37,7 @@ class ReviewSummaryScreen extends StatelessWidget {
           children: [
             25.ht,
             DottedBorder(
-              color: AppColors.secondaryTextColor.withOpacity(0.5),
+              color: AppColors.secondaryTextColor.withValues(alpha: 0.5),
               strokeWidth: 2,
               dashPattern: [5, 5], // [dash length, gap length]
               borderType: BorderType.RRect,

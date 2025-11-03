@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:neat_nest/screens/onboarding/welcome_screen.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
+import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
+import 'package:neat_nest/utilities/route/app_route_names.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -18,10 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     _timer = Timer(Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => WelcomeScreen()),
-      );
+      AppNavigatorHelper.go(context, AppRoute.welcome);
     });
   }
 

@@ -3,10 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/controller/password_reset_controller.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 
-import '../../../../utilities/app_button.dart';
-import '../../../../utilities/constant/colors.dart';
-import '../../../../widget/app_text.dart';
-import '../../utilities/auth_text_filed.dart';
+import '../../../../../utilities/app_button.dart';
+import '../../../../../utilities/constant/colors.dart';
+import '../../../../../widget/app_text.dart';
+import '../../../utilities/auth_text_filed.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});

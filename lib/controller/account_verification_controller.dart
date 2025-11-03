@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:neat_nest/screens/user/auth/signin/new_password_screen.dart';
+import 'package:neat_nest/screens/user/auth/signin/utilities/new_password_screen.dart';
 
 import '../utilities/bottom_nav/bottom_navigation_screen.dart';
 
@@ -40,9 +40,7 @@ class AccountVerificationController {
     } else {
       Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (context) => BottomNavigationScreen(yesData: true),
-        ),
+        MaterialPageRoute(builder: (context) => BottomNavigationScreen()),
       );
     }
   }

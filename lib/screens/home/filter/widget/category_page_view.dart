@@ -7,9 +7,15 @@ import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/widget/app_text.dart';
 
 class CategoryPageView extends StatelessWidget {
-  const CategoryPageView({super.key, required this.index});
+  const CategoryPageView({
+    super.key,
+    required this.index,
+    this.clickedItem = false,
+  });
 
   final int index;
+  final bool clickedItem;
+
   final List<IconData> icons = const [
     FontAwesomeIcons.broom,
     FontAwesomeIcons.hammer,
@@ -23,7 +29,9 @@ class CategoryPageView extends StatelessWidget {
       padding: EdgeInsets.only(left: 10.w, top: 5.h, bottom: 5.h),
       margin: EdgeInsets.only(left: 10.w),
       decoration: BoxDecoration(
-        color: AppColors.containerLightBackground,
+        color: clickedItem
+            ? AppColors.primaryColor.withValues(alpha: 0.2)
+            : AppColors.containerLightBackground,
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: Column(
@@ -35,8 +43,12 @@ class CategoryPageView extends StatelessWidget {
             icons: icons[index],
             width: 40.w,
             height: 40.h,
+            iconColor: AppColors.primaryColor,
           ),
-          secondaryText(text: AppData.serviceName[index]),
+          secondaryText(
+            text: AppData.serviceName[index],
+            color: AppColors.secondaryTextColor,
+          ),
         ],
       ),
     );

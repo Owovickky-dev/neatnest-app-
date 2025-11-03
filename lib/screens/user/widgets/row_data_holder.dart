@@ -18,7 +18,7 @@ class RowDataHolder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50.h,
+      height: 60.h,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.r),
         color: AppColors.containerLightBackground,
@@ -41,7 +41,7 @@ class RowDataHolder extends StatelessWidget {
                 ),
               ),
               10.wt,
-              primaryText(text: text, fontSize: 15.sp),
+              secondaryText(text: text, fontSize: 15.sp),
             ],
           ),
           GestureDetector(

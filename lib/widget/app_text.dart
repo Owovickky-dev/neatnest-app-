@@ -27,7 +27,7 @@ Widget secondaryText({
   double? fontSize,
   TextAlign textAlign = TextAlign.start,
   Color color = const Color(0xFF999A9B),
-  TextOverflow? overflow,
+  TextOverflow overflow = TextOverflow.visible,
   int? maxLines,
 }) {
   return Text(
@@ -35,6 +35,7 @@ Widget secondaryText({
     textAlign: textAlign,
     overflow: overflow,
     maxLines: maxLines,
+    softWrap: true,
     style: TextStyle(
       color: color,
       fontSize: fontSize ?? 14.sp,

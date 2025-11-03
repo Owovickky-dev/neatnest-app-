@@ -1,24 +1,28 @@
 import 'package:dotted_line/dotted_line.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/controller/sign_in_controller.dart';
 import 'package:neat_nest/screens/user/auth/icon_holder.dart';
-import 'package:neat_nest/screens/user/auth/signin/forget_password_screen.dart';
-import 'package:neat_nest/screens/user/auth/signup/sign_up_screen.dart';
 import 'package:neat_nest/screens/user/utilities/auth_text_filed.dart';
 import 'package:neat_nest/utilities/app_button.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
+import 'package:neat_nest/widget/app_bar_holder.dart';
 import 'package:neat_nest/widget/app_text.dart';
 
-class SignInScreen extends StatefulWidget {
+import '../../../../utilities/route/app_naviation_helper.dart';
+import '../../../../utilities/route/app_route_names.dart';
+
+class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  ConsumerState<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignInScreenState extends ConsumerState<SignInScreen> {
   late SignInController _signInScreenController;
   bool isChecked = false;
   final _formKey = GlobalKey<FormState>();
@@ -32,15 +36,7 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Icon(Icons.arrow_back),
-        ),
-      ),
+      appBar: AppBarHolder(title: 'Sign In'),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Form(
@@ -50,17 +46,23 @@ class _SignInScreenState extends State<SignInScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  5.ht,
-                  Center(child: primaryText(text: 'Sign In')),
-                  10.ht,
+                  20.ht,
                   AuthTextFiled(
                     titleText: 'Email Address',
                     hintText: 'Enter Email Address',
                     textEditingController:
                         _signInScreenController.emailController,
-                    // textEditingController: controller!,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Email can't be empty";
+                      }
+                      if (!EmailValidator.validate(value)) {
+                        return "Please enter a valid mail";
+                      }
+                      return null;
+                    },
                   ),
-                  10.ht,
+                  20.ht,
                   AuthTextFiled(
                     titleText: 'Password',
                     hintText: 'Enter Password',
@@ -70,12 +72,12 @@ class _SignInScreenState extends State<SignInScreen> {
                     onChanged: (value) {
                       searchServices(value);
                     },
-                    validator: (value){
-                      if(value == null || value.isEmpty){
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
                         return "This field cannot be empty";
                       }
-                      if(value.length < 3){
-                        return "Your password cannot be less than 3";
+                      if (value.length < 8) {
+                        return "Atleast 8 character";
                       }
                       return null;
                     },
@@ -106,11 +108,9 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
+                          AppNavigatorHelper.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => ForgetPasswordScreen(),
-                            ),
+                            AppRoute.forgotPassword,
                           );
                         },
                         child: secondaryText(
@@ -128,8 +128,8 @@ class _SignInScreenState extends State<SignInScreen> {
                     width: double.infinity,
                     fontSize: 18.sp,
                     function: () {
-                      if(_formKey.currentState!.validate()) {
-                        _signInScreenController.submitData(context);
+                      if (_formKey.currentState!.validate()) {
+                        _signInScreenController.submitData(context, ref);
                       }
                     },
                   ),
@@ -157,12 +157,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       secondaryText(text: 'Don\'t have and account?'),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SignUpScreen(),
-                            ),
-                          );
+                          AppNavigatorHelper.push(context, AppRoute.signUp);
                         },
                         child: secondaryText(
                           text: 'SignUp',

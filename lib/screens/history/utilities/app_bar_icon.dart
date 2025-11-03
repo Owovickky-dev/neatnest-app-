@@ -7,7 +7,7 @@ class AppBarIcon extends StatelessWidget {
   const AppBarIcon({
     super.key,
     required this.icons,
-    required this.function,
+    this.function,
     this.height,
     this.width,
     this.bckColor,
@@ -16,7 +16,7 @@ class AppBarIcon extends StatelessWidget {
   });
 
   final IconData icons;
-  final VoidCallback function;
+  final VoidCallback? function;
   final double? height;
   final double? width;
   final Color? bckColor;

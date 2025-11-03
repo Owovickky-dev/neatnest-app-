@@ -1,36 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:neat_nest/screens/home/filter/notifier/filter_state.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/widget/app_text.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
-class FilterRange extends StatefulWidget {
+class FilterRange extends ConsumerWidget {
   const FilterRange({super.key});
 
   @override
-  State<FilterRange> createState() => _FilterRangeState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final filterState = ref.watch(filterStateProvider);
 
-class _FilterRangeState extends State<FilterRange> {
-  SfRangeValues _values = SfRangeValues(50, 1000);
-  @override
-  Widget build(BuildContext context) {
+    final double minPrice = filterState?.minPrice ?? 50;
+    final double maxPrice = filterState?.maxPrice ?? 1000;
     return Column(
       children: [
         SfRangeSlider(
-          min: 10,
+          min: 50,
           max: 1000,
           activeColor: AppColors.primaryColor,
-          inactiveColor: AppColors.secondaryTextColor.withOpacity(0.3),
-          values: _values,
+          inactiveColor: AppColors.secondaryTextColor.withValues(alpha: 0.3),
+          values: SfRangeValues(minPrice, maxPrice),
           showTicks: false,
           enableTooltip: false,
           showLabels: false,
           onChanged: (SfRangeValues newValue) {
-            setState(() {
-              _values = newValue;
-            });
+            ref.read(filterStateProvider.notifier).setMinPrice(newValue.start);
+            ref.read(filterStateProvider.notifier).setMaxPrice(newValue.end);
           },
         ),
         10.ht,
@@ -50,7 +49,7 @@ class _FilterRangeState extends State<FilterRange> {
                   secondaryText(text: "Minimum Price", fontSize: 12.sp),
                   5.ht,
                   primaryText(
-                    text: "\$ ${_values.start.round()}.00",
+                    text: "\$ ${minPrice.round()}.00",
                     fontSize: 17.sp,
                   ),
                 ],
@@ -69,7 +68,7 @@ class _FilterRangeState extends State<FilterRange> {
                   secondaryText(text: "Maximum Price", fontSize: 12.sp),
                   5.ht,
                   primaryText(
-                    text: "\$ ${_values.end.round()}.00",
+                    text: "\$ ${maxPrice.round()}.00",
                     fontSize: 17.sp,
                   ),
                 ],

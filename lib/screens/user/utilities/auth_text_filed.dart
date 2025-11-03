@@ -15,9 +15,11 @@ class AuthTextFiled extends StatefulWidget {
     this.maxLine = 1,
     this.containerHeight,
     this.textInputType,
-    this.inputFormatter,
+    this.inputFormatters,
     this.onChanged,
     this.validator,
+    this.readOnly = false,
+    this.onTap,
   });
 
   final String titleText;
@@ -27,9 +29,11 @@ class AuthTextFiled extends StatefulWidget {
   final int? maxLine;
   final double? containerHeight;
   final TextInputType? textInputType;
-  final List<TextInputFormatter>? inputFormatter;
+  final List<TextInputFormatter>? inputFormatters;
   final void Function(String)? onChanged;
   final String? Function(String?)? validator;
+  final bool readOnly;
+  final void Function()? onTap;
 
   @override
   State<AuthTextFiled> createState() => _AuthTextFiledState();
@@ -47,9 +51,11 @@ class _AuthTextFiledState extends State<AuthTextFiled> {
         5.ht,
         TextFormField(
           controller: widget.textEditingController,
+          readOnly: widget.readOnly,
+          onTap: widget.onTap,
           keyboardType: widget.textInputType ?? TextInputType.multiline,
           maxLines: widget.maxLine,
-          inputFormatters: widget.inputFormatter,
+          inputFormatters: widget.inputFormatters,
           style: TextStyle(
             color: AppColors.blackTextColor,
             fontWeight: FontWeight.bold,
@@ -57,8 +63,9 @@ class _AuthTextFiledState extends State<AuthTextFiled> {
           validator: widget.validator,
           onChanged: widget.onChanged,
           decoration: InputDecoration(
+            errorStyle: TextStyle(fontWeight: FontWeight.bold),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(15.r),
               borderSide: BorderSide.none,
             ),
             filled: true,
@@ -79,16 +86,16 @@ class _AuthTextFiledState extends State<AuthTextFiled> {
                     ),
                   ),
             errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(15.r),
               borderSide: BorderSide(color: Colors.red, width: 1),
             ),
 
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(15.r),
               borderSide: BorderSide(color: AppColors.primaryColor, width: 1),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(15.r),
               borderSide: BorderSide(
                 color: AppColors.containerLightBackground,
                 width: 1,

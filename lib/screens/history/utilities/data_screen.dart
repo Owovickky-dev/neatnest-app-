@@ -106,7 +106,7 @@ class DataScreen extends StatelessWidget {
                 ),
                 25.ht,
                 DottedLine(
-                  dashColor: AppColors.secondaryTextColor.withOpacity(0.5),
+                  dashColor: AppColors.secondaryTextColor.withValues(alpha: .5),
                 ),
                 25.ht,
                 Row(
@@ -114,7 +114,7 @@ class DataScreen extends StatelessWidget {
                   children: [
                     AppButton(
                       text: text1,
-                      bckColor: AppColors.primaryColor.withOpacity(0.1),
+                      bckColor: AppColors.primaryColor.withValues(alpha: .1),
                       textColor: AppColors.blackTextColor,
                       function: function1,
                     ),

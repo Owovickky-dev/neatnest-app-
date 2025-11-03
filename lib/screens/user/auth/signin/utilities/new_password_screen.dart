@@ -3,10 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/controller/account_verification_controller.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 
-import '../../../../utilities/app_button.dart';
-import '../../../../utilities/constant/colors.dart';
-import '../../../../widget/app_text.dart';
-import '../../utilities/auth_text_filed.dart';
+import '../../../../../utilities/app_button.dart';
+import '../../../../../utilities/constant/colors.dart';
+import '../../../../../widget/app_text.dart';
+import '../../../utilities/auth_text_filed.dart';
 
 class NewPasswordScreen extends StatefulWidget {
   const NewPasswordScreen({super.key});

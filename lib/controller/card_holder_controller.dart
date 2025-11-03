@@ -32,8 +32,6 @@ class CardHolderController {
     expiryDate = DateFormat('MM/dd/yyyy').format(date);
     cvv = cardCvvController.text;
 
-    print(expiryDate);
-
     if (name.isEmpty ||
         number.isEmpty ||
         expiryDate.isEmpty ||

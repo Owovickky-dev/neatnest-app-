@@ -21,7 +21,7 @@ class IntroductionScreens extends StatelessWidget {
       child: Column(
         children: [
           primaryText(text: bigText, textAlign: TextAlign.center),
-          secondaryText(text: smallText, textAlign: TextAlign.center),
+          secondaryText(text: smallText, textAlign: TextAlign.justify),
         ],
       ),
     );

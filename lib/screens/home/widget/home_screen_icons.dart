@@ -12,6 +12,7 @@ class HomeScreenIcons extends StatelessWidget {
     this.radius,
     this.height,
     this.width,
+    this.iconColor,
   });
 
   final String? text;
@@ -19,6 +20,8 @@ class HomeScreenIcons extends StatelessWidget {
   final double? radius;
   final double? height;
   final double? width;
+  final Color? iconColor;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -30,7 +33,9 @@ class HomeScreenIcons extends StatelessWidget {
             borderRadius: BorderRadius.circular(radius ?? 25.r),
             color: AppColors.primaryColor.withOpacity(0.1),
           ),
-          child: Center(child: Icon(icons, color: AppColors.primaryColor)),
+          child: Center(
+            child: Icon(icons, color: iconColor ?? AppColors.primaryColor),
+          ),
         ),
         5.ht,
         primaryText(text: text ?? "", fontSize: 12),

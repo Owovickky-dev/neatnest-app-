@@ -9,6 +9,8 @@ import 'package:neat_nest/screens/onboarding/widgets/index_state.dart';
 import 'package:neat_nest/utilities/app_data.dart';
 import 'package:neat_nest/utilities/bottom_nav/bottom_navigation_screen.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
+import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
+import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/app_text.dart';
 
 class WelcomeScreen extends ConsumerWidget {
@@ -49,7 +51,7 @@ class WelcomeScreen extends ConsumerWidget {
                         end: Alignment.bottomCenter,
                         colors: [
                           Colors.transparent,
-                          Colors.white.withOpacity(0.2),
+                          Colors.white.withValues(alpha: 0.2),
                         ],
                       ),
                     ),
@@ -87,11 +89,9 @@ class WelcomeScreen extends ConsumerWidget {
                   children: [
                     TextButton(
                       onPressed: () {
-                        Navigator.push(
+                        AppNavigatorHelper.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => BottomNavigationScreen(),
-                          ),
+                          AppRoute.bottomNavigation,
                         );
                       },
                       child: primaryText(

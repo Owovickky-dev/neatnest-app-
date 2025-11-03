@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:neat_nest/screens/favorite/widgets/all_data_screen.dart';
 import 'package:neat_nest/screens/favorite/widgets/cleaning_data_screen.dart';
 import 'package:neat_nest/screens/favorite/widgets/plumbing_data_screen.dart';
 import 'package:neat_nest/screens/favorite/widgets/repairing_data_screen.dart';
+import 'package:neat_nest/screens/home/widget/all_ads_screen.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 
 import '../../utilities/bottom_nav/bottom_navigation_screen.dart';
@@ -38,32 +38,31 @@ class _FavoriteScreenState extends State<FavoriteScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: primaryText(text: 'Favorite'),
-          leading: Consumer(
-            builder: (context, ref, _) {
-              return AppBarIcon(
-                icons: Icons.arrow_back,
-                function: () {
-                  ref.read(bottomNavNotifiersProvider.notifier).indexUpdate(0);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BottomNavigationScreen(),
-                    ),
-                  );
-                },
-              );
-            },
-          ),
+        title: primaryText(text: 'Favorite'),
+        leading: Consumer(
+          builder: (context, ref, _) {
+            return AppBarIcon(
+              icons: Icons.arrow_back,
+              function: () {
+                ref.read(bottomNavNotifiersProvider.notifier).indexUpdate(0);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BottomNavigationScreen(),
+                  ),
+                );
+              },
+            );
+          },
         ),
-        body: Column(
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             20.ht,
@@ -121,7 +120,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
               child: TabBarView(
                 controller: _controller,
                 children: [
-                  AllDataScreen(),
+                  AllAdsScreen(yesBackButton: false),
                   CleaningDataScreen(),
                   RepairingDataScreen(),
                   PlumbingDataScreen(),

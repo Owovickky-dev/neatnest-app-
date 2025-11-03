@@ -4,39 +4,50 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:neat_nest/screens/home/notifier/notification_state_notifier.dart';
 import 'package:neat_nest/screens/home/utilities/notification_screen_holder.dart';
+import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 
 import '../../../models/notification_model.dart';
 import '../../../widget/app_text.dart';
 import '../../history/utilities/app_bar_icon.dart';
 
-class NotificationScreen extends ConsumerWidget {
+class NotificationScreen extends ConsumerStatefulWidget {
   const NotificationScreen({super.key});
 
-  Map<String, List<NotificationModel>> groupNotifications(
+  @override
+  ConsumerState<NotificationScreen> createState() => _NotificationScreenState();
+}
+
+class _NotificationScreenState extends ConsumerState<NotificationScreen> {
+  Map<DateTime, List<NotificationModel>> groupNotifications(
     List<NotificationModel> notifications,
   ) {
-    final Map<String, List<NotificationModel>> grouped = {};
+    final Map<DateTime, List<NotificationModel>> grouped = {};
 
     for (var notif in notifications) {
       // convert to local date/time to avoid timezone issues
       final local = notif.datetime.toLocal();
 
-      // create a date-only key with ISO-like format for stable lexical sorting
+      // create a date-only so that it will be used as each group name...
       final dateOnly = DateTime(local.year, local.month, local.day);
-      final key = DateFormat('yyyy-MM-dd').format(dateOnly);
 
-      grouped.putIfAbsent(key, () => []).add(notif);
+      grouped.putIfAbsent(dateOnly, () => []).add(notif);
     }
 
     return grouped;
   }
 
-  String friendlyLabelFromKey(String key) {
-    final date = DateFormat('yyyy-MM-dd').parse(key);
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(notificationStateProvider.notifier).defaultData();
+    });
+  }
+
+  String friendlyLabelFromKey(DateTime date) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final yesterday = today.subtract(const Duration(days: 1));
     final diffDays = today.difference(date).inDays;
 
     if (diffDays == 0) return 'Today';
@@ -46,29 +57,59 @@ class NotificationScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final notification = ref.watch(notificationStateNotifierProvider);
+  Widget build(BuildContext context) {
+    final notification = ref.watch(notificationStateProvider);
     final groupedNotification = groupNotifications(notification);
     final keys = groupedNotification.keys.toList()
       ..sort((a, b) => b.compareTo(a));
-    return Container(
-      color: Colors.white,
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: primaryText(text: 'Notifications'),
-          centerTitle: false,
-          leading: AppBarIcon(
-            icons: Icons.arrow_back,
-            function: () {
-              Navigator.pop(context);
-            },
-          ),
-          actions: [AppBarIcon(icons: Icons.more_vert, function: () {})],
+        title: primaryText(text: 'Notifications'),
+        centerTitle: false,
+        leading: AppBarIcon(
+          icons: Icons.arrow_back,
+          function: () {
+            Navigator.pop(context);
+          },
         ),
-        body: Column(
+        actions: [
+          PopupMenuButton(
+            color: Colors.white,
+            icon: AppBarIcon(icons: Icons.more_vert),
+            onSelected: (value) {
+              if (value == "Mark All") {
+                ref.read(notificationStateProvider.notifier).markAllAsRead();
+              }
+              if (value == "Delete All") {
+                ref
+                    .read(notificationStateProvider.notifier)
+                    .emptyNotification();
+              }
+            },
+            itemBuilder: (BuildContext context) => [
+              PopupMenuItem(
+                value: "Delete All",
+                child: secondaryText(
+                  text: "Delete All",
+                  color: AppColors.blackTextColor,
+                ),
+              ),
+              PopupMenuItem(
+                value: "Mark All",
+                child: secondaryText(
+                  text: "Mark All",
+                  color: AppColors.blackTextColor,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        child: Column(
           children: [
             20.ht,
             Expanded(
@@ -92,12 +133,9 @@ class NotificationScreen extends ConsumerWidget {
                           final notif = items[index];
                           return GestureDetector(
                             onTap: () {
-                              final globalIndex = notification.indexOf(notif);
                               ref
-                                  .read(
-                                    notificationStateNotifierProvider.notifier,
-                                  )
-                                  .markAsRead(globalIndex);
+                                  .read(notificationStateProvider.notifier)
+                                  .markAsRead(notif.id);
                             },
                             child: NotificationScreenHolder(
                               title: notif.title,
