@@ -1,24 +1,25 @@
+// screens/user/add_payment_method.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
+import 'package:neat_nest/controller/add_user_payment_controller.dart';
 import 'package:neat_nest/screens/user/widgets/payment/widgets/payment_method_fields.dart';
 import 'package:neat_nest/utilities/app_button.dart';
 import 'package:neat_nest/utilities/app_data.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/widget/app_bar_holder.dart';
 import 'package:neat_nest/widget/app_text.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
 
 import '../../../../../utilities/constant/colors.dart';
 
-class AddPaymentMethod extends StatefulWidget {
+class AddPaymentMethod extends ConsumerStatefulWidget {
   const AddPaymentMethod({super.key});
 
   @override
-  State<AddPaymentMethod> createState() => _AddPaymentMethodState();
+  ConsumerState<AddPaymentMethod> createState() => _AddPaymentMethodState();
 }
 
-class _AddPaymentMethodState extends State<AddPaymentMethod> {
+class _AddPaymentMethodState extends ConsumerState<AddPaymentMethod> {
   final List<String> paymentCountry = [
     "USA",
     "International Africa",
@@ -27,9 +28,8 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
     "International UK",
     "PayPal",
   ];
-  String? userPicked;
 
-  // Map to store all controllers
+  String? userPicked;
   late Map<String, TextEditingController> _controllers;
 
   @override
@@ -40,7 +40,6 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
 
   void _initializeControllers() {
     _controllers = {};
-    // Get all unique fields from all countries
     final allFields = AppData.desireMethod.values
         .expand((fields) => fields)
         .toSet();
@@ -57,53 +56,13 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
     }
   }
 
-  void _savePaymentMethod() {
-    if (userPicked == null) {
-      showErrorNotification(
-        context: context,
-        message: "Please select a country",
-      );
-      return;
-    }
-
-    // Validate required fields for selected country
-    final requiredFields = AppData.desireMethod[userPicked]!;
-    for (var field in requiredFields) {
-      if (_controllers[field]!.text.trim().isEmpty) {
-        showErrorNotification(
-          context: context,
-          message: 'Please fill in $field',
-        );
-        return;
-      }
-    }
-
-    // Collect and save data
-    final paymentData = _collectPaymentData();
-    _saveToStorage(paymentData);
-
-    showSuccessNotification(
+  void _onSavePressed() {
+    final controller = ref.read(addUserPaymentControllerProvider);
+    controller.savePaymentMethod(
       context: context,
-      message: 'Payment method saved successfully',
+      selectedCountry: userPicked,
+      controllers: _controllers,
     );
-    context.pop();
-  }
-
-  Map<String, String> _collectPaymentData() {
-    final paymentData = <String, String>{'Method': userPicked!};
-    final requiredFields = AppData.desireMethod[userPicked]!;
-
-    for (var field in requiredFields) {
-      paymentData[field] = _controllers[field]!.text.trim();
-    }
-
-    return paymentData;
-  }
-
-  Future<void> _saveToStorage(Map<String, String> paymentData) async {
-    // Implement your storage logic here
-    print('Saving payment data: $paymentData');
-    // await SecureStorageHelper.savePaymentMethod(jsonEncode(paymentData));
   }
 
   List<String> get _currentFields {
@@ -112,7 +71,6 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
 
   @override
   void dispose() {
-    // Dispose all controllers
     for (var controller in _controllers.values) {
       controller.dispose();
     }
@@ -129,22 +87,22 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             20.ht,
-
-            // Instruction Text
-            primaryText(
-              text: "Please fill in the correct bank details",
-              color: Colors.red,
-              fontSize: 14.sp,
-            ),
+            _buildInstructionText(),
             20.ht,
-            // Country Selection
             _buildCountryDropdown(),
             30.ht,
-            // Dynamic Fields
             if (userPicked != null) _buildPaymentFields(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildInstructionText() {
+    return primaryText(
+      text: "Please fill in the correct bank details",
+      color: Colors.red,
+      fontSize: 14.sp,
     );
   }
 
@@ -176,7 +134,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
             hint: secondaryText(text: "Choose your method", fontSize: 16.sp),
             icon: Icon(Icons.arrow_drop_down, size: 24.sp),
             isExpanded: true,
-            underline: SizedBox(),
+            underline: const SizedBox(),
             onChanged: _onCountryChanged,
           ),
         ),
@@ -196,7 +154,6 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
             fontSize: 16.sp,
           ),
           15.ht,
-
           Expanded(
             child: ListView(
               children: [
@@ -209,8 +166,6 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
                     ),
                   ),
                 ),
-
-                // Save Button
                 SizedBox(height: 30.h),
                 _buildSaveButton(),
                 20.ht,
@@ -240,7 +195,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
           BoxShadow(
             color: AppColors.primaryColor.withValues(alpha: .3),
             blurRadius: 8,
-            offset: Offset(0, 4),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -248,7 +203,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
         text: "Save Payment Method",
         bckColor: AppColors.primaryColor,
         textColor: Colors.white,
-        function: _savePaymentMethod,
+        function: _onSavePressed,
         fontSize: 18.sp,
       ),
     );

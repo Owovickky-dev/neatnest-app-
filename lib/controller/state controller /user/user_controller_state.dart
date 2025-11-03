@@ -70,13 +70,9 @@ class UserControllerState extends _$UserControllerState {
 
           final user = UserModel.fromJson(responseData["data"]["loginUser"]);
           await SecureStorageHelper.saveUserData(user);
-          print("Data succesfully save to the secure folder helper");
 
           if (ref.mounted) {
             state = user;
-            print("🎯 STATE UPDATED SUCCESSFULLY - User: ${user.name}");
-          } else {
-            print("⚠️ Provider disposed,  for the normal state");
           }
 
           return;

@@ -13,7 +13,7 @@ part of 'user_data_update_state.dart';
 const userDataUpdateStateProvider = UserDataUpdateStateProvider._();
 
 final class UserDataUpdateStateProvider
-    extends $NotifierProvider<UserDataUpdateState, EditUserInfoModel?> {
+    extends $NotifierProvider<UserDataUpdateState, EditUserInfoModel> {
   const UserDataUpdateStateProvider._()
     : super(
         from: null,
@@ -33,29 +33,29 @@ final class UserDataUpdateStateProvider
   UserDataUpdateState create() => UserDataUpdateState();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(EditUserInfoModel? value) {
+  Override overrideWithValue(EditUserInfoModel value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<EditUserInfoModel?>(value),
+      providerOverride: $SyncValueProvider<EditUserInfoModel>(value),
     );
   }
 }
 
 String _$userDataUpdateStateHash() =>
-    r'4ca6c36e2427298c94274d05caab9b46368c5f47';
+    r'8f8211f497021a7c4bd5dfc7feeae1794f25bd35';
 
-abstract class _$UserDataUpdateState extends $Notifier<EditUserInfoModel?> {
-  EditUserInfoModel? build();
+abstract class _$UserDataUpdateState extends $Notifier<EditUserInfoModel> {
+  EditUserInfoModel build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<EditUserInfoModel?, EditUserInfoModel?>;
+    final ref = this.ref as $Ref<EditUserInfoModel, EditUserInfoModel>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<EditUserInfoModel?, EditUserInfoModel?>,
-              EditUserInfoModel?,
+              AnyNotifier<EditUserInfoModel, EditUserInfoModel>,
+              EditUserInfoModel,
               Object?,
               Object?
             >;

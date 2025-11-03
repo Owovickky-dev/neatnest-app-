@@ -11,7 +11,7 @@ class SecureStorageHelper {
   static const String _userDataKey = "user_data";
 
   static Future<void> saveToken(String token) async {
-    await _storage.write(key: 'access_token', value: token);
+    await _storage.write(key: accessToken, value: token);
   }
 
   static Future<String?> getToken() async {

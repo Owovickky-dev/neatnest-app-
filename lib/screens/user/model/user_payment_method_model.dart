@@ -21,17 +21,46 @@ class UserPaymentMethodModel {
     this.id,
   });
 
+  // Map<String, dynamic> toJson() {
+  //   return {
+  //     "paymentType": paymentType,
+  //     "accountNumber": accountNumber,
+  //     "bankAddress": bankAddress,
+  //     "iban": iban,
+  //     "payPalMail": payPalMail,
+  //     "routingNumber": routingNumber,
+  //     "sortCode": sortCode,
+  //     "swiftCode": swiftCode,
+  //     "methodId": id,
+  //   };
+  // }
+
   Map<String, dynamic> toJson() {
-    return {
-      "paymentType": paymentType,
-      "accountNumber": accountNumber,
-      "bankAddress": bankAddress,
-      "iban": iban,
-      "payPalMail": payPalMail,
-      "routingNumber": routingNumber,
-      "sortCode": sortCode,
-      "swiftCode": swiftCode,
-    };
+    final data = <String, dynamic>{'paymentType': paymentType};
+
+    if (accountNumber != null && accountNumber!.isNotEmpty) {
+      data['accountNumber'] = accountNumber;
+    }
+    if (swiftCode != null && swiftCode!.isNotEmpty) {
+      data['swiftCode'] = swiftCode;
+    }
+    if (iban != null && iban!.isNotEmpty) {
+      data['iban'] = iban;
+    }
+    if (routingNumber != null && routingNumber!.isNotEmpty) {
+      data['routingNumber'] = routingNumber;
+    }
+    if (sortCode != null && sortCode!.isNotEmpty) {
+      data['sortCode'] = sortCode;
+    }
+    if (bankAddress != null && bankAddress!.isNotEmpty) {
+      data['bankAddress'] = bankAddress;
+    }
+    if (payPalMail != null && payPalMail!.isNotEmpty) {
+      data['payPalMail'] = payPalMail;
+    }
+
+    return data;
   }
 
   factory UserPaymentMethodModel.fromJson(Map<String, dynamic> json) {

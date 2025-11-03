@@ -4,7 +4,7 @@ import 'package:neat_nest/models/user_model.dart';
 import 'package:neat_nest/utilities/constant/constant_data.dart';
 
 class AuthRepo {
-  final Dio _dio = dioClient.dio;
+  final Dio _dio = DioClient().createDio();
 
   Future<Response> signIn({
     required String email,

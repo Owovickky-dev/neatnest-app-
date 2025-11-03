@@ -135,7 +135,6 @@ class AppData {
       "Bank Address",
       "SWIFT or BIC Code",
       "Bank Name",
-      "Bank Address",
       "Country",
       "Currency",
     ],
