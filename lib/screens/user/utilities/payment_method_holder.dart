@@ -4,8 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:neat_nest/controller/add_user_payment_controller.dart';
+import 'package:neat_nest/screens/user/model/user_payment_method_model.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
+import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
+import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/app_text.dart';
 
 class PaymentMethodHolder extends ConsumerWidget {
@@ -21,6 +24,9 @@ class PaymentMethodHolder extends ConsumerWidget {
     this.payPalMail,
     required this.name,
     required this.id,
+    this.country,
+    this.bankName,
+    this.currency,
   });
 
   final String paymentType;
@@ -33,6 +39,9 @@ class PaymentMethodHolder extends ConsumerWidget {
   final String? bankAddress;
   final String? payPalMail;
   final String id;
+  final String? country;
+  final String? bankName;
+  final String? currency;
 
   void _showConfirmationDialog({
     required BuildContext context,
@@ -122,7 +131,7 @@ class PaymentMethodHolder extends ConsumerWidget {
               5.ht,
               Row(
                 children: [
-                  primaryText(text: "Email:  ", fontSize: 14.sp),
+                  primaryText(text: "Account Number:  ", fontSize: 14.sp),
                   5.wt,
                   secondaryText(text: accountNumber!),
                 ],
@@ -132,7 +141,7 @@ class PaymentMethodHolder extends ConsumerWidget {
               5.ht,
               Row(
                 children: [
-                  primaryText(text: "Email:  ", fontSize: 14.sp),
+                  primaryText(text: "Swift Code:  ", fontSize: 14.sp),
                   5.wt,
                   secondaryText(text: swiftCode!),
                 ],
@@ -142,7 +151,7 @@ class PaymentMethodHolder extends ConsumerWidget {
               5.ht,
               Row(
                 children: [
-                  primaryText(text: "Email:  ", fontSize: 14.sp),
+                  primaryText(text: "IBAN:  ", fontSize: 14.sp),
                   5.wt,
                   secondaryText(text: iban!),
                 ],
@@ -152,7 +161,7 @@ class PaymentMethodHolder extends ConsumerWidget {
               5.ht,
               Row(
                 children: [
-                  primaryText(text: "Email:  ", fontSize: 14.sp),
+                  primaryText(text: "Routing Number:  ", fontSize: 14.sp),
                   5.wt,
                   secondaryText(text: routingNumber!),
                 ],
@@ -162,7 +171,7 @@ class PaymentMethodHolder extends ConsumerWidget {
               5.ht,
               Row(
                 children: [
-                  primaryText(text: "Email:  ", fontSize: 14.sp),
+                  primaryText(text: "Bank Address:  ", fontSize: 14.sp),
                   5.wt,
                   secondaryText(text: bankAddress!),
                 ],
@@ -172,9 +181,39 @@ class PaymentMethodHolder extends ConsumerWidget {
               5.ht,
               Row(
                 children: [
-                  primaryText(text: "Email:  ", fontSize: 14.sp),
+                  primaryText(text: "Sort Code:  ", fontSize: 14.sp),
                   5.wt,
                   secondaryText(text: sortCode!),
+                ],
+              ),
+            ],
+            if (currency != null && currency!.isNotEmpty) ...[
+              5.ht,
+              Row(
+                children: [
+                  primaryText(text: "Currency:  ", fontSize: 14.sp),
+                  5.wt,
+                  secondaryText(text: currency!),
+                ],
+              ),
+            ],
+            if (country != null && country!.isNotEmpty) ...[
+              5.ht,
+              Row(
+                children: [
+                  primaryText(text: "Country:  ", fontSize: 14.sp),
+                  5.wt,
+                  secondaryText(text: country!),
+                ],
+              ),
+            ],
+            if (bankName != null && bankName!.isNotEmpty) ...[
+              5.ht,
+              Row(
+                children: [
+                  primaryText(text: "Bank Name:  ", fontSize: 14.sp),
+                  5.wt,
+                  secondaryText(text: bankName!),
                 ],
               ),
             ],
@@ -190,13 +229,30 @@ class PaymentMethodHolder extends ConsumerWidget {
                       onPressed: () {
                         _showConfirmationDialog(context: context, ref: ref);
                       },
-                      child: secondaryText(text: "Remove"),
+                      child: secondaryText(text: "Delete"),
                     ),
                     5.ht,
                     secondaryText(text: "|"),
                     5.ht,
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        final userExistingData = UserPaymentMethodModel(
+                          id: id,
+                          accountNumber: accountNumber,
+                          swiftCode: swiftCode,
+                          sortCode: sortCode,
+                          bankAddress: bankAddress,
+                          payPalMail: payPalMail,
+                          paymentType: paymentType,
+                          iban: iban,
+                          routingNumber: routingNumber,
+                        );
+                        AppNavigatorHelper.push(
+                          context,
+                          AppRoute.addPaymentMethod,
+                          extra: userExistingData,
+                        );
+                      },
                       child: secondaryText(text: "Edit"),
                     ),
                   ],

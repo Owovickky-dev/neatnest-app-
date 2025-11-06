@@ -17,30 +17,30 @@ class RowDataHolder extends StatelessWidget {
   final VoidCallback function;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 60.h,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.r),
-        color: AppColors.containerLightBackground,
-      ),
-      child: Row(
-        children: [
-          Container(
-            margin: EdgeInsets.only(left: 10.w),
-            height: 42,
-            width: 42,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(21.r),
-              color: AppColors.primaryColor.withValues(alpha: .2),
+    return GestureDetector(
+      onTap: function,
+      child: Container(
+        height: 60.h,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.r),
+          color: AppColors.containerLightBackground,
+        ),
+        child: Row(
+          children: [
+            Container(
+              margin: EdgeInsets.only(left: 10.w),
+              height: 42,
+              width: 42,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(21.r),
+                color: AppColors.primaryColor.withValues(alpha: .2),
+              ),
+              child: Center(
+                child: Icon(icons, color: AppColors.primaryColor, size: 20.r),
+              ),
             ),
-            child: Center(
-              child: Icon(icons, color: AppColors.primaryColor, size: 20.r),
-            ),
-          ),
-          10.wt,
-          Expanded(
-            child: GestureDetector(
-              onTap: function,
+            10.wt,
+            Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -52,8 +52,8 @@ class RowDataHolder extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

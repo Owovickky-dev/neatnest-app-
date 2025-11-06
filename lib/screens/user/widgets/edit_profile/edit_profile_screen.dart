@@ -145,7 +145,12 @@ class EditProfileScreen extends ConsumerWidget {
                     RowDataHolder(
                       text: 'Address Information',
                       icons: FontAwesomeIcons.locationDot,
-                      function: () {},
+                      function: () {
+                        AppNavigatorHelper.push(
+                          context,
+                          AppRoute.userAddresses,
+                        );
+                      },
                     ),
                     15.ht,
                     RowDataHolder(

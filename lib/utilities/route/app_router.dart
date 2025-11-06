@@ -12,6 +12,7 @@ import 'package:neat_nest/screens/user/user_profile_screen.dart';
 import 'package:neat_nest/screens/user/user_screen.dart';
 import 'package:neat_nest/screens/user/widgets/edit_profile/edit_profile_screen.dart';
 import 'package:neat_nest/screens/user/widgets/edit_profile/widget/personal_info_edit.dart';
+import 'package:neat_nest/screens/user/widgets/edit_profile/widget/user_address_screen.dart';
 import 'package:neat_nest/screens/user/widgets/in_reg_screen.dart';
 import 'package:neat_nest/screens/user/widgets/payment/user_payment_method.dart';
 import 'package:neat_nest/screens/user/widgets/payment/widgets/add_payment_method.dart';
@@ -21,6 +22,7 @@ import 'package:neat_nest/utilities/bottom_nav/bottom_navigation_screen.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
 
 import '../../screens/onboarding/widgets/splash_screen.dart';
+import '../../screens/user/model/user_payment_method_model.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -123,9 +125,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => UserPaymentMethod(),
       ),
       GoRoute(
+        path: AppRoute.userAddresses.path,
+        name: AppRoute.userAddresses.name,
+        builder: (context, state) => UserAddressScreen(),
+      ),
+      GoRoute(
         path: AppRoute.addPaymentMethod.path,
         name: AppRoute.addPaymentMethod.name,
-        builder: (context, state) => AddPaymentMethod(),
+        builder: (context, state) {
+          final paymentMethod = state.extra as UserPaymentMethodModel?;
+          return AddPaymentMethod(userExistingData: paymentMethod);
+        },
       ),
     ],
   );

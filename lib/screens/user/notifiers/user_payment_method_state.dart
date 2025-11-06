@@ -65,4 +65,38 @@ class UserPaymentMethodState extends _$UserPaymentMethodState {
       rethrow;
     }
   }
+
+  Future<void> updatePaymentMethod(
+    UserPaymentMethodModel updatePaymentMethod,
+  ) async {
+    try {
+      final response = await _userDataRepo.updatePaymentMethod(
+        updatePaymentMethod,
+      );
+
+      if (response.statusCode == 201) {
+        final responseData = response.data["data"]["updatedData"];
+        final updatedMethod = UserPaymentMethodModel.fromJson(responseData);
+
+        // find the index of the item to update
+        final index = state.indexWhere((item) => item.id == updatedMethod.id);
+
+        if (index != -1) {
+          // create a new list and replace the old item
+          final updatedList = [...state];
+          updatedList[index] = updatedMethod;
+
+          // update state with the new list
+          state = updatedList;
+        }
+      } else {
+        final errorMessage =
+            response.data['message'] ?? 'Failed to update payment method';
+        print("❌ Backend error: $errorMessage");
+        throw Exception(errorMessage);
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

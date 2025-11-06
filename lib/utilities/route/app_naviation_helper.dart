@@ -8,7 +8,7 @@ class AppNavigatorHelper {
     BuildContext context,
     AppRoute appRoute, {
     Map<String, String>? pathParameters,
-    Map<String, dynamic>? extra,
+    Object? extra,
     Map<String, String>? queryParameters,
   }) {
     context.goNamed(
@@ -24,7 +24,7 @@ class AppNavigatorHelper {
     BuildContext context,
     AppRoute appRoute, {
     Map<String, String>? pathParameters,
-    Map<String, dynamic>? extra,
+    Object? extra,
     Map<String, String>? queryParameters,
   }) {
     context.pushNamed(
@@ -35,12 +35,12 @@ class AppNavigatorHelper {
     );
   }
 
-  // ✅ Replace (replace current screen)
+  // ✅ Replace
   static void replace(
     BuildContext context,
     AppRoute appRoute, {
     Map<String, String>? pathParameters,
-    Map<String, dynamic>? extra,
+    Object? extra,
     Map<String, String>? queryParameters,
   }) {
     context.replaceNamed(
@@ -51,12 +51,12 @@ class AppNavigatorHelper {
     );
   }
 
-  // ✅ Push Replacement (replace current screen with new one)
+  // ✅ Push Replacement
   static void pushReplacement(
     BuildContext context,
     AppRoute appRoute, {
     Map<String, String>? pathParameters,
-    Map<String, dynamic>? extra,
+    Object? extra,
     Map<String, String>? queryParameters,
   }) {
     context.pushReplacementNamed(

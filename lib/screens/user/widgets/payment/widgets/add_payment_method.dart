@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/controller/add_user_payment_controller.dart';
+import 'package:neat_nest/screens/user/model/user_payment_method_model.dart';
 import 'package:neat_nest/screens/user/widgets/payment/widgets/payment_method_fields.dart';
 import 'package:neat_nest/utilities/app_button.dart';
 import 'package:neat_nest/utilities/app_data.dart';
@@ -12,7 +13,9 @@ import 'package:neat_nest/widget/app_text.dart';
 import '../../../../../utilities/constant/colors.dart';
 
 class AddPaymentMethod extends ConsumerStatefulWidget {
-  const AddPaymentMethod({super.key});
+  const AddPaymentMethod({super.key, this.userExistingData});
+
+  final UserPaymentMethodModel? userExistingData;
 
   @override
   ConsumerState<AddPaymentMethod> createState() => _AddPaymentMethodState();
@@ -30,11 +33,45 @@ class _AddPaymentMethodState extends ConsumerState<AddPaymentMethod> {
 
   String? userPicked;
   late Map<String, TextEditingController> _controllers;
+  bool get _isEditMode => widget.userExistingData != null;
 
   @override
   void initState() {
     super.initState();
     _initializeControllers();
+    _existData();
+  }
+
+  void _existData() {
+    if (_isEditMode) {
+      final method = widget.userExistingData!;
+
+      setState(() {
+        userPicked = method.paymentType;
+      });
+
+      if (method.accountNumber != null) {
+        _controllers["Account Number"]?.text = method.accountNumber!;
+      }
+      if (method.sortCode != null) {
+        _controllers["Sort Code"]?.text = method.sortCode!;
+      }
+      if (method.iban != null) {
+        _controllers["IBAN"]?.text = method.iban!;
+      }
+      if (method.bankAddress != null) {
+        _controllers["Bank Address"]?.text = method.bankAddress!;
+      }
+      if (method.routingNumber != null) {
+        _controllers["Routing Number"]?.text = method.routingNumber!;
+      }
+      if (method.payPalMail != null) {
+        _controllers["Email"]?.text = method.payPalMail!;
+      }
+      if (method.swiftCode != null) {
+        _controllers["Swift Code"]?.text = method.swiftCode!;
+      }
+    }
   }
 
   void _initializeControllers() {
@@ -48,7 +85,7 @@ class _AddPaymentMethodState extends ConsumerState<AddPaymentMethod> {
   }
 
   void _onCountryChanged(String? country) {
-    if (country != null) {
+    if (country != null && !_isEditMode) {
       setState(() {
         userPicked = country;
       });
@@ -57,11 +94,21 @@ class _AddPaymentMethodState extends ConsumerState<AddPaymentMethod> {
 
   void _onSavePressed() {
     final controller = ref.read(addUserPaymentControllerProvider);
-    controller.savePaymentMethod(
-      context: context,
-      selectedCountry: userPicked,
-      controllers: _controllers,
-    );
+
+    if (_isEditMode) {
+      controller.updatePaymentMethod(
+        context: context,
+        selectedCountry: userPicked,
+        controllers: _controllers,
+        methodId: widget.userExistingData!.id!,
+      );
+    } else {
+      controller.savePaymentMethod(
+        context: context,
+        selectedCountry: userPicked,
+        controllers: _controllers,
+      );
+    }
   }
 
   List<String> get _currentFields {
@@ -99,7 +146,7 @@ class _AddPaymentMethodState extends ConsumerState<AddPaymentMethod> {
 
   Widget _buildInstructionText() {
     return primaryText(
-      text: "Please fill in the correct bank details",
+      text: "Please fill in the correct  details",
       color: Colors.red,
       fontSize: 14.sp,
     );
@@ -110,7 +157,9 @@ class _AddPaymentMethodState extends ConsumerState<AddPaymentMethod> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         secondaryText(
-          text: "Kindly Select Your choice ",
+          text: widget.userExistingData != null
+              ? "You cant update payment method"
+              : "Kindly Select Your choice once pick cant be change",
           color: Colors.black,
           fontSize: 16.sp,
         ),
@@ -134,7 +183,7 @@ class _AddPaymentMethodState extends ConsumerState<AddPaymentMethod> {
             icon: Icon(Icons.arrow_drop_down, size: 24.sp),
             isExpanded: true,
             underline: const SizedBox(),
-            onChanged: _onCountryChanged,
+            onChanged: _isEditMode ? null : _onCountryChanged,
           ),
         ),
       ],
@@ -199,7 +248,9 @@ class _AddPaymentMethodState extends ConsumerState<AddPaymentMethod> {
         ],
       ),
       child: AppButton(
-        text: "Save Payment Method",
+        text: widget.userExistingData == null
+            ? "Save Payment Method"
+            : "Update Payment Method",
         bckColor: AppColors.primaryColor,
         textColor: Colors.white,
         function: _onSavePressed,

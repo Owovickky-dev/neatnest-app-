@@ -20,6 +20,7 @@ class QueryDataController extends _$QueryDataController {
     if (!ref.mounted) return;
 
     try {
+      if (!ref.mounted) return;
       state = const AsyncValue.loading();
       await Future.delayed(Duration(milliseconds: 1500));
       Response response = await _queryDataRepo.getAllAds();
