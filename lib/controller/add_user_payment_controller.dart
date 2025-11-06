@@ -81,7 +81,28 @@ class AddUserPaymentController {
     }
   }
 
-  Future<void> getUserPaymentMethod() async {}
+  Future<void> deleteUserPaymentMethod({
+    required BuildContext context,
+    required String methodId,
+  }) async {
+    try {
+      final deleteMethod = UserPaymentMethodModel(id: methodId);
+      await ref
+          .read(userPaymentMethodStateProvider.notifier)
+          .deleteUserPayment(deleteMethod);
+
+      if (!context.mounted) return;
+      showSuccessNotification(
+        context: context,
+        message: 'Payment method removed successfully',
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+      context.pop();
+      final errorMessage = e.toString().replaceFirst('Exception: ', '');
+      showErrorNotification(context: context, message: errorMessage);
+    }
+  }
 
   // field collectors ...
   String? _getFieldValue(

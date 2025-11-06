@@ -24,31 +24,33 @@ class RowDataHolder extends StatelessWidget {
         color: AppColors.containerLightBackground,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              Container(
-                margin: EdgeInsets.only(left: 10.w),
-                height: 42,
-                width: 42,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(21.r),
-                  color: AppColors.primaryColor.withOpacity(0.2),
-                ),
-                child: Center(
-                  child: Icon(icons, color: AppColors.primaryColor, size: 20.r),
-                ),
-              ),
-              10.wt,
-              secondaryText(text: text, fontSize: 15.sp),
-            ],
+          Container(
+            margin: EdgeInsets.only(left: 10.w),
+            height: 42,
+            width: 42,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(21.r),
+              color: AppColors.primaryColor.withValues(alpha: .2),
+            ),
+            child: Center(
+              child: Icon(icons, color: AppColors.primaryColor, size: 20.r),
+            ),
           ),
-          GestureDetector(
-            onTap: function,
-            child: Icon(
-              Icons.arrow_forward_ios,
-              color: AppColors.secondaryTextColor,
+          10.wt,
+          Expanded(
+            child: GestureDetector(
+              onTap: function,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  secondaryText(text: text, fontSize: 15.sp),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppColors.secondaryTextColor,
+                  ),
+                ],
+              ),
             ),
           ),
         ],

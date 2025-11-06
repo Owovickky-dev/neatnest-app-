@@ -68,6 +68,7 @@ class _WorkerPaymentMethodState extends ConsumerState<WorkerPaymentMethod> {
                         bankAddress: user.bankAddress,
                         swiftCode: user.swiftCode,
                         routingNumber: user.routingNumber,
+                        id: user.id!,
                       );
                     },
                   ),

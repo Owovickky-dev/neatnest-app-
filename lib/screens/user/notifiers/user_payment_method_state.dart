@@ -42,8 +42,24 @@ class UserPaymentMethodState extends _$UserPaymentMethodState {
         final List<UserPaymentMethodModel> dataGet = responseData
             .map((el) => UserPaymentMethodModel.fromJson(el))
             .toList();
-        print(dataGet.length);
         state = dataGet;
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> deleteUserPayment(UserPaymentMethodModel userMethod) async {
+    try {
+      final response = await _userDataRepo.deleteUserPaymentMethod(userMethod);
+
+      if (response.statusCode == 200) {
+        getUserPayment();
+      } else {
+        final errorMessage =
+            response.data['message'] ?? 'Failed to delete payment method';
+        print("❌ Backend error: $errorMessage");
+        throw Exception(errorMessage);
       }
     } catch (e) {
       rethrow;

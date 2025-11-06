@@ -1,4 +1,3 @@
-// screens/user/add_payment_method.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -111,7 +110,7 @@ class _AddPaymentMethodState extends ConsumerState<AddPaymentMethod> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         secondaryText(
-          text: "Select Country",
+          text: "Kindly Select Your choice ",
           color: Colors.black,
           fontSize: 16.sp,
         ),

@@ -1,11 +1,14 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:neat_nest/controller/add_user_payment_controller.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/widget/app_text.dart';
 
-class PaymentMethodHolder extends StatelessWidget {
+class PaymentMethodHolder extends ConsumerWidget {
   const PaymentMethodHolder({
     super.key,
     required this.paymentType,
@@ -17,6 +20,7 @@ class PaymentMethodHolder extends StatelessWidget {
     this.bankAddress,
     this.payPalMail,
     required this.name,
+    required this.id,
   });
 
   final String paymentType;
@@ -28,9 +32,54 @@ class PaymentMethodHolder extends StatelessWidget {
   final String? sortCode;
   final String? bankAddress;
   final String? payPalMail;
+  final String id;
+
+  void _showConfirmationDialog({
+    required BuildContext context,
+    required WidgetRef ref,
+  }) {
+    final parentContext = context;
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: primaryText(text: "Delete Payment Method"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              secondaryText(
+                text: "Are you sure you want to delete this method?",
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                dialogContext.pop();
+              },
+              child: secondaryText(text: "Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                dialogContext.pop();
+                await ref
+                    .read(addUserPaymentControllerProvider)
+                    .deleteUserPaymentMethod(
+                      context: parentContext,
+                      methodId: id,
+                    );
+              },
+              child: secondaryText(text: "Yes Delete"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       height: 200.h,
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
@@ -138,7 +187,9 @@ class PaymentMethodHolder extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _showConfirmationDialog(context: context, ref: ref);
+                      },
                       child: secondaryText(text: "Remove"),
                     ),
                     5.ht,

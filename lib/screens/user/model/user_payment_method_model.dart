@@ -21,20 +21,6 @@ class UserPaymentMethodModel {
     this.id,
   });
 
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     "paymentType": paymentType,
-  //     "accountNumber": accountNumber,
-  //     "bankAddress": bankAddress,
-  //     "iban": iban,
-  //     "payPalMail": payPalMail,
-  //     "routingNumber": routingNumber,
-  //     "sortCode": sortCode,
-  //     "swiftCode": swiftCode,
-  //     "methodId": id,
-  //   };
-  // }
-
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{'paymentType': paymentType};
 
@@ -58,6 +44,9 @@ class UserPaymentMethodModel {
     }
     if (payPalMail != null && payPalMail!.isNotEmpty) {
       data['payPalMail'] = payPalMail;
+    }
+    if (id != null && id!.isNotEmpty) {
+      data['id'] = id;
     }
 
     return data;

@@ -22,4 +22,25 @@ class UserDataRepo {
     final response = await _dio.get(ConstantData.PAYMENTMETHOd);
     return response;
   }
+
+  Future<Response> deleteUserPaymentMethod(
+    UserPaymentMethodModel userPaymentModel,
+  ) async {
+    final response = await _dio.delete(
+      ConstantData.PAYMENTMETHOd,
+      data: userPaymentModel.toJson(),
+    );
+    return response;
+  }
+
+  Future<Response> updatePaymentMethod(
+    UserPaymentMethodModel updatePayment,
+  ) async {
+    final response = await _dio.patch(
+      ConstantData.PAYMENTMETHOd,
+      data: updatePayment.toJson(),
+    );
+
+    return response;
+  }
 }
