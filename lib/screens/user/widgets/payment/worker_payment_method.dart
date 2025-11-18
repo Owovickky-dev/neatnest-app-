@@ -54,27 +54,29 @@ class _WorkerPaymentMethodState extends ConsumerState<WorkerPaymentMethod> {
             Expanded(
               child: Stack(
                 children: [
-                  ListView.builder(
-                    itemCount: methods.length,
-                    itemBuilder: (context, index) {
-                      final user = methods[index];
-                      return PaymentMethodHolder(
-                        paymentType: user.paymentType!,
-                        name: loggedUser!.name,
-                        accountNumber: user.accountNumber,
-                        sortCode: user.sortCode,
-                        iban: user.iban,
-                        payPalMail: user.payPalMail,
-                        bankAddress: user.bankAddress,
-                        swiftCode: user.swiftCode,
-                        routingNumber: user.routingNumber,
-                        id: user.id!,
-                        currency: user.currency,
-                        country: user.country,
-                        bankName: user.bankName,
-                      );
-                    },
-                  ),
+                  methods.isNotEmpty
+                      ? ListView.builder(
+                          itemCount: methods.length,
+                          itemBuilder: (context, index) {
+                            final user = methods[index];
+                            return PaymentMethodHolder(
+                              paymentType: user.paymentType!,
+                              name: loggedUser!.name,
+                              accountNumber: user.accountNumber,
+                              sortCode: user.sortCode,
+                              iban: user.iban,
+                              payPalMail: user.payPalMail,
+                              bankAddress: user.bankAddress,
+                              swiftCode: user.swiftCode,
+                              routingNumber: user.routingNumber,
+                              id: user.id!,
+                              currency: user.currency,
+                              country: user.country,
+                              bankName: user.bankName,
+                            );
+                          },
+                        )
+                      : primaryText(text: "You yet to add a payment method"),
                   Positioned(
                     bottom: 40.h,
                     left: 0,

@@ -19,6 +19,7 @@ enum AppRoute {
   userPaymentMethod,
   addPaymentMethod,
   userAddresses,
+  addressHolder,
 }
 
 extension AppRouteNamesExtension on AppRoute {
@@ -64,6 +65,8 @@ extension AppRouteNamesExtension on AppRoute {
         return "/addPaymentMethod";
       case AppRoute.userAddresses:
         return "/userAddresses";
+      case AppRoute.addressHolder:
+        return "/addressHolder";
     }
   }
 }

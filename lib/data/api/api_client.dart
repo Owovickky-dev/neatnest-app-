@@ -59,8 +59,8 @@ class DioClient {
     final dio = Dio(
       BaseOptions(
         baseUrl: ConstantData.BASE_URL,
-        connectTimeout: const Duration(seconds: 15),
-        receiveTimeout: const Duration(seconds: 15),
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
         headers: {"Content-Type": "application/json"},
         validateStatus: (status) {
           return status! < 500;

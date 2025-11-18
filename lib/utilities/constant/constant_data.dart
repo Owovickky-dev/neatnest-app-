@@ -10,4 +10,7 @@ class ConstantData {
   static const REGISTER = "/auth/register";
   static const QUERY = "/ads";
   static const PAYMENTMETHOd = "/payment-method";
+  static const ADDRESS = "/users/addresses";
+  static const GETCOUNTRIES = "/address/countries";
+  static const GETSTATE = "/address/states";
 }

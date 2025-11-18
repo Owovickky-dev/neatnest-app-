@@ -10,6 +10,7 @@ import 'package:neat_nest/screens/user/auth/signin/utilities/forget_password_scr
 import 'package:neat_nest/screens/user/auth/signup/sign_up_screen.dart';
 import 'package:neat_nest/screens/user/user_profile_screen.dart';
 import 'package:neat_nest/screens/user/user_screen.dart';
+import 'package:neat_nest/screens/user/utilities/add_address_holder.dart';
 import 'package:neat_nest/screens/user/widgets/edit_profile/edit_profile_screen.dart';
 import 'package:neat_nest/screens/user/widgets/edit_profile/widget/personal_info_edit.dart';
 import 'package:neat_nest/screens/user/widgets/edit_profile/widget/user_address_screen.dart';
@@ -128,6 +129,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoute.userAddresses.path,
         name: AppRoute.userAddresses.name,
         builder: (context, state) => UserAddressScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.addressHolder.path,
+        name: AppRoute.addressHolder.name,
+        builder: (context, state) => AddAddressHolder(),
       ),
       GoRoute(
         path: AppRoute.addPaymentMethod.path,

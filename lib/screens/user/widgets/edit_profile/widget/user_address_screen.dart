@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
+import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
+import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/app_text.dart';
 
 import '../../../../../utilities/app_button.dart';
@@ -33,7 +35,7 @@ class UserAddressScreen extends StatelessWidget {
                     ListView.builder(
                       itemCount: 5,
                       itemBuilder: (context, index) {
-                        return Container(
+                        return SizedBox(
                           height: 100.h,
                           child: Text("My address"),
                         );
@@ -49,7 +51,12 @@ class UserAddressScreen extends StatelessWidget {
                         bckColor: AppColors.primaryColor,
                         textColor: Colors.white,
                         width: double.infinity,
-                        function: () {},
+                        function: () {
+                          AppNavigatorHelper.push(
+                            context,
+                            AppRoute.addressHolder,
+                          );
+                        },
                       ),
                     ),
                   ],
