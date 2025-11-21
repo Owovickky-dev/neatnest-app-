@@ -46,7 +46,7 @@ final class UserPaymentMethodStateProvider
 }
 
 String _$userPaymentMethodStateHash() =>
-    r'efbf3d11c5ff3ccff4f547b05d16336490ed0f03';
+    r'48fbf26f7534cbd445b9862c085f13f52fa67dab';
 
 abstract class _$UserPaymentMethodState
     extends $Notifier<List<UserPaymentMethodModel>> {

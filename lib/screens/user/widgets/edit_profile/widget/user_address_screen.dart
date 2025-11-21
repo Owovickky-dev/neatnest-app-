@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:neat_nest/controller/state%20controller%20/address/address_state_controller.dart';
+import 'package:neat_nest/screens/user/utilities/address_holder_template.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
@@ -9,11 +12,27 @@ import '../../../../../utilities/app_button.dart';
 import '../../../../../utilities/constant/colors.dart';
 import '../../../../../widget/app_bar_holder.dart';
 
-class UserAddressScreen extends StatelessWidget {
+class UserAddressScreen extends ConsumerStatefulWidget {
   const UserAddressScreen({super.key});
 
   @override
+  ConsumerState<UserAddressScreen> createState() => _UserAddressScreenState();
+}
+
+class _UserAddressScreenState extends ConsumerState<UserAddressScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _loadUserAddress();
+  }
+
+  void _loadUserAddress() async {
+    await ref.read(addressStateControllerProvider.notifier).getUserAddress();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final addresses = ref.watch(addressStateControllerProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBarHolder(title: 'Addresses'),
@@ -32,15 +51,28 @@ class UserAddressScreen extends StatelessWidget {
               Expanded(
                 child: Stack(
                   children: [
-                    ListView.builder(
-                      itemCount: 5,
-                      itemBuilder: (context, index) {
-                        return SizedBox(
-                          height: 100.h,
-                          child: Text("My address"),
-                        );
-                      },
-                    ),
+                    addresses.isNotEmpty
+                        ? ListView.builder(
+                            itemCount: addresses.length,
+                            itemBuilder: (context, index) {
+                              final myAddresses = addresses[index];
+                              return AddressHolderTemplate(
+                                address: myAddresses.address!,
+                                city: myAddresses.city!,
+                                state: myAddresses.state!,
+                                country: myAddresses.country!,
+                                postalCode: myAddresses.postalCode,
+                                isDefault: myAddresses.isPrimary!,
+                              );
+                            },
+                          )
+                        : Center(
+                            child: secondaryText(
+                              text:
+                                  "No Address added yet, please add an address",
+                              color: Colors.red,
+                            ),
+                          ),
                     Positioned(
                       bottom: 40.h,
                       left: 0,

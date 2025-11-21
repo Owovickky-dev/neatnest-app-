@@ -26,7 +26,7 @@ class UserPaymentMethodState extends _$UserPaymentMethodState {
         final errorMessage =
             response.data['message'] ?? 'Failed to save payment method';
         print("❌ Backend error: $errorMessage");
-        throw Exception(errorMessage); // ✅ Throw with actual message
+        throw Exception(errorMessage);
       }
     } catch (e) {
       rethrow;

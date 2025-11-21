@@ -34,7 +34,7 @@ final class QueryDataControllerProvider
 }
 
 String _$queryDataControllerHash() =>
-    r'52b55e1dffd34b48401bbd62415d19371d70ef10';
+    r'367931b495431b239d6e354e2832226e7e966115';
 
 abstract class _$QueryDataController extends $AsyncNotifier<List<AdsModel>> {
   FutureOr<List<AdsModel>> build();

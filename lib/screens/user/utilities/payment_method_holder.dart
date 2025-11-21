@@ -90,7 +90,6 @@ class PaymentMethodHolder extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      height: 200.h,
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       margin: EdgeInsets.only(bottom: 20.h),
       width: double.infinity,
@@ -98,169 +97,167 @@ class PaymentMethodHolder extends ConsumerWidget {
         borderRadius: BorderRadius.circular(15.r),
         color: AppColors.primaryColor.withValues(alpha: 0.1),
       ),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              primaryText(text: "Method:  ", fontSize: 16.sp),
+              5.wt,
+              primaryText(text: paymentType, fontSize: 18.sp),
+            ],
+          ),
+          10.ht,
+          Row(
+            children: [
+              primaryText(text: "Name:  ", fontSize: 14.sp),
+              5.wt,
+              secondaryText(text: name),
+            ],
+          ),
+          if (payPalMail != null && payPalMail!.isNotEmpty) ...[
+            5.ht,
             Row(
               children: [
-                primaryText(text: "Method:  ", fontSize: 16.sp),
+                primaryText(text: "Email:  ", fontSize: 14.sp),
                 5.wt,
-                primaryText(text: paymentType, fontSize: 18.sp),
-              ],
-            ),
-            10.ht,
-            Row(
-              children: [
-                primaryText(text: "Name:  ", fontSize: 14.sp),
-                5.wt,
-                secondaryText(text: name),
-              ],
-            ),
-            if (payPalMail != null && payPalMail!.isNotEmpty) ...[
-              5.ht,
-              Row(
-                children: [
-                  primaryText(text: "Email:  ", fontSize: 14.sp),
-                  5.wt,
-                  secondaryText(text: payPalMail!),
-                ],
-              ),
-            ],
-            if (accountNumber != null && accountNumber!.isNotEmpty) ...[
-              5.ht,
-              Row(
-                children: [
-                  primaryText(text: "Account Number:  ", fontSize: 14.sp),
-                  5.wt,
-                  secondaryText(text: accountNumber!),
-                ],
-              ),
-            ],
-            if (swiftCode != null && swiftCode!.isNotEmpty) ...[
-              5.ht,
-              Row(
-                children: [
-                  primaryText(text: "Swift Code:  ", fontSize: 14.sp),
-                  5.wt,
-                  secondaryText(text: swiftCode!),
-                ],
-              ),
-            ],
-            if (iban != null && iban!.isNotEmpty) ...[
-              5.ht,
-              Row(
-                children: [
-                  primaryText(text: "IBAN:  ", fontSize: 14.sp),
-                  5.wt,
-                  secondaryText(text: iban!),
-                ],
-              ),
-            ],
-            if (routingNumber != null && routingNumber!.isNotEmpty) ...[
-              5.ht,
-              Row(
-                children: [
-                  primaryText(text: "Routing Number:  ", fontSize: 14.sp),
-                  5.wt,
-                  secondaryText(text: routingNumber!),
-                ],
-              ),
-            ],
-            if (bankAddress != null && bankAddress!.isNotEmpty) ...[
-              5.ht,
-              Row(
-                children: [
-                  primaryText(text: "Bank Address:  ", fontSize: 14.sp),
-                  5.wt,
-                  secondaryText(text: bankAddress!),
-                ],
-              ),
-            ],
-            if (sortCode != null && sortCode!.isNotEmpty) ...[
-              5.ht,
-              Row(
-                children: [
-                  primaryText(text: "Sort Code:  ", fontSize: 14.sp),
-                  5.wt,
-                  secondaryText(text: sortCode!),
-                ],
-              ),
-            ],
-            if (currency != null && currency!.isNotEmpty) ...[
-              5.ht,
-              Row(
-                children: [
-                  primaryText(text: "Currency:  ", fontSize: 14.sp),
-                  5.wt,
-                  secondaryText(text: currency!),
-                ],
-              ),
-            ],
-            if (country != null && country!.isNotEmpty) ...[
-              5.ht,
-              Row(
-                children: [
-                  primaryText(text: "Country:  ", fontSize: 14.sp),
-                  5.wt,
-                  secondaryText(text: country!),
-                ],
-              ),
-            ],
-            if (bankName != null && bankName!.isNotEmpty) ...[
-              5.ht,
-              Row(
-                children: [
-                  primaryText(text: "Bank Name:  ", fontSize: 14.sp),
-                  5.wt,
-                  secondaryText(text: bankName!),
-                ],
-              ),
-            ],
-            20.ht,
-            Column(
-              children: [
-                DottedLine(dashColor: AppColors.secondaryTextColor),
-                5.ht,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        _showConfirmationDialog(context: context, ref: ref);
-                      },
-                      child: secondaryText(text: "Delete"),
-                    ),
-                    5.ht,
-                    secondaryText(text: "|"),
-                    5.ht,
-                    TextButton(
-                      onPressed: () {
-                        final userExistingData = UserPaymentMethodModel(
-                          id: id,
-                          accountNumber: accountNumber,
-                          swiftCode: swiftCode,
-                          sortCode: sortCode,
-                          bankAddress: bankAddress,
-                          payPalMail: payPalMail,
-                          paymentType: paymentType,
-                          iban: iban,
-                          routingNumber: routingNumber,
-                        );
-                        AppNavigatorHelper.push(
-                          context,
-                          AppRoute.addPaymentMethod,
-                          extra: userExistingData,
-                        );
-                      },
-                      child: secondaryText(text: "Edit"),
-                    ),
-                  ],
-                ),
+                secondaryText(text: payPalMail!),
               ],
             ),
           ],
-        ),
+          if (accountNumber != null && accountNumber!.isNotEmpty) ...[
+            5.ht,
+            Row(
+              children: [
+                primaryText(text: "Account Number:  ", fontSize: 14.sp),
+                5.wt,
+                secondaryText(text: accountNumber!),
+              ],
+            ),
+          ],
+          if (swiftCode != null && swiftCode!.isNotEmpty) ...[
+            5.ht,
+            Row(
+              children: [
+                primaryText(text: "Swift Code:  ", fontSize: 14.sp),
+                5.wt,
+                secondaryText(text: swiftCode!),
+              ],
+            ),
+          ],
+          if (iban != null && iban!.isNotEmpty) ...[
+            5.ht,
+            Row(
+              children: [
+                primaryText(text: "IBAN:  ", fontSize: 14.sp),
+                5.wt,
+                secondaryText(text: iban!),
+              ],
+            ),
+          ],
+          if (routingNumber != null && routingNumber!.isNotEmpty) ...[
+            5.ht,
+            Row(
+              children: [
+                primaryText(text: "Routing Number:  ", fontSize: 14.sp),
+                5.wt,
+                secondaryText(text: routingNumber!),
+              ],
+            ),
+          ],
+          if (bankAddress != null && bankAddress!.isNotEmpty) ...[
+            5.ht,
+            Row(
+              children: [
+                primaryText(text: "Bank Address:  ", fontSize: 14.sp),
+                5.wt,
+                secondaryText(text: bankAddress!),
+              ],
+            ),
+          ],
+          if (sortCode != null && sortCode!.isNotEmpty) ...[
+            5.ht,
+            Row(
+              children: [
+                primaryText(text: "Sort Code:  ", fontSize: 14.sp),
+                5.wt,
+                secondaryText(text: sortCode!),
+              ],
+            ),
+          ],
+          if (currency != null && currency!.isNotEmpty) ...[
+            5.ht,
+            Row(
+              children: [
+                primaryText(text: "Currency:  ", fontSize: 14.sp),
+                5.wt,
+                secondaryText(text: currency!),
+              ],
+            ),
+          ],
+          if (country != null && country!.isNotEmpty) ...[
+            5.ht,
+            Row(
+              children: [
+                primaryText(text: "Country:  ", fontSize: 14.sp),
+                5.wt,
+                secondaryText(text: country!),
+              ],
+            ),
+          ],
+          if (bankName != null && bankName!.isNotEmpty) ...[
+            5.ht,
+            Row(
+              children: [
+                primaryText(text: "Bank Name:  ", fontSize: 14.sp),
+                5.wt,
+                secondaryText(text: bankName!),
+              ],
+            ),
+          ],
+          20.ht,
+          Column(
+            children: [
+              DottedLine(dashColor: AppColors.secondaryTextColor),
+              5.ht,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      _showConfirmationDialog(context: context, ref: ref);
+                    },
+                    child: secondaryText(text: "Delete"),
+                  ),
+                  5.ht,
+                  secondaryText(text: "|"),
+                  5.ht,
+                  TextButton(
+                    onPressed: () {
+                      final userExistingData = UserPaymentMethodModel(
+                        id: id,
+                        accountNumber: accountNumber,
+                        swiftCode: swiftCode,
+                        sortCode: sortCode,
+                        bankAddress: bankAddress,
+                        payPalMail: payPalMail,
+                        paymentType: paymentType,
+                        iban: iban,
+                        routingNumber: routingNumber,
+                      );
+                      AppNavigatorHelper.push(
+                        context,
+                        AppRoute.addPaymentMethod,
+                        extra: userExistingData,
+                      );
+                    },
+                    child: secondaryText(text: "Edit"),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -61,9 +61,12 @@ class DioClient {
         baseUrl: ConstantData.BASE_URL,
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
         validateStatus: (status) {
-          return status! < 500;
+          return status! < 500; // Consider status codes < 500 as valid
         },
       ),
     );
@@ -72,20 +75,27 @@ class DioClient {
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           final token = await SecureStorageHelper.getToken();
-          if (token != null) {
+          if (token != null && token.isNotEmpty) {
             options.headers["Authorization"] = "Bearer $token";
+          } else {
+            print("ℹ️ No token found");
           }
+
           return handler.next(options);
         },
         onResponse: (response, handler) {
-          print("✅ RESPONSE: ${response.statusCode}");
-          if (response.statusCode! >= 400) {
-            print("⚠️ Backend error response: ${response.data}");
-          }
           return handler.next(response);
         },
         onError: (DioException e, handler) {
-          print("❌ NETWORK/DIO ERROR: ${e.type}");
+          print("❌ DIO ERROR TYPE: ${e.type}");
+          print("❌ DIO ERROR MESSAGE: ${e.message}");
+          print("❌ RESPONSE STATUS: ${e.response?.statusCode}");
+          print("❌ RESPONSE DATA: ${e.response?.data}");
+          print("❌ REQUEST URL: ${e.requestOptions.path}");
+          print(
+            "❌ FULL URL: ${e.requestOptions.baseUrl}${e.requestOptions.path}",
+          );
+
           return handler.next(e);
         },
       ),
