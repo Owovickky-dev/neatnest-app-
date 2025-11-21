@@ -18,6 +18,12 @@ class AddAddressHolderController {
   String? countryPicked;
   bool? isPrimary;
 
+  void preLoadData(UserLocationModel model) {
+    addressController.text = model.address ?? "no data";
+    cityController.text = model.city ?? "no data";
+    postalController.text = model.postalCode ?? "no data";
+  }
+
   Future<List<String>> getCountriesOnline() async {
     final response = await _addressDataRepo.getCountries();
     if (response.statusCode == 200) {
@@ -90,17 +96,93 @@ class AddAddressHolderController {
         isPrimary: isPrimary,
       );
 
+      try {
+        await ref
+            .read(addressStateControllerProvider.notifier)
+            .addNewAddress(userAddress);
+        if (!context.mounted) return;
+        showSuccessNotification(
+          context: context,
+          message: "Address Added successfully",
+        );
+
+        if (!context.mounted) return;
+        context.pop();
+      } catch (e) {
+        if (!context.mounted) return;
+        final errorMessage = e.toString().replaceFirst('Exception: ', '');
+        showErrorNotification(context: context, message: errorMessage);
+      }
+    }
+  }
+
+  void deleteAddress(BuildContext context, WidgetRef ref, String id) async {
+    try {
       await ref
           .read(addressStateControllerProvider.notifier)
-          .addNewAddress(userAddress);
+          .deleteUserAddress(id);
       if (!context.mounted) return;
       showSuccessNotification(
         context: context,
-        message: "Address Added successfully",
+        message: "Address successfully deleted",
       );
+    } catch (e) {
+      if (!context.mounted) return;
+      final errorMessage = e.toString().replaceFirst('Exception: ', '');
+      showErrorNotification(context: context, message: errorMessage);
+    }
+  }
+
+  void setDefaultAddress(BuildContext context, WidgetRef ref, String id) async {
+    try {
+      final isDefault = UserLocationModel(isPrimary: true, addressId: id);
+
+      await ref
+          .read(addressStateControllerProvider.notifier)
+          .updateAddressData(isDefault);
 
       if (!context.mounted) return;
-      context.pop();
+      showSuccessNotification(
+        context: context,
+        message: "Address successfully set to default",
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+      final errorMessage = e.toString().replaceFirst('Exception: ', '');
+      showErrorNotification(context: context, message: errorMessage);
     }
+  }
+
+  void updateAddressData(
+    BuildContext context,
+    WidgetRef ref,
+    String addressId,
+  ) async {
+    final String? address;
+    final String? city;
+    final String? postalCode;
+
+    address = addressController.text.trim();
+    city = cityController.text.trim();
+    postalCode = postalController.text.trim().isNotEmpty
+        ? postalController.text.trim()
+        : null;
+
+    final updatedUserAddress = UserLocationModel(
+      address: address,
+      addressId: addressId,
+      postalCode: postalCode,
+      country: countryPicked,
+      state: statePicked,
+      city: city,
+      isPrimary: isPrimary,
+    );
+
+    await ref
+        .read(addressStateControllerProvider.notifier)
+        .updateAddressData(updatedUserAddress);
+    if (!context.mounted) return;
+    context.pop();
+    showSuccessNotification(context: context, message: "Address updated");
   }
 }

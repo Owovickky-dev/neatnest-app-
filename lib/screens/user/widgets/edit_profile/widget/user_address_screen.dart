@@ -63,6 +63,8 @@ class _UserAddressScreenState extends ConsumerState<UserAddressScreen> {
                                 country: myAddresses.country!,
                                 postalCode: myAddresses.postalCode,
                                 isDefault: myAddresses.isPrimary!,
+                                ref: ref,
+                                addressId: myAddresses.addressId!,
                               );
                             },
                           )
@@ -74,7 +76,7 @@ class _UserAddressScreenState extends ConsumerState<UserAddressScreen> {
                             ),
                           ),
                     Positioned(
-                      bottom: 40.h,
+                      bottom: 0,
                       left: 0,
                       right: 0,
                       child: AppButton(

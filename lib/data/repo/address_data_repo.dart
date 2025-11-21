@@ -45,4 +45,17 @@ class AddressDataRepo {
     final response = _dio.get(ConstantData.ADDRESS);
     return response;
   }
+
+  Future<Response> deleteUserAddress(String id) async {
+    final response = _dio.delete("${ConstantData.ADDRESS}/$id");
+    return response;
+  }
+
+  Future<Response> updateAddressData(UserLocationModel updateData) async {
+    final response = await _dio.patch(
+      ConstantData.ADDRESS,
+      data: updateData.toJson(),
+    );
+    return response;
+  }
 }
