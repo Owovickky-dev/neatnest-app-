@@ -5,6 +5,8 @@ import 'package:neat_nest/screens/home/filter/filter_screen.dart';
 import 'package:neat_nest/screens/home/widget/all_ads_screen.dart';
 import 'package:neat_nest/screens/home/widget/notification_screen.dart';
 import 'package:neat_nest/screens/onboarding/welcome_screen.dart';
+import 'package:neat_nest/screens/user/auth/security/security_screen.dart';
+import 'package:neat_nest/screens/user/auth/security/widget/update_password_screen.dart';
 import 'package:neat_nest/screens/user/auth/signin/sign_in_screen.dart';
 import 'package:neat_nest/screens/user/auth/signin/utilities/forget_password_screen.dart';
 import 'package:neat_nest/screens/user/auth/signup/sign_up_screen.dart';
@@ -19,6 +21,7 @@ import 'package:neat_nest/screens/user/widgets/in_reg_screen.dart';
 import 'package:neat_nest/screens/user/widgets/payment/user_payment_method.dart';
 import 'package:neat_nest/screens/user/widgets/payment/widgets/add_payment_method.dart';
 import 'package:neat_nest/screens/user/widgets/payment/worker_payment_method.dart';
+import 'package:neat_nest/screens/user/widgets/settings/settings_screen.dart';
 import 'package:neat_nest/screens/user/widgets/verification/worker_verification_screen.dart';
 import 'package:neat_nest/utilities/bottom_nav/bottom_navigation_screen.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
@@ -130,6 +133,21 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoute.userAddresses.path,
         name: AppRoute.userAddresses.name,
         builder: (context, state) => UserAddressScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.updatePasswordScreen.path,
+        name: AppRoute.updatePasswordScreen.name,
+        builder: (context, state) => UpdatePasswordScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.securityScreen.path,
+        name: AppRoute.securityScreen.name,
+        builder: (context, state) => SecurityScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.settingsScreen.path,
+        name: AppRoute.settingsScreen.name,
+        builder: (context, state) => SettingsScreen(),
       ),
       GoRoute(
         path: AppRoute.addressHolder.path,

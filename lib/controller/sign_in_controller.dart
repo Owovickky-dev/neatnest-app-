@@ -68,7 +68,7 @@ class SignInController {
     }
   }
 
-  void logout(BuildContext context, WidgetRef ref) async {
+  void logout(BuildContext context, WidgetRef ref, {String? update}) async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -77,10 +77,12 @@ class SignInController {
     try {
       await ref.read(userControllerStateProvider.notifier).logOut();
       if (!context.mounted) return;
-      showSuccessNotification(
-        context: context,
-        message: "Successfully logged out",
-      );
+      update == null
+          ? showSuccessNotification(
+              context: context,
+              message: "Successfully logged out",
+            )
+          : null;
       ref.read(isLoggedInStateProvider.notifier).yesLogged(false);
       if (!context.mounted) return;
       AppNavigatorHelper.pushReplacement(context, AppRoute.bottomNavigation);

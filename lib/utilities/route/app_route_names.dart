@@ -20,6 +20,9 @@ enum AppRoute {
   addPaymentMethod,
   userAddresses,
   addressHolder,
+  updatePasswordScreen,
+  settingsScreen,
+  securityScreen,
 }
 
 extension AppRouteNamesExtension on AppRoute {
@@ -67,6 +70,12 @@ extension AppRouteNamesExtension on AppRoute {
         return "/userAddresses";
       case AppRoute.addressHolder:
         return "/addressHolder";
+      case AppRoute.updatePasswordScreen:
+        return "/updatePasswordScreen";
+      case AppRoute.settingsScreen:
+        return "/settingsScreen";
+      case AppRoute.securityScreen:
+        return "/securityScreen";
     }
   }
 }

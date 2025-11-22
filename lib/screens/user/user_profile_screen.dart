@@ -87,12 +87,6 @@ class UserProfileScreen extends ConsumerWidget {
               ),
               20.ht,
               RowDataHolder(
-                text: 'Manage Address',
-                icons: Icons.location_on_outlined,
-                function: () {},
-              ),
-              20.ht,
-              RowDataHolder(
                 text: userData?.role == "Worker"
                     ? "Verification"
                     : 'Payment Methods',
@@ -120,9 +114,19 @@ class UserProfileScreen extends ConsumerWidget {
               ),
               20.ht,
               RowDataHolder(
+                text: 'Security',
+                icons: Icons.security,
+                function: () {
+                  AppNavigatorHelper.push(context, AppRoute.securityScreen);
+                },
+              ),
+              20.ht,
+              RowDataHolder(
                 text: 'Settings',
                 icons: Icons.settings,
-                function: () {},
+                function: () {
+                  AppNavigatorHelper.push(context, AppRoute.settingsScreen);
+                },
               ),
               20.ht,
               RowDataHolder(
@@ -130,7 +134,7 @@ class UserProfileScreen extends ConsumerWidget {
                 icons: FontAwesomeIcons.hireAHelper,
                 function: () {},
               ),
-              20.ht,
+              30.ht,
               AppButton(
                 text: "Log Out",
                 bckColor: AppColors.primaryColor,

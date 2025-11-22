@@ -11,7 +11,7 @@ void showSuccessNotification({
     msg: message,
     gravity: ToastGravity.TOP,
     toastLength: Toast.LENGTH_LONG,
-    timeInSecForIosWeb: 2,
+    timeInSecForIosWeb: 40,
     backgroundColor: AppColors.primaryColor,
     textColor: Colors.white,
     fontSize: 16.sp,
