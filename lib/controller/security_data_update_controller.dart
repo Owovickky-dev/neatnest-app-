@@ -62,4 +62,70 @@ class SecurityDataUpdateController {
       }
     }
   }
+
+  Future<void> updateMail(BuildContext context, WidgetRef ref) async {
+    String newMail;
+    String password;
+    String oldMail;
+
+    newMail = newEmailController.text.trim();
+    password = newPasswordController.text.trim();
+    oldMail = oldEmailController.text.trim();
+
+    final updateData = SecurityUpdateModel(
+      password: password,
+      oldEmail: oldMail,
+      newMail: newMail,
+    );
+
+    try {
+      final response = await _securityUpdateRepo.updateEmail(updateData);
+      if (response.statusCode == 200) {
+        final responseData = response.data["message"];
+        if (!context.mounted) return;
+        showSuccessNotification(
+          context: context,
+          message: "${responseData.toString()}, Pleases login again  ",
+        );
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      if (e is DioException) {
+        showErrorNotification(context: context, message: e.error.toString());
+      }
+    }
+  }
+
+  Future<void> updatePhoneNumber(BuildContext context, WidgetRef ref) async {
+    String newPhone;
+    String password;
+    String oldPhone;
+
+    newPhone = newPhoneController.text.trim();
+    password = newPasswordController.text.trim();
+    oldPhone = oldPhoneController.text.trim();
+
+    final updateData = SecurityUpdateModel(
+      password: password,
+      oldPhoneNumber: oldPhone,
+      newPhoneNumber: newPhone,
+    );
+
+    try {
+      final response = await _securityUpdateRepo.updatePhone(updateData);
+      if (response.statusCode == 200) {
+        final responseData = response.data["message"];
+        if (!context.mounted) return;
+        showSuccessNotification(
+          context: context,
+          message: "${responseData.toString()}, Pleases login again  ",
+        );
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      if (e is DioException) {
+        showErrorNotification(context: context, message: e.error.toString());
+      }
+    }
+  }
 }

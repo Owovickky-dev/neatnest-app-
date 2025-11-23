@@ -1,24 +1,25 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:neat_nest/controller/security_data_update_controller.dart';
-import 'package:neat_nest/screens/user/utilities/auth_text_filed.dart';
-import 'package:neat_nest/utilities/app_button.dart';
-import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 
+import '../../../../../controller/security_data_update_controller.dart';
+import '../../../../../utilities/app_button.dart';
+import '../../../../../utilities/constant/colors.dart';
 import '../../../../../widget/app_bar_holder.dart';
 import '../../../../../widget/app_text.dart';
+import '../../../utilities/auth_text_filed.dart';
 
-class ChangeMailScreen extends ConsumerStatefulWidget {
-  const ChangeMailScreen({super.key});
+class ChangePhoneNumberScreen extends ConsumerStatefulWidget {
+  const ChangePhoneNumberScreen({super.key});
 
   @override
-  ConsumerState<ChangeMailScreen> createState() => _ChangeMailScreenState();
+  ConsumerState<ChangePhoneNumberScreen> createState() =>
+      _ChangePhoneNumberScreenState();
 }
 
-class _ChangeMailScreenState extends ConsumerState<ChangeMailScreen> {
+class _ChangePhoneNumberScreenState
+    extends ConsumerState<ChangePhoneNumberScreen> {
   final _formKey = GlobalKey<FormState>();
   late SecurityDataUpdateController _securityDataUpdateController;
 
@@ -28,12 +29,11 @@ class _ChangeMailScreenState extends ConsumerState<ChangeMailScreen> {
     _securityDataUpdateController = SecurityDataUpdateController();
   }
 
-  String? enteredMail;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBarHolder(title: 'Change mail'),
+      appBar: AppBarHolder(title: 'Change Phone Number'),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -54,33 +54,28 @@ class _ChangeMailScreenState extends ConsumerState<ChangeMailScreen> {
                 ),
                 20.ht,
                 AuthTextFiled(
-                  titleText: "Old Email",
-                  hintText: "Enter Old Mail",
+                  titleText: "Old Phone",
+                  hintText: "Enter Old Phone",
                   textEditingController:
-                      _securityDataUpdateController.oldEmailController,
+                      _securityDataUpdateController.oldPhoneController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Filed need to be filled";
-                    }
-                    if (!EmailValidator.validate(value)) {
-                      return "Email is invalid, enter valid mail";
                     }
                     return null;
                   },
                 ),
                 20.ht,
                 AuthTextFiled(
-                  titleText: "New Email",
-                  hintText: "Enter New Mail",
+                  titleText: "New Phone",
+                  hintText: "Enter New Phone",
                   textEditingController:
-                      _securityDataUpdateController.newEmailController,
+                      _securityDataUpdateController.newPhoneController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Filed need to be filled";
                     }
-                    if (!EmailValidator.validate(value)) {
-                      return "Email is invalid, enter valid mail";
-                    }
+
                     return null;
                   },
                 ),
@@ -110,7 +105,10 @@ class _ChangeMailScreenState extends ConsumerState<ChangeMailScreen> {
                   textColor: Colors.white,
                   function: () {
                     if (_formKey.currentState!.validate()) {
-                      _securityDataUpdateController.updateMail(context, ref);
+                      _securityDataUpdateController.updatePhoneNumber(
+                        context,
+                        ref,
+                      );
                     }
                   },
                 ),

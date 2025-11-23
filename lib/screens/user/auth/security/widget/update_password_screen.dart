@@ -52,6 +52,7 @@ class _UpdatePasswordScreenState extends ConsumerState<UpdatePasswordScreen> {
                 AuthTextFiled(
                   titleText: "Old Password",
                   hintText: "Enter old password",
+                  secure: true,
                   textEditingController:
                       _securityDataUpdateController.oldPasswordController,
                   validator: (value) {
@@ -67,6 +68,7 @@ class _UpdatePasswordScreenState extends ConsumerState<UpdatePasswordScreen> {
                 20.ht,
                 AuthTextFiled(
                   titleText: "New Password",
+                  secure: true,
                   hintText: "Enter New password",
                   textEditingController:
                       _securityDataUpdateController.newPasswordController,
@@ -98,6 +100,7 @@ class _UpdatePasswordScreenState extends ConsumerState<UpdatePasswordScreen> {
                 AuthTextFiled(
                   titleText: "Confirm New Password",
                   hintText: "Confirm New password",
+                  secure: true,
                   textEditingController:
                       _securityDataUpdateController.confirmPasswordController,
                   validator: (value) {
@@ -119,7 +122,6 @@ class _UpdatePasswordScreenState extends ConsumerState<UpdatePasswordScreen> {
                   textColor: Colors.white,
                   function: () {
                     if (_formKey.currentState!.validate()) {
-                      print("All field is valid");
                       _securityDataUpdateController.updatePassword(
                         context,
                         ref,

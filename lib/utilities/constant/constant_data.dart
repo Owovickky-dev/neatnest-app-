@@ -14,4 +14,6 @@ class ConstantData {
   static const GETCOUNTRIES = "/address/countries";
   static const GETSTATE = "/address/states";
   static const UPDATEPASSWORD = "/auth/updatepassword";
+  static const UPDATEEMAIL = "/auth/updateemail";
+  static const UPDATEPPHONE = "/auth/updatephonenumber";
 }

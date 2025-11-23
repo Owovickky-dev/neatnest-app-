@@ -6,6 +6,8 @@ import 'package:neat_nest/screens/home/widget/all_ads_screen.dart';
 import 'package:neat_nest/screens/home/widget/notification_screen.dart';
 import 'package:neat_nest/screens/onboarding/welcome_screen.dart';
 import 'package:neat_nest/screens/user/auth/security/security_screen.dart';
+import 'package:neat_nest/screens/user/auth/security/widget/change_mail_screen.dart';
+import 'package:neat_nest/screens/user/auth/security/widget/change_phone_number_screen.dart';
 import 'package:neat_nest/screens/user/auth/security/widget/update_password_screen.dart';
 import 'package:neat_nest/screens/user/auth/signin/sign_in_screen.dart';
 import 'package:neat_nest/screens/user/auth/signin/utilities/forget_password_screen.dart';
@@ -148,6 +150,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoute.settingsScreen.path,
         name: AppRoute.settingsScreen.name,
         builder: (context, state) => SettingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.updateEmailScreen.path,
+        name: AppRoute.updateEmailScreen.name,
+        builder: (context, state) => ChangeMailScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.updatePhoneScreen.path,
+        name: AppRoute.updatePhoneScreen.name,
+        builder: (context, state) => ChangePhoneNumberScreen(),
       ),
       GoRoute(
         path: AppRoute.addressHolder.path,

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -110,8 +111,9 @@ class AddAddressHolderController {
         context.pop();
       } catch (e) {
         if (!context.mounted) return;
-        final errorMessage = e.toString().replaceFirst('Exception: ', '');
-        showErrorNotification(context: context, message: errorMessage);
+        if (e is DioException) {
+          showErrorNotification(context: context, message: e.error.toString());
+        }
       }
     }
   }
@@ -128,8 +130,9 @@ class AddAddressHolderController {
       );
     } catch (e) {
       if (!context.mounted) return;
-      final errorMessage = e.toString().replaceFirst('Exception: ', '');
-      showErrorNotification(context: context, message: errorMessage);
+      if (e is DioException) {
+        showErrorNotification(context: context, message: e.error.toString());
+      }
     }
   }
 
@@ -148,8 +151,9 @@ class AddAddressHolderController {
       );
     } catch (e) {
       if (!context.mounted) return;
-      final errorMessage = e.toString().replaceFirst('Exception: ', '');
-      showErrorNotification(context: context, message: errorMessage);
+      if (e is DioException) {
+        showErrorNotification(context: context, message: e.error.toString());
+      }
     }
   }
 
@@ -178,11 +182,18 @@ class AddAddressHolderController {
       isPrimary: isPrimary,
     );
 
-    await ref
-        .read(addressStateControllerProvider.notifier)
-        .updateAddressData(updatedUserAddress);
-    if (!context.mounted) return;
-    context.pop();
-    showSuccessNotification(context: context, message: "Address updated");
+    try {
+      await ref
+          .read(addressStateControllerProvider.notifier)
+          .updateAddressData(updatedUserAddress);
+      if (!context.mounted) return;
+      context.pop();
+      showSuccessNotification(context: context, message: "Address updated");
+    } catch (e) {
+      if (!context.mounted) return;
+      if (e is DioException) {
+        showErrorNotification(context: context, message: e.error.toString());
+      }
+    }
   }
 }

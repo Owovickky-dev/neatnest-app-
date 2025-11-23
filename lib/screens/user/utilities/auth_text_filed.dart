@@ -82,7 +82,7 @@ class _AuthTextFiledState extends State<AuthTextFiled> {
                     },
                     child: Icon(
                       visible ? Icons.visibility_off : Icons.visibility,
-                      color: AppColors.primaryColor,
+                      color: Colors.grey,
                     ),
                   ),
             errorBorder: OutlineInputBorder(

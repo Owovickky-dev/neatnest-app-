@@ -42,6 +42,7 @@ class QueryDataController extends _$QueryDataController {
         if (kDebugMode) {
           print("✅ Successfully parsed ${adsList.length} ads");
         }
+        if (!ref.mounted) return;
         state = AsyncValue.data(adsList);
       } else {
         throw Exception("Failed to load ads: ${response.statusCode}");

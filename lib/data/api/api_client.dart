@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../../utilities/api_error_handler.dart';
 import '../../utilities/constant/constant_data.dart';
 import '../storage/secure_storage_helper.dart';
 
@@ -33,12 +34,15 @@ class DioClient {
           return handler.next(response);
         },
         onError: (DioException e, handler) {
-          print("❌ DIO ERROR TYPE: ${e.type}");
-          print("❌ DIO ERROR MESSAGE: ${e.message}");
-          print("❌ RESPONSE STATUS: ${e.response?.statusCode}");
-          print("❌ RESPONSE DATA: ${e.response?.data}");
-          print("❌ REQUEST URL: ${e.requestOptions.path}");
-          return handler.next(e);
+          final errorMessage = ApiErrorHandler.getErrorMessage(e);
+          return handler.reject(
+            DioException(
+              requestOptions: e.requestOptions,
+              response: e.response,
+              type: e.type,
+              error: errorMessage,
+            ),
+          );
         },
       ),
     );

@@ -13,4 +13,20 @@ class SecurityUpdateRepo {
     );
     return response;
   }
+
+  Future<Response> updateEmail(SecurityUpdateModel newData) async {
+    final response = _dio.patch(
+      ConstantData.UPDATEEMAIL,
+      data: newData.toJson(),
+    );
+    return response;
+  }
+
+  Future<Response> updatePhone(SecurityUpdateModel newData) async {
+    final response = _dio.patch(
+      ConstantData.UPDATEPPHONE,
+      data: newData.toJson(),
+    );
+    return response;
+  }
 }

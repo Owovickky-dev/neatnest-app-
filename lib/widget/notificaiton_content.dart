@@ -11,10 +11,10 @@ void showSuccessNotification({
     msg: message,
     gravity: ToastGravity.TOP,
     toastLength: Toast.LENGTH_LONG,
-    timeInSecForIosWeb: 40,
+    timeInSecForIosWeb: 3,
     backgroundColor: AppColors.primaryColor,
     textColor: Colors.white,
-    fontSize: 16.sp,
+    fontSize: 14.sp,
   );
 }
 
@@ -26,9 +26,9 @@ void showErrorNotification({
     msg: message,
     gravity: ToastGravity.TOP,
     toastLength: Toast.LENGTH_LONG,
-    timeInSecForIosWeb: 2,
+    timeInSecForIosWeb: 3,
     backgroundColor: Colors.red,
     textColor: Colors.white,
-    fontSize: 16.sp,
+    fontSize: 14.sp,
   );
 }

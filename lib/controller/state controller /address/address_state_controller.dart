@@ -21,11 +21,6 @@ class AddressStateController extends _$AddressStateController {
         final saveUserAddress = UserLocationModel.fromJson(responseData);
         state = [...state, saveUserAddress];
         getUserAddress();
-      } else {
-        final errorMessage =
-            response.data['message'] ?? 'Failed to add new address ';
-        print("❌ Backend error: $errorMessage");
-        throw Exception(errorMessage);
       }
     } catch (e) {
       rethrow;
@@ -48,7 +43,9 @@ class AddressStateController extends _$AddressStateController {
         });
         state = savedUserAddress;
       }
-    } catch (e) {}
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<void> deleteUserAddress(String id) async {
@@ -56,11 +53,6 @@ class AddressStateController extends _$AddressStateController {
       final response = await _addressDataRepo.deleteUserAddress(id);
       if (response.statusCode == 200) {
         getUserAddress();
-      } else {
-        final errorMessage =
-            response.data['message'] ?? 'Failed to save address ';
-        print("❌ Backend error: $errorMessage");
-        throw Exception(errorMessage);
       }
     } catch (e) {
       rethrow;
@@ -74,12 +66,6 @@ class AddressStateController extends _$AddressStateController {
       );
       if (response.statusCode == 201) {
         getUserAddress();
-      } else {
-        final errorMessage =
-            response.data['message'] ??
-            'Failed to set address address to default ';
-        print("❌ Backend error: $errorMessage");
-        throw Exception(errorMessage);
       }
     } catch (e) {
       rethrow;

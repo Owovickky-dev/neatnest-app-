@@ -64,13 +64,17 @@ class SecurityScreen extends StatelessWidget {
               RowDataHolder(
                 text: "Change Email",
                 icons: Icons.mail,
-                function: () {},
+                function: () {
+                  AppNavigatorHelper.push(context, AppRoute.updateEmailScreen);
+                },
               ),
               30.ht,
               RowDataHolder(
                 text: "Change Phone Number",
                 icons: Icons.phone,
-                function: () {},
+                function: () {
+                  AppNavigatorHelper.push(context, AppRoute.updatePhoneScreen);
+                },
               ),
               20.ht,
               RowDataHolder(
