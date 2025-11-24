@@ -31,10 +31,7 @@ class FilterSearchController {
         maxPrice == null &&
         location == null &&
         rating == null) {
-      showErrorNotification(
-        context: context,
-        message: "All filter field can't be empty",
-      );
+      showErrorNotification(message: "All filter field can't be empty");
     } else {
       navigate.push(MaterialPageRoute(builder: (_) => LoadingScreen()));
 

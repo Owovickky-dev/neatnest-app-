@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:neat_nest/controller/sign_in_controller.dart';
 import 'package:neat_nest/data/repo/security_update_repo.dart';
 import 'package:neat_nest/screens/user/model/security_update_model.dart';
@@ -43,21 +44,20 @@ class SecurityDataUpdateController {
         _signInController.logout(context, ref, update: "update");
         if (!context.mounted) return;
         showSuccessNotification(
-          context: context,
           message: "Password Successfully updated, Please login again",
         );
       } else {
         final errorMessage =
             response.data['message'] ?? 'Failed to  update password';
         if (!context.mounted) return;
-        showErrorNotification(context: context, message: errorMessage);
+        showErrorNotification(message: errorMessage);
       }
     } catch (e) {
       if (!context.mounted) return;
       if (e is DioException) {
         if (e.response?.statusCode == 401) {
           final errorMessage = e.response?.data["message"];
-          showErrorNotification(context: context, message: errorMessage);
+          showErrorNotification(message: errorMessage);
         }
       }
     }
@@ -84,14 +84,13 @@ class SecurityDataUpdateController {
         final responseData = response.data["message"];
         if (!context.mounted) return;
         showSuccessNotification(
-          context: context,
           message: "${responseData.toString()}, Pleases login again  ",
         );
       }
     } catch (e) {
       if (!context.mounted) return;
       if (e is DioException) {
-        showErrorNotification(context: context, message: e.error.toString());
+        showErrorNotification(message: e.error.toString());
       }
     }
   }
@@ -116,15 +115,15 @@ class SecurityDataUpdateController {
       if (response.statusCode == 200) {
         final responseData = response.data["message"];
         if (!context.mounted) return;
+        context.pop();
         showSuccessNotification(
-          context: context,
           message: "${responseData.toString()}, Pleases login again  ",
         );
       }
     } catch (e) {
       if (!context.mounted) return;
       if (e is DioException) {
-        showErrorNotification(context: context, message: e.error.toString());
+        showErrorNotification(message: e.error.toString());
       }
     }
   }

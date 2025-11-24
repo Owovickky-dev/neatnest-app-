@@ -353,10 +353,7 @@ class _IdUploadScreenState extends ConsumerState<IdUploadScreen> {
                 function: () {
                   if (isSelfie) {
                     if (selectedFront == null) {
-                      showErrorNotification(
-                        context: context,
-                        message: "Kindly take a selfie",
-                      );
+                      showErrorNotification(message: "Kindly take a selfie");
                     } else {
                       ref
                           .read(dataFlowStateProvider.notifier)
@@ -371,7 +368,6 @@ class _IdUploadScreenState extends ConsumerState<IdUploadScreen> {
                   } else {
                     if (selectedFront == null || selectedBack == null) {
                       showErrorNotification(
-                        context: context,
                         message:
                             "Kindly Upload both the front and back of your $documentType",
                       );

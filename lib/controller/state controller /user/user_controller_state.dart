@@ -19,12 +19,8 @@ class UserControllerState extends _$UserControllerState {
     try {
       final user = await SecureStorageHelper.getUserData();
       if (user != null) {
-        if (ref.mounted) {
-          state = user;
-          print("Data loaded successfully: ${user.name}");
-        } else {
-          print("⚠️ Provider disposed, but user data saved to storage");
-        }
+        if (!ref.mounted) return;
+        state = user;
       }
     } catch (e) {
       print("Error loading the user data from local storage $e");
@@ -38,9 +34,11 @@ class UserControllerState extends _$UserControllerState {
       if (response.statusCode == 201) {
         final responseData = response.data;
         final token = responseData["data"]["token"];
-
-        if (token != null) {
+        final refreshToken = responseData["data"]["refreshToken"];
+        if (token != null && refreshToken != null) {
           await SecureStorageHelper.saveToken(token);
+          await SecureStorageHelper.saveRefreshToken(refreshToken);
+
           final user = UserModel.fromJson(responseData["data"]["user"]);
           await SecureStorageHelper.saveUserData(user);
           if (!ref.mounted) return;
@@ -50,9 +48,7 @@ class UserControllerState extends _$UserControllerState {
           throw Exception("No token receive");
         }
       }
-    } catch (e, stack) {
-      print("❌ ERROR in UserControllerState.register(): $e");
-      print("❌ Stack trace: $stack");
+    } catch (e) {
       rethrow;
     }
   }
@@ -64,10 +60,12 @@ class UserControllerState extends _$UserControllerState {
 
       if (response.statusCode == 200) {
         final token = responseData['data']['token'];
-        if (token != null) {
+        final refreshToken = responseData["data"]["refreshToken"];
+        if (token != null && refreshToken != null) {
           await SecureStorageHelper.saveToken(token);
-          print("✅ Token saved successfully");
-
+          print("access token saved");
+          await SecureStorageHelper.saveRefreshToken(refreshToken);
+          print("refresh token saved");
           final user = UserModel.fromJson(responseData["data"]["loginUser"]);
           await SecureStorageHelper.saveUserData(user);
 
@@ -90,6 +88,7 @@ class UserControllerState extends _$UserControllerState {
   Future<void> logOut() async {
     await SecureStorageHelper.deleteToken();
     await SecureStorageHelper.deleteUserData();
+    await SecureStorageHelper.deleteRefreshToken();
     state = null;
   }
 

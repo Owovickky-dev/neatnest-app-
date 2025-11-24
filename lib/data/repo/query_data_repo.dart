@@ -7,6 +7,6 @@ class QueryDataRepo {
   final Dio _dio = DioClient().createDio();
 
   Future<Response> getAllAds() async {
-    return await _dio.get(ConstantData.QUERY);
+    return await _dio.get(ConstantData.ADS);
   }
 }

@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    _timer = Timer(Duration(seconds: 3), () {
+    _timer = Timer(Duration(milliseconds: 1500), () {
       AppNavigatorHelper.go(context, AppRoute.welcome);
     });
   }

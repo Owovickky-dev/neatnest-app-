@@ -30,7 +30,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final List<String> gender = const ["Male", "Female"];
   String? positionGen;
   String? position;
-  String? onChange;
+  String? enteredPassword;
 
   @override
   void didChangeDependencies() {
@@ -138,11 +138,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     titleText: 'UserName',
                     hintText: 'Enter UserName',
                     textEditingController: _signUpController.userNameController,
-                    onChanged: (val) {
-                      setState(() {
-                        onChange = val;
-                      });
-                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "UserName is required";
@@ -166,11 +161,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     ],
                     textEditingController:
                         _signUpController.phoneNumberController,
-                    onChanged: (val) {
-                      setState(() {
-                        onChange = val;
-                      });
-                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Your phone number is required";
@@ -230,7 +220,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     textEditingController: _signUpController.passwordController,
                     onChanged: (val) {
                       setState(() {
-                        onChange = val;
+                        enteredPassword = val;
                       });
                     },
                     validator: (value) {
@@ -263,7 +253,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       if (value == null || value.isEmpty) {
                         return "Must not be empty";
                       }
-                      if (value != onChange) {
+                      if (value != enteredPassword) {
+                        print(enteredPassword);
                         return "Password don't match";
                       }
                       return null;

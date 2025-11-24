@@ -8,7 +8,8 @@ class ConstantData {
       : "http://127.0.0.1:8000/api/v1";
   static const LOGIN = "/auth/login";
   static const REGISTER = "/auth/register";
-  static const QUERY = "/ads";
+  static const REFRESHTOKEN = "/auth/refreshtoken";
+  static const ADS = "/ads";
   static const PAYMENTMETHOd = "/payment-method";
   static const ADDRESS = "/user-address";
   static const GETCOUNTRIES = "/address/countries";

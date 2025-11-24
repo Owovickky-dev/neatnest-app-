@@ -10,7 +10,7 @@ class LoadingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.white60,
+        color: Colors.transparent,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

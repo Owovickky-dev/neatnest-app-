@@ -47,7 +47,7 @@ class _AuthTextFiledState extends State<AuthTextFiled> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        primaryText(text: widget.titleText, fontSize: 14.sp),
+        primaryText(text: widget.titleText, fontSize: 18.sp),
         5.ht,
         TextFormField(
           controller: widget.textEditingController,
@@ -89,7 +89,6 @@ class _AuthTextFiledState extends State<AuthTextFiled> {
               borderRadius: BorderRadius.circular(15.r),
               borderSide: BorderSide(color: Colors.red, width: 1),
             ),
-
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15.r),
               borderSide: BorderSide(color: AppColors.primaryColor, width: 1),

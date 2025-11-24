@@ -19,10 +19,7 @@ class AddUserPaymentController {
     required Map<String, TextEditingController> controllers,
   }) async {
     if (selectedCountry == null) {
-      showErrorNotification(
-        context: context,
-        message: "Please select a payment method",
-      );
+      showErrorNotification(message: "Please select a payment method");
       return;
     }
 
@@ -30,10 +27,7 @@ class AddUserPaymentController {
     final requiredFields = AppData.desireMethod[selectedCountry]!;
     for (var field in requiredFields) {
       if (controllers[field]!.text.trim().isEmpty) {
-        showErrorNotification(
-          context: context,
-          message: 'Please fill in $field',
-        );
+        showErrorNotification(message: 'Please fill in $field');
         return;
       }
     }
@@ -55,10 +49,7 @@ class AddUserPaymentController {
 
       if (paymentMethod.payPalMail != null &&
           !EmailValidator.validate(paymentMethod.payPalMail!)) {
-        showErrorNotification(
-          context: context,
-          message: "Invalid Email address",
-        );
+        showErrorNotification(message: "Invalid Email address");
         return;
       }
 
@@ -67,10 +58,7 @@ class AddUserPaymentController {
           .saveUserPaymentInfo(paymentMethod);
 
       if (!context.mounted) return;
-      showSuccessNotification(
-        context: context,
-        message: 'Payment method saved successfully',
-      );
+      showSuccessNotification(message: 'Payment method saved successfully');
 
       // Close the screen
       if (context.mounted) {
@@ -80,7 +68,7 @@ class AddUserPaymentController {
       if (!context.mounted) return;
       context.pop();
       final errorMessage = e.toString().replaceFirst('Exception: ', '');
-      showErrorNotification(context: context, message: errorMessage);
+      showErrorNotification(message: errorMessage);
     }
   }
 
@@ -92,10 +80,7 @@ class AddUserPaymentController {
     required Map<String, TextEditingController> controllers,
   }) async {
     if (selectedCountry == null) {
-      showErrorNotification(
-        context: context,
-        message: "Payment method type is required",
-      );
+      showErrorNotification(message: "Payment method type is required");
       return;
     }
 
@@ -103,10 +88,7 @@ class AddUserPaymentController {
     final requiredFields = AppData.desireMethod[selectedCountry]!;
     for (var field in requiredFields) {
       if (controllers[field]!.text.trim().isEmpty) {
-        showErrorNotification(
-          context: context,
-          message: 'Please fill in $field',
-        );
+        showErrorNotification(message: 'Please fill in $field');
         return;
       }
     }
@@ -129,10 +111,7 @@ class AddUserPaymentController {
 
       if (paymentMethod.payPalMail != null &&
           !EmailValidator.validate(paymentMethod.payPalMail!)) {
-        showErrorNotification(
-          context: context,
-          message: "Invalid Email address",
-        );
+        showErrorNotification(message: "Invalid Email address");
         return;
       }
 
@@ -141,10 +120,7 @@ class AddUserPaymentController {
           .updatePaymentMethod(paymentMethod);
 
       if (!context.mounted) return;
-      showSuccessNotification(
-        context: context,
-        message: 'Payment method updated successfully',
-      );
+      showSuccessNotification(message: 'Payment method updated successfully');
 
       // Close the screen
       if (context.mounted) {
@@ -154,7 +130,7 @@ class AddUserPaymentController {
       if (!context.mounted) return;
       context.pop();
       final errorMessage = e.toString().replaceFirst('Exception: ', '');
-      showErrorNotification(context: context, message: errorMessage);
+      showErrorNotification(message: errorMessage);
     }
   }
 
@@ -169,15 +145,12 @@ class AddUserPaymentController {
           .deleteUserPayment(deleteMethod);
 
       if (!context.mounted) return;
-      showSuccessNotification(
-        context: context,
-        message: 'Payment method removed successfully',
-      );
+      showSuccessNotification(message: 'Payment method removed successfully');
     } catch (e) {
       if (!context.mounted) return;
       context.pop();
       final errorMessage = e.toString().replaceFirst('Exception: ', '');
-      showErrorNotification(context: context, message: errorMessage);
+      showErrorNotification(message: errorMessage);
     }
   }
 

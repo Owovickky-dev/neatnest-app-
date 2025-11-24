@@ -79,7 +79,6 @@ class _PersonalInfoEditState extends ConsumerState<PersonalInfoEdit> {
                 onTap: () {
                   if (!_editProfileController.canEditDetails()) {
                     showErrorNotification(
-                      context: context,
                       message:
                           "Name can't be edited for security reasons. Wait ${_editProfileController.timeLeft()}s",
                     );
@@ -106,7 +105,6 @@ class _PersonalInfoEditState extends ConsumerState<PersonalInfoEdit> {
                 onTap: () {
                   if (!_editProfileController.canUserNameDetails()) {
                     showErrorNotification(
-                      context: context,
                       message:
                           "UserName can't be edited for security reasons. Wait ${_editProfileController.userNameTimeLeft()}s",
                     );

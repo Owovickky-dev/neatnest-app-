@@ -42,7 +42,7 @@ final class AddressStateControllerProvider
 }
 
 String _$addressStateControllerHash() =>
-    r'388610445346c4c5a922defc78dce153bb7568ef';
+    r'5c6eb859b80eb7db36dbe3ab237eb70b0d0d1365';
 
 abstract class _$AddressStateController
     extends $Notifier<List<UserLocationModel>> {

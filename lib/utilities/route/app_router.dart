@@ -5,6 +5,8 @@ import 'package:neat_nest/screens/home/filter/filter_screen.dart';
 import 'package:neat_nest/screens/home/widget/all_ads_screen.dart';
 import 'package:neat_nest/screens/home/widget/notification_screen.dart';
 import 'package:neat_nest/screens/onboarding/welcome_screen.dart';
+import 'package:neat_nest/screens/user/ads/ads_screen.dart';
+import 'package:neat_nest/screens/user/ads/widgets/post_ads_screen.dart';
 import 'package:neat_nest/screens/user/auth/security/security_screen.dart';
 import 'package:neat_nest/screens/user/auth/security/widget/change_mail_screen.dart';
 import 'package:neat_nest/screens/user/auth/security/widget/change_phone_number_screen.dart';
@@ -27,6 +29,7 @@ import 'package:neat_nest/screens/user/widgets/settings/settings_screen.dart';
 import 'package:neat_nest/screens/user/widgets/verification/worker_verification_screen.dart';
 import 'package:neat_nest/utilities/bottom_nav/bottom_navigation_screen.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
+import 'package:neat_nest/utilities/route/app_router_key.dart';
 
 import '../../screens/onboarding/widgets/splash_screen.dart';
 import '../../screens/user/model/user_payment_method_model.dart';
@@ -34,6 +37,7 @@ import '../../screens/user/model/user_payment_method_model.dart';
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: "/splash",
+    navigatorKey: AppRouterKey.navigatorKey,
     routes: [
       GoRoute(
         path: AppRoute.splash.path,
@@ -142,6 +146,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => UpdatePasswordScreen(),
       ),
       GoRoute(
+        path: AppRoute.adsScreen.path,
+        name: AppRoute.adsScreen.name,
+        builder: (context, state) => AdsScreen(),
+      ),
+      GoRoute(
         path: AppRoute.securityScreen.path,
         name: AppRoute.securityScreen.name,
         builder: (context, state) => SecurityScreen(),
@@ -150,6 +159,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoute.settingsScreen.path,
         name: AppRoute.settingsScreen.name,
         builder: (context, state) => SettingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.postAdsScreen.path,
+        name: AppRoute.postAdsScreen.name,
+        builder: (context, state) => PostAdsScreen(),
       ),
       GoRoute(
         path: AppRoute.updateEmailScreen.path,

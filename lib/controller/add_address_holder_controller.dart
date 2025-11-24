@@ -78,15 +78,9 @@ class AddAddressHolderController {
         statePicked == null ||
         countryPicked == null ||
         isPrimary == null) {
-      showErrorNotification(
-        context: context,
-        message: "Please fill all required field",
-      );
+      showErrorNotification(message: "Please fill all required field");
     } else if (postalCode != null && postalCode.length != 6) {
-      showErrorNotification(
-        context: context,
-        message: "Postal code  need to be 6 digits",
-      );
+      showErrorNotification(message: "Postal code  need to be 6 digits");
     } else {
       final userAddress = UserLocationModel(
         city: city,
@@ -102,17 +96,14 @@ class AddAddressHolderController {
             .read(addressStateControllerProvider.notifier)
             .addNewAddress(userAddress);
         if (!context.mounted) return;
-        showSuccessNotification(
-          context: context,
-          message: "Address Added successfully",
-        );
+        showSuccessNotification(message: "Address Added successfully");
 
         if (!context.mounted) return;
         context.pop();
       } catch (e) {
         if (!context.mounted) return;
         if (e is DioException) {
-          showErrorNotification(context: context, message: e.error.toString());
+          showErrorNotification(message: e.error.toString());
         }
       }
     }
@@ -124,14 +115,11 @@ class AddAddressHolderController {
           .read(addressStateControllerProvider.notifier)
           .deleteUserAddress(id);
       if (!context.mounted) return;
-      showSuccessNotification(
-        context: context,
-        message: "Address successfully deleted",
-      );
+      showSuccessNotification(message: "Address successfully deleted");
     } catch (e) {
       if (!context.mounted) return;
       if (e is DioException) {
-        showErrorNotification(context: context, message: e.error.toString());
+        showErrorNotification(message: e.error.toString());
       }
     }
   }
@@ -145,14 +133,11 @@ class AddAddressHolderController {
           .updateAddressData(isDefault);
 
       if (!context.mounted) return;
-      showSuccessNotification(
-        context: context,
-        message: "Address successfully set to default",
-      );
+      showSuccessNotification(message: "Address successfully set to default");
     } catch (e) {
       if (!context.mounted) return;
       if (e is DioException) {
-        showErrorNotification(context: context, message: e.error.toString());
+        showErrorNotification(message: e.error.toString());
       }
     }
   }
@@ -188,11 +173,11 @@ class AddAddressHolderController {
           .updateAddressData(updatedUserAddress);
       if (!context.mounted) return;
       context.pop();
-      showSuccessNotification(context: context, message: "Address updated");
+      showSuccessNotification(message: "Address updated");
     } catch (e) {
       if (!context.mounted) return;
       if (e is DioException) {
-        showErrorNotification(context: context, message: e.error.toString());
+        showErrorNotification(message: e.error.toString());
       }
     }
   }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:neat_nest/controller/state%20controller%20/ads/query_data_controller.dart';
+import 'package:neat_nest/controller/state%20controller%20/ads/ads_state_controller.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
+import 'package:neat_nest/widget/loading_screen.dart';
 
 import '../../../utilities/constant/colors.dart';
 import '../../../widget/app_text.dart';
@@ -28,75 +29,34 @@ class _AllAdsScreenState extends ConsumerState<AllAdsScreen> {
 
   void _loadAds() {
     if (!_initialLoad) {
-      ref.read(queryDataControllerProvider.notifier).getAdsData();
+      ref.read(adsStateControllerProvider.notifier).getAllAds();
       _initialLoad = true;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final adsData = ref.watch(queryDataControllerProvider);
+    final adsData = ref.watch(adsStateControllerProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         children: [
           Expanded(
-            child: adsData.when(
-              loading: () {
-                print("Loading screen first");
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 80,
-                        width: 80,
-                        child: FittedBox(
-                          child: CircularProgressIndicator.adaptive(
-                            backgroundColor: AppColors.primaryColor,
-                            strokeWidth: 6,
-                          ),
-                        ),
-                      ),
-                      20.ht,
-                      primaryText(text: "loading........"),
-                    ],
-                  ),
-                );
-              },
-              error: (error, stack) => Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Error loading ads: $error'),
-                    SizedBox(height: 10.h),
-                    ElevatedButton(
-                      onPressed: () {
-                        ref
-                            .read(queryDataControllerProvider.notifier)
-                            .getAdsData();
-                      },
-                      child: Text('Retry'),
+            child: adsData.isNotEmpty
+                ? GridView.builder(
+                    itemCount: adsData.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10.w,
+                      mainAxisSpacing: 20.h,
+                      childAspectRatio: 0.6,
                     ),
-                  ],
-                ),
-              ),
-              data: (ads) {
-                return GridView.builder(
-                  itemCount: ads.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10.w,
-                    mainAxisSpacing: 20.h,
-                    childAspectRatio: 0.6,
-                  ),
-                  itemBuilder: (context, index) {
-                    final ad = ads[index];
-                    return FavouriteDataHolder(index: index, adsModel: ad);
-                  },
-                );
-              },
-            ),
+                    itemBuilder: (context, index) {
+                      final ad = adsData[index];
+                      return FavouriteDataHolder(index: index, adsModel: ad);
+                    },
+                  )
+                : LoadingScreen(),
           ),
           10.ht,
           widget.yesBackButton

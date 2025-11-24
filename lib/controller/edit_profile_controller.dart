@@ -68,7 +68,7 @@ class EditProfileController {
           phoneNumber: updatedPhoneNumber,
           userName: updatedUserName,
         );
-    showSuccessNotification(context: context, message: "Data Temporary Saved");
+    showSuccessNotification(message: "Data Temporary Saved");
     AppNavigatorHelper.push(context, AppRoute.editProfile);
   }
 }

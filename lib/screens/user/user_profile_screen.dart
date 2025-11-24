@@ -112,6 +112,23 @@ class UserProfileScreen extends ConsumerWidget {
                 icons: Icons.calendar_month_outlined,
                 function: () {},
               ),
+              ?userData?.role == "Worker"
+                  ? Column(
+                      children: [
+                        20.ht,
+                        RowDataHolder(
+                          text: 'My Ads',
+                          icons: FontAwesomeIcons.adversal,
+                          function: () {
+                            AppNavigatorHelper.push(
+                              context,
+                              AppRoute.adsScreen,
+                            );
+                          },
+                        ),
+                      ],
+                    )
+                  : null,
               20.ht,
               RowDataHolder(
                 text: 'Security',

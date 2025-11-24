@@ -60,7 +60,6 @@ class _VerificationMethodScreenState
                 onTap: verificationStatus == "Pending"
                     ? () {
                         showErrorNotification(
-                          context: context,
                           message: "Your data is under verification",
                         );
                       }

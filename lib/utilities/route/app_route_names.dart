@@ -25,6 +25,8 @@ enum AppRoute {
   securityScreen,
   updateEmailScreen,
   updatePhoneScreen,
+  adsScreen,
+  postAdsScreen,
 }
 
 extension AppRouteNamesExtension on AppRoute {
@@ -82,6 +84,10 @@ extension AppRouteNamesExtension on AppRoute {
         return "/updateEmailScreen";
       case AppRoute.updatePhoneScreen:
         return "/updatePhoneScreen";
+      case AppRoute.adsScreen:
+        return "/adsScreen";
+      case AppRoute.postAdsScreen:
+        return "/postAdsScreen";
     }
   }
 }

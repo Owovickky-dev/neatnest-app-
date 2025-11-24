@@ -20,10 +20,7 @@ class EditProfileScreen extends ConsumerWidget {
   const EditProfileScreen({super.key});
 
   Future<void> _handleSave(BuildContext context) async {
-    showSuccessNotification(
-      context: context,
-      message: "Changes saved successfully",
-    );
+    showSuccessNotification(message: "Changes saved successfully");
     await Future.delayed(Duration(seconds: 2));
     if (context.mounted) {
       AppNavigatorHelper.replace(context, AppRoute.userProfile);

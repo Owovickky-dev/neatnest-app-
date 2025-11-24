@@ -6,20 +6,32 @@ import 'package:neat_nest/models/user_model.dart';
 class SecureStorageHelper {
   static const _storage = FlutterSecureStorage();
 
-  static const String accessToken = "token";
-  static const String refreshToken = "refreshToken";
+  static const String accessTokenKey = "token";
+  static const String refreshTokenKey = "refresh_token";
   static const String _userDataKey = "user_data";
 
   static Future<void> saveToken(String token) async {
-    await _storage.write(key: accessToken, value: token);
+    await _storage.write(key: accessTokenKey, value: token);
+  }
+
+  static Future<void> saveRefreshToken(String refreshToken) async {
+    await _storage.write(key: refreshTokenKey, value: refreshToken);
   }
 
   static Future<String?> getToken() async {
-    return await _storage.read(key: accessToken);
+    return await _storage.read(key: accessTokenKey);
+  }
+
+  static Future<String?> getRefreshToken() async {
+    return await _storage.read(key: refreshTokenKey);
   }
 
   static Future<void> deleteToken() async {
-    return await _storage.delete(key: accessToken);
+    return await _storage.delete(key: accessTokenKey);
+  }
+
+  static Future<void> deleteRefreshToken() async {
+    return await _storage.delete(key: refreshTokenKey);
   }
 
   static Future<void> saveUserData(UserModel user) async {
@@ -52,5 +64,10 @@ class SecureStorageHelper {
 
   static Future<void> deleteUserData() async {
     await _storage.delete(key: _userDataKey);
+  }
+
+  static Future<void> clearAll() async {
+    await _storage.deleteAll();
+    print("All storage cleared");
   }
 }
