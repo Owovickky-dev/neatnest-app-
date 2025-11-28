@@ -87,7 +87,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              userData != null
+              ?userData != null
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -172,10 +172,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                       ],
                     )
-                  : Container(),
+                  : null,
               5.ht,
               AppTextField(
-                hintText: 'Search...',
+                hintText: 'Search  by category only...',
                 iconPrefix: Icons.search,
                 iconSuffix: Icons.menu,
                 function: () {

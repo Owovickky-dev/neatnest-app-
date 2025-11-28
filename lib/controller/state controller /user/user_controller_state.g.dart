@@ -42,7 +42,7 @@ final class UserControllerStateProvider
 }
 
 String _$userControllerStateHash() =>
-    r'712cc7e3cfaaeed3544167d323b2009604de5ccc';
+    r'09fd94b47452e81468f60777097cc7c4c97a7dce';
 
 abstract class _$UserControllerState extends $Notifier<UserModel?> {
   UserModel? build();

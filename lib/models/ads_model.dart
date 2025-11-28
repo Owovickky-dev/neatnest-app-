@@ -2,38 +2,52 @@ import 'job_poster_model.dart';
 
 class AdsModel {
   final String? id;
-  final String title;
-  final String about;
-  final int basePrice;
-  final String image;
+  final String? title;
+  final String? about;
+  final int? basePrice;
+  final String? image;
   final JobPosterModel? jobPoster;
-  final String category;
-  final bool isActive;
+  final String? category;
+  final bool? isActive;
   final String? workerId;
   final DateTime? createdAt;
 
   AdsModel({
     this.id,
-    required this.title,
-    required this.about,
-    required this.basePrice,
-    required this.category,
-    required this.image,
-    required this.isActive,
+    this.title,
+    this.about,
+    this.basePrice,
+    this.category,
+    this.image,
+    this.isActive,
     this.jobPoster,
     this.workerId,
     this.createdAt,
   });
 
   Map<String, dynamic> toJson() {
-    return {
-      "title": title,
-      "about": about,
-      "basePrice": basePrice,
-      "category": category,
-      "image": image,
-      "isActive": isActive,
-    };
+    final data = <String, dynamic>{};
+
+    if (title != null && title!.isNotEmpty) {
+      data["title"] = title;
+    }
+    if (basePrice != null) {
+      data["basePrice"] = basePrice;
+    }
+    if (about != null && about!.isNotEmpty) {
+      data["about"] = about;
+    }
+    if (image != null && image!.isNotEmpty) {
+      data["image"] = image;
+    }
+    if (isActive != null) {
+      data["isActive"] = isActive;
+    }
+    if (category != null && category!.isNotEmpty) {
+      data["category"] = category;
+    }
+
+    return data;
   }
 
   factory AdsModel.fromJson(Map<String, dynamic> json) {

@@ -265,7 +265,7 @@ class _AddAddressHolderState extends ConsumerState<AddAddressHolder> {
                                 text: isLoadingStates
                                     ? "Loading states..."
                                     : states.isEmpty
-                                    ? "Select country first"
+                                    ? "failed to load state"
                                     : "select state",
                               ),
                               icon: Icon(Icons.keyboard_arrow_down_outlined),

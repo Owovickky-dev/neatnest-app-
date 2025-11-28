@@ -41,4 +41,20 @@ class AdsStateController extends _$AdsStateController {
       rethrow;
     }
   }
+
+  Future<void> queryAds(AdsModel queryData) async {
+    try {
+      final response = await _adsRepo.queryAds(queryData);
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = response.data["data"]["allAds"];
+        final List<AdsModel> queryData = responseData
+            .map((result) => AdsModel.fromJson(result))
+            .toList();
+
+        state = queryData;
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

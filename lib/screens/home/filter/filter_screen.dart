@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:country_state_city/country_state_city.dart';
+import 'package:flutter/material.dart' hide State;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/controller/filter_search_controller.dart';
 import 'package:neat_nest/screens/home/filter/notifier/filter_state.dart';
-import 'package:neat_nest/screens/home/filter/widget/category_page_view.dart';
 import 'package:neat_nest/screens/home/filter/widget/filter_range.dart';
 import 'package:neat_nest/screens/home/filter/widget/filter_rating.dart';
 import 'package:neat_nest/utilities/app_button.dart';
@@ -22,22 +22,58 @@ class FilterScreen extends ConsumerStatefulWidget {
 }
 
 class _FilterScreenState extends ConsumerState<FilterScreen> {
-  final List<String> locations = const [
-    "Abuja, Nigeria",
-    "Osun, Nigeria",
-    "Lagos, Nigeria",
-    "London, UK",
+  List<String> categories = [
+    "Cleaning",
+    "Plumbing",
+    "Electrical",
+    "Carpentry",
+    "Painting",
+    "Gardening",
+    "Moving",
+    "Assembly",
+    "Repair",
+    "Other",
   ];
 
-  final FilterSearchController _filterSearchController =
-      FilterSearchController();
+  late FilterSearchController _filterSearchController;
 
-  late int categoryIndex = -1;
-  late int ratingIndex = -1;
+  List<Country> countries = [];
+  List<State> states = [];
+
+  Country? countryPicked;
+  State? statesPicked;
+  String? isPrimaryPicked;
+
+  @override
+  void initState() {
+    super.initState();
+    _filterSearchController = FilterSearchController();
+    _loadCountries();
+  }
+
+  Future<void> _loadCountries() async {
+    List<Country> countryList = await getAllCountries();
+    setState(() {
+      countries = countryList;
+    });
+  }
+
+  Future<void> _loadState(String countryCode) async {
+    List<State> stateList = await getStatesOfCountry(countryCode);
+    setState(() {
+      states = stateList;
+    });
+  }
+
+  int? ratingIndex;
+
+  String? countrySelected;
+  String? stateSelected;
+  String? categorySelected;
 
   @override
   Widget build(BuildContext context) {
-    final filterState = ref.watch(filterStateProvider);
+    final filterData = ref.read(filterStateProvider.notifier);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -56,67 +92,126 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              5.ht,
-              primaryText(text: "Location"),
+              10.ht,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  secondaryText(
+                    text: "Please kindly note Country and state must be picked",
+                    color: Colors.red,
+                  ),
+                  10.ht,
+                  primaryText(text: "Country"),
+                  5.ht,
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 5.h,
+                      horizontal: 10.w,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: DropdownButton<Country>(
+                      hint: secondaryText(text: "select country"),
+                      icon: Icon(Icons.keyboard_arrow_down_outlined),
+                      isExpanded: true,
+                      value: countryPicked,
+                      underline: SizedBox(),
+                      items: countries.map((country) {
+                        return DropdownMenuItem<Country>(
+                          value: country,
+                          child: secondaryText(text: country.name),
+                        );
+                      }).toList(),
+                      onChanged: (Country? value) {
+                        if (value != null) {
+                          setState(() {
+                            countryPicked = value;
+
+                            statesPicked = null;
+                            states = [];
+                            _loadState(value.isoCode);
+                          });
+                          filterData.setCountry(value.name);
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              10.ht,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  primaryText(text: "State"),
+                  5.ht,
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 5.h,
+                      horizontal: 10.w,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: DropdownButton<State>(
+                      hint: secondaryText(text: "select state"),
+                      icon: Icon(Icons.keyboard_arrow_down_outlined),
+                      isExpanded: true,
+                      value: statesPicked,
+                      underline: SizedBox(),
+                      items: states.map((state) {
+                        return DropdownMenuItem<State>(
+                          value: state,
+                          child: secondaryText(text: state.name),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() {
+                            statesPicked = value;
+                          });
+                          filterData.setUserState(value.name);
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              20.ht,
+              primaryText(text: "Category"),
               10.ht,
               Container(
                 padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
                 decoration: BoxDecoration(
-                  color: AppColors.containerLightBackground,
+                  color: Colors.grey.shade200,
                   borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: DropdownButton<String>(
-                  hint: secondaryText(text: "Select a country"),
+                  hint: secondaryText(text: "Select a category"),
                   icon: Icon(Icons.keyboard_arrow_down_outlined),
                   isExpanded: true,
-                  value: filterState?.location,
+                  value: categorySelected,
                   underline: SizedBox(),
-                  items: locations.map((location) {
+                  items: categories.map((category) {
                     return DropdownMenuItem<String>(
-                      value: location,
-                      child: secondaryText(text: location),
+                      value: category,
+                      child: secondaryText(text: category),
                     );
                   }).toList(),
                   onChanged: (value) {
-                    if (value != null) {
-                      ref
-                          .read(filterStateProvider.notifier)
-                          .setLocation(value.toString());
-                    }
-                  },
-                ),
-              ),
-              20.ht,
-              primaryText(text: "Category"),
-              20.ht,
-              SizedBox(
-                height: 120.h,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    final isClicked = categoryIndex == index;
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          categoryIndex = index;
-                        });
-                        ref
-                            .read(filterStateProvider.notifier)
-                            .setCategory(AppData.serviceName[index]);
-                      },
-                      child: CategoryPageView(
-                        index: index,
-                        clickedItem: isClicked,
-                      ),
-                    );
+                    setState(() {
+                      categorySelected = value;
+                    });
+                    filterData.setCategory(value.toString());
                   },
                 ),
               ),
               20.ht,
               primaryText(text: "Price Range"),
               5.ht,
-              FilterRange(),
+              FilterRange(ref: ref),
               10.ht,
               primaryText(text: "Ratings"),
               10.ht,
@@ -127,18 +222,26 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                   itemCount: 5,
                   itemBuilder: (context, index) {
                     final ratingClicked = ratingIndex == index;
+                    final ratingText = AppData.ratingTextRange[index];
                     return GestureDetector(
                       onTap: () {
                         setState(() {
                           ratingIndex = index;
                         });
-                        ref
-                            .read(filterStateProvider.notifier)
-                            .setRating(AppData.ratingTextRange[index]);
+                        List<String> ranges = ratingText.split(" ");
+                        if (ranges.length > 1) {
+                          filterData.setMinRating(double.parse(ranges[0]));
+                          filterData.setMaxRating(double.parse(ranges[2]));
+                          print("min ${ranges[0]} and Max ${ranges[2]}");
+                        } else {
+                          filterData.setMaxRating(double.parse(ranges[0]));
+                          print("the max ranges is ${ranges[0]}");
+                        }
                       },
                       child: FilterRating(
                         index: index,
                         ratingClicked: ratingClicked,
+                        text: ratingText,
                       ),
                     );
                   },
@@ -151,15 +254,17 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                   AppButton(
                     text: "Reset",
                     fontSize: 16.sp,
-                    bckColor: AppColors.primaryColor.withOpacity(0.1),
+                    bckColor: AppColors.primaryColor.withValues(alpha: .1),
                     textColor: Colors.black,
                     verticalHeight: 12.h,
                     function: () {
                       setState(() {
-                        categoryIndex = _filterSearchController.resetIndex();
-                        ratingIndex = _filterSearchController.resetIndex();
+                        countryPicked = null;
+                        statesPicked = null;
+                        categorySelected = null;
+                        ratingIndex = -1;
                       });
-                      ref.read(filterStateProvider.notifier).reset();
+                      filterData.reset();
                     },
                   ),
                   AppButton(
@@ -169,11 +274,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                     textColor: Colors.white,
                     verticalHeight: 12.h,
                     function: () {
-                      _filterSearchController.submit(ref, context);
-                      setState(() {
-                        categoryIndex = _filterSearchController.resetIndex();
-                        ratingIndex = _filterSearchController.resetIndex();
-                      });
+                      _filterSearchController.submit(context, ref);
                     },
                   ),
                 ],

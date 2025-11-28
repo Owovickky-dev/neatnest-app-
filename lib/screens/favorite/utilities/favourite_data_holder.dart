@@ -61,7 +61,7 @@ class _FavouriteDataHolderState extends State<FavouriteDataHolder> {
                 borderRadius: BorderRadius.circular(2.r),
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
-                  imageUrl: widget.adsModel!.image,
+                  imageUrl: widget.adsModel?.image ?? "No Image",
                 ),
               ),
             ),
@@ -102,7 +102,7 @@ class _FavouriteDataHolderState extends State<FavouriteDataHolder> {
                   SizedBox(
                     width: double.infinity,
                     child: secondaryText(
-                      text: widget.adsModel!.category,
+                      text: widget.adsModel?.category ?? "No Category",
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),

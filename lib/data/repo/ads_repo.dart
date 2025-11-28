@@ -15,4 +15,12 @@ class AdsRepo {
     final response = await _dio.post(ConstantData.ADS, data: adsData.toJson());
     return response;
   }
+
+  Future<Response> queryAds(AdsModel queryData) async {
+    final response = await _dio.get(
+      ConstantData.ADS,
+      queryParameters: queryData.toJson(),
+    );
+    return response;
+  }
 }

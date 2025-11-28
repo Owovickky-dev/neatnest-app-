@@ -11,7 +11,7 @@ void showSuccessNotification({required String message}) {
     timeInSecForIosWeb: 5,
     backgroundColor: AppColors.primaryColor,
     textColor: Colors.white,
-    fontSize: 14.sp,
+    fontSize: 15.sp,
   );
 }
 

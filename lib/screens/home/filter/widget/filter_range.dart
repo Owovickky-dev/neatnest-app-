@@ -7,15 +7,21 @@ import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/widget/app_text.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
-class FilterRange extends ConsumerWidget {
-  const FilterRange({super.key});
+class FilterRange extends StatefulWidget {
+  const FilterRange({super.key, required this.ref});
+
+  final WidgetRef ref;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final filterState = ref.watch(filterStateProvider);
+  State<FilterRange> createState() => _FilterRangeState();
+}
 
-    final double minPrice = filterState?.minPrice ?? 50;
-    final double maxPrice = filterState?.maxPrice ?? 1000;
+class _FilterRangeState extends State<FilterRange> {
+  @override
+  Widget build(BuildContext context) {
+    final refData = widget.ref.watch(filterStateProvider);
+    num minPrice = refData?.minPrice ?? 50;
+    num maxPrice = refData?.maxPrice ?? 1000;
     return Column(
       children: [
         SfRangeSlider(
@@ -28,8 +34,16 @@ class FilterRange extends ConsumerWidget {
           enableTooltip: false,
           showLabels: false,
           onChanged: (SfRangeValues newValue) {
-            ref.read(filterStateProvider.notifier).setMinPrice(newValue.start);
-            ref.read(filterStateProvider.notifier).setMaxPrice(newValue.end);
+            setState(() {
+              minPrice = newValue.start;
+              maxPrice = newValue.end;
+            });
+            widget.ref
+                .read(filterStateProvider.notifier)
+                .setMinPrice(minPrice.round());
+            widget.ref
+                .read(filterStateProvider.notifier)
+                .setMaxPrice(maxPrice.round());
           },
         ),
         10.ht,
@@ -40,9 +54,7 @@ class FilterRange extends ConsumerWidget {
               padding: EdgeInsets.only(top: 10.h, bottom: 10.h, left: 10.w),
               width: MediaQuery.of(context).size.width * 0.43,
               height: 70.h,
-              decoration: BoxDecoration(
-                color: AppColors.containerLightBackground,
-              ),
+              decoration: BoxDecoration(color: Colors.grey.shade200),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -59,9 +71,7 @@ class FilterRange extends ConsumerWidget {
               padding: EdgeInsets.only(top: 10.h, bottom: 10.h, left: 10.w),
               width: MediaQuery.of(context).size.width * 0.43,
               height: 70.h,
-              decoration: BoxDecoration(
-                color: AppColors.containerLightBackground,
-              ),
+              decoration: BoxDecoration(color: Colors.grey.shade200),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
