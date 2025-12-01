@@ -8,11 +8,13 @@ import 'package:neat_nest/screens/home/filter/widget/filter_range.dart';
 import 'package:neat_nest/screens/home/filter/widget/filter_rating.dart';
 import 'package:neat_nest/utilities/app_button.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
+import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
+import 'package:neat_nest/utilities/route/app_route_names.dart';
 
 import '../../../utilities/app_data.dart';
 import '../../../utilities/constant/colors.dart';
+import '../../../widget/app_bar_holder.dart';
 import '../../../widget/app_text.dart';
-import '../../history/utilities/app_bar_icon.dart';
 
 class FilterScreen extends ConsumerStatefulWidget {
   const FilterScreen({super.key});
@@ -76,15 +78,11 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
     final filterData = ref.read(filterStateProvider.notifier);
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: primaryText(text: 'Filter'),
-        leading: AppBarIcon(
-          icons: Icons.arrow_back,
-          function: () {
-            Navigator.pop(context);
-          },
-        ),
+      appBar: AppBarHolder(
+        title: 'Filter',
+        function: () {
+          AppNavigatorHelper.go(context, AppRoute.bottomNavigation);
+        },
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -96,10 +94,6 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  secondaryText(
-                    text: "Please kindly note Country and state must be picked",
-                    color: Colors.red,
-                  ),
                   10.ht,
                   primaryText(text: "Country"),
                   5.ht,
@@ -273,8 +267,9 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                     bckColor: AppColors.primaryColor,
                     textColor: Colors.white,
                     verticalHeight: 12.h,
-                    function: () {
-                      _filterSearchController.submit(context, ref);
+                    function: () async {
+                      AppNavigatorHelper.push(context, AppRoute.filterResult);
+                      await _filterSearchController.submit(context, ref);
                     },
                   ),
                 ],

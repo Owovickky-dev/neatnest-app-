@@ -59,7 +59,7 @@ class _AllAdsScreenState extends ConsumerState<AllAdsScreen> {
                 : LoadingScreen(),
           ),
           10.ht,
-          widget.yesBackButton
+          ?widget.yesBackButton
               ? GestureDetector(
                   onTap: () {
                     ref
@@ -85,7 +85,7 @@ class _AllAdsScreenState extends ConsumerState<AllAdsScreen> {
                     ),
                   ),
                 )
-              : Container(),
+              : null,
         ],
       ),
     );

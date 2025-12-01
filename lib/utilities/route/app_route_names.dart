@@ -27,6 +27,7 @@ enum AppRoute {
   updatePhoneScreen,
   adsScreen,
   postAdsScreen,
+  filterResult,
 }
 
 extension AppRouteNamesExtension on AppRoute {
@@ -88,6 +89,8 @@ extension AppRouteNamesExtension on AppRoute {
         return "/adsScreen";
       case AppRoute.postAdsScreen:
         return "/postAdsScreen";
+      case AppRoute.filterResult:
+        return "/filterResult";
     }
   }
 }

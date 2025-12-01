@@ -8,7 +8,7 @@ void showSuccessNotification({required String message}) {
     msg: message,
     gravity: ToastGravity.TOP,
     toastLength: Toast.LENGTH_LONG,
-    timeInSecForIosWeb: 5,
+    timeInSecForIosWeb: 3,
     backgroundColor: AppColors.primaryColor,
     textColor: Colors.white,
     fontSize: 15.sp,

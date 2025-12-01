@@ -1,11 +1,14 @@
 class FilterSearchModel {
-  final int? maxPrice;
-  final int? minPrice;
+  final num? maxPrice;
+  final num? minPrice;
   final double? minRating;
   final double? maxRating;
   final String? country;
   final String? userState;
   final String? category;
+  final int? page;
+  final int? limit;
+  final String? sort;
 
   FilterSearchModel({
     this.maxPrice,
@@ -15,6 +18,9 @@ class FilterSearchModel {
     this.country,
     this.userState,
     this.category,
+    this.limit,
+    this.page,
+    this.sort,
   });
 
   Map<String, dynamic> toJson() {
@@ -29,16 +35,25 @@ class FilterSearchModel {
       data["state"] = userState;
     }
     if (maxPrice != null) {
-      data["maxPrice"] = maxPrice;
+      data["basePrice[lte]"] = maxPrice;
     }
     if (minPrice != null) {
-      data["minPrice"] = minPrice;
+      data["basePrice[gte]"] = minPrice;
     }
     if (maxRating != null) {
-      data["maxRating"] = maxRating;
+      data["maxRating[lte]"] = maxRating;
     }
     if (minRating != null) {
-      data["minRating"] = minRating;
+      data["minRating[gte]"] = minRating;
+    }
+    if (page != null) {
+      data["page"] = page;
+    }
+    if (limit != null) {
+      data["limit"] = limit;
+    }
+    if (sort != null && sort!.isNotEmpty) {
+      data["sort"] = sort;
     }
     return data;
   }

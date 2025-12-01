@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:neat_nest/data/api/api_client.dart';
 import 'package:neat_nest/models/ads_model.dart';
+import 'package:neat_nest/models/filter_search_model.dart';
 import 'package:neat_nest/utilities/constant/constant_data.dart';
 
 class AdsRepo {
@@ -16,7 +17,7 @@ class AdsRepo {
     return response;
   }
 
-  Future<Response> queryAds(AdsModel queryData) async {
+  Future<Response> queryAds(FilterSearchModel queryData) async {
     final response = await _dio.get(
       ConstantData.ADS,
       queryParameters: queryData.toJson(),
