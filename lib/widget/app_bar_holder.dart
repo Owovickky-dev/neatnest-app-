@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
+import 'package:go_router/go_router.dart';
 
 import '../screens/history/utilities/app_bar_icon.dart';
 import 'app_text.dart';
@@ -23,7 +23,7 @@ class AppBarHolder extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.white,
       leading: AppBarIcon(
         icons: iconName ?? Icons.arrow_back,
-        function: function ?? () => AppNavigatorHelper.back(context),
+        function: function ?? () => context.pop(),
       ),
       title: primaryText(text: title, fontSize: 22.sp),
     );

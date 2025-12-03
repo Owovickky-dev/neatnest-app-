@@ -4,8 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:neat_nest/controller/state%20controller%20/ads/ads_state_controller.dart';
 import 'package:neat_nest/models/ads_model.dart';
-import 'package:neat_nest/widget/loading_screen.dart';
 import 'package:neat_nest/widget/notificaiton_content.dart';
+
+import '../widget/loading_screen.dart';
 
 class AdsController {
   AdsController();
@@ -17,6 +18,8 @@ class AdsController {
 
   String? category;
   bool? status;
+  String? country;
+  String? state;
 
   void updateStatus(String isActive) {
     if (isActive == "True") {
@@ -32,7 +35,6 @@ class AdsController {
       if (!context.mounted) return;
     } catch (e) {
       if (!context.mounted) return;
-
       if (e is DioException) {
         showErrorNotification(message: e.error.toString());
       }
@@ -58,7 +60,9 @@ class AdsController {
       title: title,
       about: aboutAds,
       basePrice: int.parse(price),
-      category: category!,
+      category: category!.toLowerCase(),
+      country: country,
+      state: state,
       image: imagePath,
       isActive: status!,
     );
@@ -76,10 +80,20 @@ class AdsController {
       },
     );
     try {
-      await ref.read(adsStateControllerProvider.notifier).postAds(newAds);
-      if (!context.mounted) return;
-      context.pop();
-      showSuccessNotification(message: "Ads successfully posted");
+      final response = await ref
+          .read(adsStateControllerProvider.notifier)
+          .postAds(newAds);
+      if (response.statusCode == 201) {
+        showSuccessNotification(message: "Ads Successfully Posted");
+        if (!context.mounted) return;
+        context.pop();
+      } else {
+        final errorMessage = response.data["message"];
+        showErrorNotification(message: errorMessage);
+        if (!context.mounted) return;
+        context.pop();
+      }
+      // AppNavigatorHelper.go(context, AppRoute.bottomNavigation);
     } catch (e) {
       if (!context.mounted) return;
       context.pop();

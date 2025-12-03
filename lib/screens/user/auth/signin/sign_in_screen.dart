@@ -36,7 +36,12 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBarHolder(title: 'Sign In'),
+      appBar: AppBarHolder(
+        title: 'Sign In',
+        function: () {
+          AppNavigatorHelper.go(context, AppRoute.welcome);
+        },
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Form(

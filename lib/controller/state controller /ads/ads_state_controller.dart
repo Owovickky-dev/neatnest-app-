@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:neat_nest/data/repo/ads_repo.dart';
 import 'package:neat_nest/models/ads_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -34,10 +35,14 @@ class AdsStateController extends _$AdsStateController {
     }
   }
 
-  Future<void> postAds(AdsModel adsData) async {
+  Future<Response> postAds(AdsModel adsData) async {
     try {
       final response = await _adsRepo.postAds(adsData);
+      return response;
     } catch (e) {
+      if (e is DioException && e.response != null) {
+        return e.response!;
+      }
       rethrow;
     }
   }

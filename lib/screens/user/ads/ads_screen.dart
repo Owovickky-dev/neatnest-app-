@@ -45,6 +45,14 @@ class AdsScreen extends StatelessWidget {
                   AppNavigatorHelper.push(context, AppRoute.postAdsScreen);
                 },
               ),
+              30.ht,
+              RowDataHolder(
+                text: "View Ads",
+                icons: FontAwesomeIcons.lock,
+                function: () {
+                  print("List of ads");
+                },
+              ),
             ],
           ),
         ),

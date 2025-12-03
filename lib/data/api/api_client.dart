@@ -20,7 +20,7 @@ class DioClient {
           "Accept": "application/json",
         },
         validateStatus: (status) {
-          return status! < 500; // Allow 401, 403, 404 but not 500
+          return status! < 500;
         },
       ),
     );
@@ -78,7 +78,6 @@ class DioClient {
             }
           }
 
-          // For all other errors
           final errorMessage = ApiErrorHandler.getErrorMessage(e);
           return handler.reject(
             DioException(
@@ -137,7 +136,7 @@ class DioClient {
     await SecureStorageHelper.deleteRefreshToken();
     await SecureStorageHelper.deleteUserData();
 
-    notificationTest(message: "Session expired, Please login again");
+    showErrorNotification(message: "Session expired, Please login again");
 
     if (AppRouterKey.navigatorKey.currentContext != null) {
       AppNavigatorHelper.go(

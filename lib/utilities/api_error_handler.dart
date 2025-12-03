@@ -19,6 +19,10 @@ class ApiErrorHandler {
     final status = e.response?.statusCode;
     final responseData = e.response?.data;
 
+    if (responseData["error"]["statusCode"] == 400 &&
+        responseData["message"] != null) {
+      return responseData["message"] ?? "An error has occurred";
+    }
     // 🔙 Safe extraction of message
     String getMessage() {
       if (responseData is Map && responseData.containsKey('message')) {

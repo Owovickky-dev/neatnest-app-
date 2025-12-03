@@ -77,7 +77,7 @@ class _FavouriteDataHolderState extends State<FavouriteDataHolder> {
                       Expanded(
                         child: SizedBox(
                           child: primaryText(
-                            text: widget.adsModel!.jobPoster!.name,
+                            text: widget.adsModel!.jobPoster!.username,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             fontSize: 16.sp, // Reduced font size

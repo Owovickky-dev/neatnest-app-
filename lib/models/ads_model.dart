@@ -6,6 +6,8 @@ class AdsModel {
   final String? about;
   final int? basePrice;
   final String? image;
+  final String? country;
+  final String? state;
   final JobPosterModel? jobPoster;
   final String? category;
   final bool? isActive;
@@ -23,6 +25,8 @@ class AdsModel {
     this.jobPoster,
     this.workerId,
     this.createdAt,
+    this.country,
+    this.state,
   });
 
   Map<String, dynamic> toJson() {
@@ -46,6 +50,12 @@ class AdsModel {
     if (category != null && category!.isNotEmpty) {
       data["category"] = category;
     }
+    if (country != null && country!.isNotEmpty) {
+      data["country"] = country;
+    }
+    if (state != null && state!.isNotEmpty) {
+      data["state"] = state;
+    }
 
     return data;
   }
@@ -59,6 +69,8 @@ class AdsModel {
       category: json["category"] ?? "",
       image: json["image"] ?? "",
       isActive: json["isActive"] ?? false,
+      country: json["country"] ?? "",
+      state: json["state"] ?? "",
       jobPoster: JobPosterModel.fromJson(json["jobPoster"] ?? {}),
       createdAt: json["createdAt"] != null
           ? DateTime.parse(json["createdAt"])

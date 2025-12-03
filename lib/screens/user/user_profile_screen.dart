@@ -69,6 +69,19 @@ class UserProfileScreen extends ConsumerWidget {
                     children: [
                       primaryText(text: userData?.name ?? "User"),
                       secondaryText(text: userData?.username ?? "Username"),
+                      ?userData?.role == "Worker"
+                          ? (userData!.isVerfied!
+                                ? primaryText(
+                                    text: "Verified",
+                                    color: AppColors.primaryColor,
+                                    fontSize: 14.sp,
+                                  )
+                                : primaryText(
+                                    text: "Unverified",
+                                    color: Colors.red,
+                                    fontSize: 14.sp,
+                                  ))
+                          : null,
                     ],
                   ),
                 ],

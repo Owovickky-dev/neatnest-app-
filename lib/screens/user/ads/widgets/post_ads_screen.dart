@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:country_state_city/country_state_city.dart';
+import 'package:flutter/material.dart' hide State;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -36,13 +37,33 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
   ];
   final List<String> status = ["True", "False"];
 
+  List<Country> countries = [];
+  List<State> states = [];
+
   String? categorySelected;
   String? statusSelected;
+  Country? countrySelected;
+  State? stateSelected;
 
   @override
   void initState() {
     super.initState();
     _adsController = AdsController();
+    _loadCountries();
+  }
+
+  Future<void> _loadCountries() async {
+    List<Country> countryList = await getAllCountries();
+    setState(() {
+      countries = countryList;
+    });
+  }
+
+  Future<void> _loadStates(String countryCode) async {
+    List<State> stateList = await getStatesOfCountry(countryCode);
+    setState(() {
+      states = stateList;
+    });
   }
 
   @override
@@ -159,7 +180,7 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      primaryText(text: "Status", fontSize: 14.sp),
+                      primaryText(text: "Ads Active", fontSize: 14.sp),
                       5.ht,
                       Container(
                         padding: EdgeInsets.symmetric(
@@ -187,6 +208,87 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                             setState(() {
                               statusSelected = value;
                             });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  20.ht,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      primaryText(text: "Ads Country", fontSize: 14.sp),
+                      5.ht,
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 5.h,
+                          horizontal: 10.w,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        child: DropdownButton<Country>(
+                          hint: secondaryText(text: "Select Country"),
+                          icon: Icon(Icons.keyboard_arrow_down_outlined),
+                          isExpanded: true,
+                          value: countrySelected,
+                          underline: SizedBox(),
+                          items: countries.map((state) {
+                            return DropdownMenuItem<Country>(
+                              value: state,
+                              child: secondaryText(text: state.name),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            if (value != null) {
+                              _adsController.country = value.toString();
+                              setState(() {
+                                countrySelected = value;
+                                stateSelected = null;
+                                states = [];
+                              });
+                              _loadStates(value.isoCode);
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  20.ht,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      primaryText(text: "Ads State", fontSize: 14.sp),
+                      5.ht,
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 5.h,
+                          horizontal: 10.w,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        child: DropdownButton<State>(
+                          hint: secondaryText(text: "Select State"),
+                          icon: Icon(Icons.keyboard_arrow_down_outlined),
+                          isExpanded: true,
+                          value: stateSelected,
+                          underline: SizedBox(),
+                          items: states.map((state) {
+                            return DropdownMenuItem<State>(
+                              value: state,
+                              child: secondaryText(text: state.name),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            if (value != null) {
+                              _adsController.state = value.toString();
+                              setState(() {
+                                stateSelected = value;
+                              });
+                            }
                           },
                         ),
                       ),
