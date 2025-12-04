@@ -39,7 +39,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       appBar: AppBarHolder(
         title: 'Sign In',
         function: () {
-          AppNavigatorHelper.go(context, AppRoute.welcome);
+          AppNavigatorHelper.go(context, AppRoute.bottomNavigation);
         },
       ),
       body: SafeArea(

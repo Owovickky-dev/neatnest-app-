@@ -24,4 +24,9 @@ class AdsRepo {
     );
     return response;
   }
+
+  Future<Response> getUserAds() async {
+    final response = await _dio.get(ConstantData.GETUSERADS);
+    return response;
+  }
 }

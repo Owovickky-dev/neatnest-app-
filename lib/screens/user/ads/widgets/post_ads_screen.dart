@@ -242,7 +242,7 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                           }).toList(),
                           onChanged: (value) {
                             if (value != null) {
-                              _adsController.country = value.toString();
+                              _adsController.country = value.name;
                               setState(() {
                                 countrySelected = value;
                                 stateSelected = null;
@@ -284,7 +284,7 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                           }).toList(),
                           onChanged: (value) {
                             if (value != null) {
-                              _adsController.state = value.toString();
+                              _adsController.state = value.name;
                               setState(() {
                                 stateSelected = value;
                               });

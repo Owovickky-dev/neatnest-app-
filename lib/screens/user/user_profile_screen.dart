@@ -130,7 +130,7 @@ class UserProfileScreen extends ConsumerWidget {
                       children: [
                         20.ht,
                         RowDataHolder(
-                          text: 'My Ads',
+                          text: 'Ads',
                           icons: FontAwesomeIcons.adversal,
                           function: () {
                             AppNavigatorHelper.push(

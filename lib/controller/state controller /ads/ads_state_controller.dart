@@ -40,6 +40,7 @@ class AdsStateController extends _$AdsStateController {
       final response = await _adsRepo.postAds(adsData);
       return response;
     } catch (e) {
+      print("The server error is $e");
       if (e is DioException && e.response != null) {
         return e.response!;
       }

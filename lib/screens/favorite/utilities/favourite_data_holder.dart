@@ -92,7 +92,11 @@ class _FavouriteDataHolderState extends State<FavouriteDataHolder> {
                             size: 14.sp,
                           ),
                           3.wt,
-                          primaryText(text: str, fontSize: 14.sp),
+                          primaryText(
+                            text: widget.adsModel!.jobPoster!.ratingAverage
+                                .toString(),
+                            fontSize: 14.sp,
+                          ),
                         ],
                       ),
                     ],

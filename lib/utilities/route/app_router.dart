@@ -8,6 +8,7 @@ import 'package:neat_nest/screens/home/widget/notification_screen.dart';
 import 'package:neat_nest/screens/onboarding/welcome_screen.dart';
 import 'package:neat_nest/screens/user/ads/ads_screen.dart';
 import 'package:neat_nest/screens/user/ads/widgets/post_ads_screen.dart';
+import 'package:neat_nest/screens/user/ads/widgets/view_ads_screen.dart';
 import 'package:neat_nest/screens/user/auth/security/security_screen.dart';
 import 'package:neat_nest/screens/user/auth/security/widget/change_mail_screen.dart';
 import 'package:neat_nest/screens/user/auth/security/widget/change_phone_number_screen.dart';
@@ -121,6 +122,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoute.filterResult.path,
         name: AppRoute.filterResult.name,
         builder: (context, state) => FilterResultScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.viewAdsScreen.path,
+        name: AppRoute.viewAdsScreen.name,
+        builder: (context, state) => ViewAdsScreen(),
       ),
       GoRoute(
         path: AppRoute.userScreenLog.path,

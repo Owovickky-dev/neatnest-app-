@@ -20,12 +20,12 @@ class _FilterRangeState extends State<FilterRange> {
   @override
   Widget build(BuildContext context) {
     final refData = widget.ref.watch(filterStateProvider);
-    num minPrice = refData?.minPrice ?? 50;
+    num minPrice = refData?.minPrice ?? 20;
     num maxPrice = refData?.maxPrice ?? 1000;
     return Column(
       children: [
         SfRangeSlider(
-          min: 50,
+          min: 20,
           max: 1000,
           activeColor: AppColors.primaryColor,
           inactiveColor: AppColors.secondaryTextColor.withValues(alpha: 0.3),

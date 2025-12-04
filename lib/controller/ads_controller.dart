@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:neat_nest/controller/state%20controller%20/ads/ads_state_controller.dart';
 import 'package:neat_nest/models/ads_model.dart';
 import 'package:neat_nest/widget/notificaiton_content.dart';
 
+import '../utilities/route/app_naviation_helper.dart';
+import '../utilities/route/app_route_names.dart';
 import '../widget/loading_screen.dart';
 
 class AdsController {
@@ -51,7 +52,7 @@ class AdsController {
     price = adsPriceController.text.trim();
     imagePath = adsImageController.text.trim();
     aboutAds = adsAboutController.text.trim();
-    print("$category and $status");
+    print("$country and $state");
     if (category == null || category!.isEmpty || status == null) {
       return showErrorNotification(message: "All field must be filed");
     }
@@ -66,16 +67,15 @@ class AdsController {
       image: imagePath,
       isActive: status!,
     );
-
     showDialog(
       context: context,
-      barrierDismissible: false, // Prevent dismissing by tapping outside
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           backgroundColor: Colors.transparent,
           elevation: 0,
           insetPadding: EdgeInsets.zero,
-          child: LoadingScreen(), // Your custom loading screen
+          child: LoadingScreen(),
         );
       },
     );
@@ -84,20 +84,20 @@ class AdsController {
           .read(adsStateControllerProvider.notifier)
           .postAds(newAds);
       if (response.statusCode == 201) {
-        showSuccessNotification(message: "Ads Successfully Posted");
         if (!context.mounted) return;
-        context.pop();
+        AppNavigatorHelper.go(context, AppRoute.bottomNavigation);
+        showSuccessNotification(message: "Ads Successfully Posted");
       } else {
         final errorMessage = response.data["message"];
-        showErrorNotification(message: errorMessage);
         if (!context.mounted) return;
-        context.pop();
+        AppNavigatorHelper.go(context, AppRoute.bottomNavigation);
+        showErrorNotification(message: errorMessage);
       }
-      // AppNavigatorHelper.go(context, AppRoute.bottomNavigation);
     } catch (e) {
       if (!context.mounted) return;
-      context.pop();
+      AppNavigatorHelper.go(context, AppRoute.bottomNavigation);
       if (e is DioException) {
+        print(e.error);
         showErrorNotification(message: e.error.toString());
       }
     }

@@ -63,6 +63,7 @@ class FilterSearchController {
         data: (adsList) {
           if (adsList.isNotEmpty) {
             showSuccessNotification(message: "${adsList.length} ads found");
+            ref.read(filterStateProvider.notifier).reset();
           }
         },
         loading: () {},
