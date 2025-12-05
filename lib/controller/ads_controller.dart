@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neat_nest/controller/state%20controller%20/ads/ads_state_controller.dart';
+import 'package:neat_nest/controller/state%20controller%20/ads/user_ads_state_controller.dart';
 import 'package:neat_nest/models/ads_model.dart';
 import 'package:neat_nest/widget/notificaiton_content.dart';
 
@@ -98,6 +99,17 @@ class AdsController {
       AppNavigatorHelper.go(context, AppRoute.bottomNavigation);
       if (e is DioException) {
         print(e.error);
+        showErrorNotification(message: e.error.toString());
+      }
+    }
+  }
+
+  Future<void> deleteAds(WidgetRef ref, String adsId) async {
+    try {
+      await ref.read(userAdsStateControllerProvider.notifier).deleteAds(adsId);
+      showSuccessNotification(message: "Ads successfully deleted");
+    } catch (e) {
+      if (e is DioException) {
         showErrorNotification(message: e.error.toString());
       }
     }

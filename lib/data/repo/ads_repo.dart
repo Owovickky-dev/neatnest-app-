@@ -29,4 +29,9 @@ class AdsRepo {
     final response = await _dio.get(ConstantData.GETUSERADS);
     return response;
   }
+
+  Future<Response> deleteAds(String adsId) async {
+    final response = await _dio.delete("${ConstantData.ADS}/$adsId");
+    return response;
+  }
 }

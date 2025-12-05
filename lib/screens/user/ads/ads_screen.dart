@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
@@ -9,11 +10,11 @@ import '../../../widget/app_bar_holder.dart';
 import '../../../widget/app_text.dart';
 import '../widgets/row_data_holder.dart';
 
-class AdsScreen extends StatelessWidget {
+class AdsScreen extends ConsumerWidget {
   const AdsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBarHolder(title: 'Advertisement'),

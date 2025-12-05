@@ -30,6 +30,7 @@ class UserAdsStateController extends _$UserAdsStateController {
             .map((activeAds) => AdsModel.fromJson(activeAds))
             .toList();
 
+        print("The total ads is ${getTotalAds.length}");
         if (!ref.mounted) return;
         state = UserAdsModel(activeAds: getActiveAds, totalAds: getTotalAds);
       }
@@ -41,5 +42,16 @@ class UserAdsStateController extends _$UserAdsStateController {
   Future<void> refreshUserData() async {
     state = null;
     await getUserAds();
+  }
+
+  Future<void> deleteAds(String adsId) async {
+    try {
+      final response = await _adsRepo.deleteAds(adsId);
+      if (response.statusCode == 201) {
+        await getUserAds();
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 }
