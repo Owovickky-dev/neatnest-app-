@@ -34,4 +34,9 @@ class AdsRepo {
     final response = await _dio.delete("${ConstantData.ADS}/$adsId");
     return response;
   }
+
+  Future<Response> updateAds(AdsModel updateData) async {
+    final response = await _dio.patch(ConstantData.ADS, data: updateData);
+    return response;
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:neat_nest/controller/state%20controller%20/ads/ads_state_controller.dart';
 import 'package:neat_nest/controller/state%20controller%20/ads/user_ads_state_controller.dart';
 import 'package:neat_nest/models/ads_model.dart';
@@ -22,6 +23,7 @@ class AdsController {
   bool? status;
   String? country;
   String? state;
+  String? id;
 
   void updateStatus(String isActive) {
     if (isActive == "True") {
@@ -109,6 +111,66 @@ class AdsController {
       await ref.read(userAdsStateControllerProvider.notifier).deleteAds(adsId);
       showSuccessNotification(message: "Ads successfully deleted");
     } catch (e) {
+      if (e is DioException) {
+        showErrorNotification(message: e.error.toString());
+      }
+    }
+  }
+
+  Future<void> getUserAds(BuildContext context, WidgetRef ref) async {
+    try {
+      await ref.read(userAdsStateControllerProvider.notifier).getUserAds();
+    } catch (e) {
+      if (!context.mounted) return;
+      context.pop();
+      if (e is DioException) {
+        showErrorNotification(message: e.error.toString());
+      }
+    }
+  }
+
+  Future<void> updateAds(BuildContext context, WidgetRef ref) async {
+    final String title;
+    final String price;
+    final String imagePath;
+    final String aboutAds;
+
+    title = adsTitleController.text.trim();
+    price = adsPriceController.text.trim();
+    imagePath = adsImageController.text.trim();
+    aboutAds = adsAboutController.text.trim();
+
+    final updateData = AdsModel(
+      title: title,
+      basePrice: int.parse(price),
+      image: imagePath,
+      about: aboutAds,
+      country: country,
+      state: state,
+      category: category,
+      isActive: status,
+      id: id,
+    );
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          insetPadding: EdgeInsets.zero,
+          child: LoadingScreen(),
+        );
+      },
+    );
+    try {
+      await ref.read(adsStateControllerProvider.notifier).updateAds(updateData);
+      if (!context.mounted) return;
+      context.pop();
+      showSuccessNotification(message: "Ads Successfully updated");
+    } catch (e) {
+      if (!context.mounted) return;
+      context.pop();
       if (e is DioException) {
         showErrorNotification(message: e.error.toString());
       }

@@ -4,7 +4,7 @@ class AdsModel {
   final String? id;
   final String? title;
   final String? about;
-  final int? basePrice;
+  final num? basePrice;
   final String? image;
   final String? country;
   final String? state;
@@ -55,6 +55,9 @@ class AdsModel {
     }
     if (state != null && state!.isNotEmpty) {
       data["state"] = state;
+    }
+    if (id != null && id!.isNotEmpty) {
+      data["adsId"] = id;
     }
 
     return data;

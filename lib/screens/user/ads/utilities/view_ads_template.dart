@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:neat_nest/controller/ads_controller.dart';
+import 'package:neat_nest/models/ads_model.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
+import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
+import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/app_text.dart';
 
 import '../../../../utilities/constant/colors.dart';
@@ -16,6 +20,11 @@ class ViewAdsTemplate extends ConsumerStatefulWidget {
     required this.aOrders,
     required this.adsId,
     this.controller,
+    required this.userCountry,
+    required this.userState,
+    required this.image,
+    required this.isActive,
+    required this.about,
   });
 
   final String title;
@@ -24,6 +33,11 @@ class ViewAdsTemplate extends ConsumerStatefulWidget {
   final num aOrders;
   final String adsId;
   final AdsController? controller;
+  final String userCountry;
+  final String userState;
+  final bool isActive;
+  final String about;
+  final String image;
 
   @override
   ConsumerState<ViewAdsTemplate> createState() => _ViewAdsTemplateState();
@@ -31,6 +45,38 @@ class ViewAdsTemplate extends ConsumerStatefulWidget {
 
 class _ViewAdsTemplateState extends ConsumerState<ViewAdsTemplate> {
   final AdsController _adsController = AdsController();
+  void showConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: primaryText(text: "Delete Ads"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              secondaryText(text: "Are you sure you want to delete this Ads?"),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                dialogContext.pop();
+              },
+              child: secondaryText(text: "Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                dialogContext.pop();
+                await _adsController.deleteAds(ref, widget.adsId);
+              },
+              child: secondaryText(text: "Yes Delete"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,12 +147,32 @@ class _ViewAdsTemplateState extends ConsumerState<ViewAdsTemplate> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Icon(Icons.edit_outlined, color: AppColors.primaryColor),
+              GestureDetector(
+                onTap: () {
+                  final adsData = AdsModel(
+                    title: widget.title,
+                    category: widget.category,
+                    basePrice: widget.basePrice,
+                    id: widget.adsId,
+                    country: widget.userCountry,
+                    state: widget.userState,
+                    about: widget.about,
+                    isActive: widget.isActive,
+                    image: widget.image,
+                  );
+
+                  print("The ads on list page has this ${adsData.title}");
+                  AppNavigatorHelper.push(
+                    context,
+                    AppRoute.postAdsScreen,
+                    extra: adsData,
+                  );
+                },
+                child: Icon(Icons.edit_outlined, color: AppColors.primaryColor),
+              ),
               15.wt,
               GestureDetector(
-                onTap: () async {
-                  await _adsController.deleteAds(ref, widget.adsId);
-                },
+                onTap: showConfirmationDialog,
                 child: Icon(Icons.delete, color: Colors.red),
               ),
             ],

@@ -47,4 +47,15 @@ class AdsStateController extends _$AdsStateController {
       rethrow;
     }
   }
+
+  Future<void> updateAds(AdsModel adsUpdateData) async {
+    try {
+      final response = await _adsRepo.updateAds(adsUpdateData);
+      if (response.statusCode == 200) {
+        await getAllAds();
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

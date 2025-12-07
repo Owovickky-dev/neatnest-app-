@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:neat_nest/models/ads_model.dart';
 import 'package:neat_nest/screens/booking/widgets/booking_form_screen.dart';
 import 'package:neat_nest/screens/home/filter/filter_screen.dart';
 import 'package:neat_nest/screens/home/filter/widget/filter_result_screen.dart';
@@ -175,7 +177,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoute.postAdsScreen.path,
         name: AppRoute.postAdsScreen.name,
-        builder: (context, state) => PostAdsScreen(),
+        pageBuilder: (context, state) {
+          final adsState = state.extra as AdsModel?;
+          return MaterialPage(
+            key: state.pageKey,
+            child: PostAdsScreen(adsData: adsState),
+          );
+          ;
+        },
       ),
       GoRoute(
         path: AppRoute.updateEmailScreen.path,

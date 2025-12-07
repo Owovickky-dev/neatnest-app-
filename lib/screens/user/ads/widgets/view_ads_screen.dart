@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:neat_nest/controller/ads_controller.dart';
 import 'package:neat_nest/controller/state%20controller%20/ads/user_ads_state_controller.dart';
 import 'package:neat_nest/screens/user/ads/utilities/view_ads_template.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
@@ -20,11 +21,20 @@ class ViewAdsScreen extends ConsumerStatefulWidget {
 }
 
 class _ViewAdsScreenState extends ConsumerState<ViewAdsScreen> {
+  AdsController controller = AdsController();
+  bool isLoading = true;
+  bool isActive = true;
   @override
   void initState() {
     super.initState();
+    getUserData();
+  }
 
-    ref.read(userAdsStateControllerProvider.notifier).getUserAds();
+  void getUserData() async {
+    await controller.getUserAds(context, ref);
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -35,41 +45,84 @@ class _ViewAdsScreenState extends ConsumerState<ViewAdsScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBarHolder(title: 'My Ads'),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15.w),
-          child: myAds != null
-              ? totalAds!.isNotEmpty
+      body: isLoading
+          ? LoadingScreen()
+          : SafeArea(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15.w),
+                child: totalAds!.isNotEmpty
                     ? Column(
                         children: [
                           20.ht,
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              secondaryText(
-                                text: "Active Ads   (${activeAds?.length})",
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    isActive = true;
+                                  });
+                                },
+                                child: secondaryText(
+                                  text: "Active Ads   (${activeAds?.length})",
+                                  fontSize: 16.sp,
+                                ),
                               ),
-                              secondaryText(
-                                text: "Total Ads  (${totalAds.length})",
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    isActive = false;
+                                  });
+                                },
+                                child: secondaryText(
+                                  text: "Total Ads  (${totalAds.length})",
+                                  fontSize: 16.sp,
+                                ),
                               ),
                             ],
                           ),
                           20.ht,
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount: totalAds.length,
-                              itemBuilder: (context, index) {
-                                final allAds = totalAds[index];
-                                return ViewAdsTemplate(
-                                  title: allAds.title!,
-                                  category: allAds.category!,
-                                  basePrice: allAds.basePrice!,
-                                  adsId: allAds.id!,
-                                  aOrders: 4,
-                                );
-                              },
-                            ),
-                          ),
+                          isActive
+                              ? Expanded(
+                                  child: ListView.builder(
+                                    itemCount: activeAds?.length,
+                                    itemBuilder: (context, index) {
+                                      final activeAd = activeAds?[index];
+                                      return ViewAdsTemplate(
+                                        title: activeAd!.title!,
+                                        category: activeAd.category!,
+                                        basePrice: activeAd.basePrice!,
+                                        adsId: activeAd.id!,
+                                        aOrders: 4,
+                                        userCountry: activeAd.country!,
+                                        userState: activeAd.state!,
+                                        image: activeAd.image!,
+                                        isActive: activeAd.isActive!,
+                                        about: activeAd.about!,
+                                      );
+                                    },
+                                  ),
+                                )
+                              : Expanded(
+                                  child: ListView.builder(
+                                    itemCount: totalAds.length,
+                                    itemBuilder: (context, index) {
+                                      final allAds = totalAds[index];
+                                      return ViewAdsTemplate(
+                                        title: allAds.title!,
+                                        category: allAds.category!,
+                                        basePrice: allAds.basePrice!,
+                                        adsId: allAds.id!,
+                                        aOrders: 4,
+                                        userCountry: allAds.country!,
+                                        userState: allAds.state!,
+                                        image: allAds.image!,
+                                        isActive: allAds.isActive!,
+                                        about: allAds.about!,
+                                      );
+                                    },
+                                  ),
+                                ),
                         ],
                       )
                     : Column(
@@ -96,10 +149,9 @@ class _ViewAdsScreenState extends ConsumerState<ViewAdsScreen> {
                             ),
                           ),
                         ],
-                      )
-              : LoadingScreen(),
-        ),
-      ),
+                      ),
+              ),
+            ),
     );
   }
 }

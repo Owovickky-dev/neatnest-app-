@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/controller/ads_controller.dart';
+import 'package:neat_nest/models/ads_model.dart';
 import 'package:neat_nest/utilities/app_button.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
@@ -14,7 +15,9 @@ import '../../../history/utilities/text_filed_holder.dart';
 import '../../utilities/auth_text_filed.dart';
 
 class PostAdsScreen extends ConsumerStatefulWidget {
-  const PostAdsScreen({super.key});
+  const PostAdsScreen({super.key, this.adsData});
+
+  final AdsModel? adsData;
 
   @override
   ConsumerState<PostAdsScreen> createState() => _PostAdsScreenState();
@@ -42,14 +45,38 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
 
   String? categorySelected;
   String? statusSelected;
-  Country? countrySelected;
-  State? stateSelected;
+  String? countrySelected;
+  String? stateSelected;
 
   @override
   void initState() {
     super.initState();
     _adsController = AdsController();
-    _loadCountries();
+
+    _loadCountries().then((_) {
+      if (widget.adsData != null && mounted) {
+        _adsController.id = widget.adsData?.id;
+        prefilledData();
+      }
+    });
+  }
+
+  void prefilledData() {
+    final myAds = widget.adsData!;
+    _adsController.adsAboutController.text = myAds.about!;
+    _adsController.adsPriceController.text = myAds.basePrice!.toString();
+    _adsController.adsImageController.text = myAds.image!;
+    _adsController.adsTitleController.text = myAds.title!;
+    String category =
+        myAds.category![0].toUpperCase() +
+        myAds.category!.substring(1).toLowerCase();
+    String status = myAds.isActive! ? "True" : "False";
+    setState(() {
+      categorySelected = category;
+      statusSelected = status;
+      countrySelected = myAds.country!;
+    });
+    _loadStates(myAds.country!, myAds.state!);
   }
 
   Future<void> _loadCountries() async {
@@ -59,10 +86,30 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
     });
   }
 
-  Future<void> _loadStates(String countryCode) async {
-    List<State> stateList = await getStatesOfCountry(countryCode);
+  Future<void> _loadStates(String countryName, String? stateName) async {
+    Country? userPickedCountry;
+    try {
+      userPickedCountry = countries.firstWhere(
+        (country) => country.name == countryName,
+      );
+    } catch (e) {
+      return;
+    }
+    List<State> stateList = await getStatesOfCountry(userPickedCountry.isoCode);
+
     setState(() {
       states = stateList;
+
+      if (stateName != null && stateName.isNotEmpty) {
+        try {
+          final matchedState = states.firstWhere(
+            (state) => state.name == stateName,
+          );
+          stateSelected = matchedState.name;
+        } catch (e) {
+          stateSelected = null;
+        }
+      }
     });
   }
 
@@ -70,7 +117,9 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBarHolder(title: 'Post Ads'),
+      appBar: AppBarHolder(
+        title: widget.adsData == null ? 'Post Ads' : "Edit Ads",
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -197,10 +246,10 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                           isExpanded: true,
                           value: statusSelected,
                           underline: SizedBox(),
-                          items: status.map((state) {
+                          items: status.map((staus) {
                             return DropdownMenuItem<String>(
-                              value: state,
-                              child: secondaryText(text: state),
+                              value: staus,
+                              child: secondaryText(text: staus),
                             );
                           }).toList(),
                           onChanged: (value) {
@@ -228,27 +277,27 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                           color: Colors.grey.shade200,
                           borderRadius: BorderRadius.circular(10.r),
                         ),
-                        child: DropdownButton<Country>(
+                        child: DropdownButton<String>(
                           hint: secondaryText(text: "Select Country"),
                           icon: Icon(Icons.keyboard_arrow_down_outlined),
                           isExpanded: true,
                           value: countrySelected,
                           underline: SizedBox(),
-                          items: countries.map((state) {
-                            return DropdownMenuItem<Country>(
-                              value: state,
-                              child: secondaryText(text: state.name),
+                          items: countries.map((country) {
+                            return DropdownMenuItem<String>(
+                              value: country.name,
+                              child: secondaryText(text: country.name),
                             );
                           }).toList(),
                           onChanged: (value) {
                             if (value != null) {
-                              _adsController.country = value.name;
+                              _adsController.country = value;
                               setState(() {
                                 countrySelected = value;
                                 stateSelected = null;
                                 states = [];
                               });
-                              _loadStates(value.isoCode);
+                              _loadStates(value, null);
                             }
                           },
                         ),
@@ -270,21 +319,21 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                           color: Colors.grey.shade200,
                           borderRadius: BorderRadius.circular(10.r),
                         ),
-                        child: DropdownButton<State>(
+                        child: DropdownButton<String>(
                           hint: secondaryText(text: "Select State"),
                           icon: Icon(Icons.keyboard_arrow_down_outlined),
                           isExpanded: true,
                           value: stateSelected,
                           underline: SizedBox(),
                           items: states.map((state) {
-                            return DropdownMenuItem<State>(
-                              value: state,
+                            return DropdownMenuItem<String>(
+                              value: state.name,
                               child: secondaryText(text: state.name),
                             );
                           }).toList(),
                           onChanged: (value) {
                             if (value != null) {
-                              _adsController.state = value.name;
+                              _adsController.state = value;
                               setState(() {
                                 stateSelected = value;
                               });
@@ -315,16 +364,18 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                   ),
                   30.ht,
                   AppButton(
-                    text: "Submit",
+                    text: widget.adsData == null ? "Submit" : "Update",
                     fontSize: 18.sp,
                     width: double.infinity,
                     bckColor: AppColors.primaryColor,
                     textColor: Colors.white,
                     function: () {
-                      print("Post ads is cliced");
-                      if (_formKey.currentState!.validate()) {
-                        _adsController.postAds(context, ref);
-                      }
+                      print("Post ads is clicked");
+                      widget.adsData == null
+                          ? _formKey.currentState!.validate()
+                                ? _adsController.postAds(context, ref)
+                                : null
+                          : _adsController.updateAds(context, ref);
                     },
                   ),
                 ],
