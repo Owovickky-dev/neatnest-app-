@@ -370,12 +370,19 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                     bckColor: AppColors.primaryColor,
                     textColor: Colors.white,
                     function: () {
-                      print("Post ads is clicked");
-                      widget.adsData == null
-                          ? _formKey.currentState!.validate()
-                                ? _adsController.postAds(context, ref)
-                                : null
-                          : _adsController.updateAds(context, ref);
+                      if (widget.adsData == null) {
+                        if (_formKey.currentState!.validate()) {
+                          _adsController.postAds(context, ref);
+                        }
+                      } else {
+                        if (_formKey.currentState!.validate()) {
+                          _adsController.updateAds(
+                            context,
+                            ref,
+                            widget.adsData!,
+                          );
+                        }
+                      }
                     },
                   ),
                 ],

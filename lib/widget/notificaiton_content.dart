@@ -26,15 +26,3 @@ void showErrorNotification({required String message}) {
     fontSize: 15.sp,
   );
 }
-
-void notificationTest({required String message}) {
-  Fluttertoast.showToast(
-    msg: message,
-    gravity: ToastGravity.TOP,
-    toastLength: Toast.LENGTH_LONG,
-    timeInSecForIosWeb: 3,
-    backgroundColor: Colors.red,
-    textColor: Colors.white,
-    fontSize: 15.sp,
-  );
-}

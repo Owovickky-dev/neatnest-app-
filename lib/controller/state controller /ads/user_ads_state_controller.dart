@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:neat_nest/data/repo/ads_repo.dart';
 import 'package:neat_nest/models/ads_model.dart';
 import 'package:neat_nest/models/user_ads_model.dart';
@@ -50,6 +51,24 @@ class UserAdsStateController extends _$UserAdsStateController {
       if (response.statusCode == 201) {
         await getUserAds();
       }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> updateAds(AdsModel adsUpdateData) async {
+    try {
+      final response = await _adsRepo.updateAds(adsUpdateData);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> activateAds(bool active, String adsId) async {
+    try {
+      final response = _adsRepo.activateAds(active, adsId);
+      return response;
     } catch (e) {
       rethrow;
     }

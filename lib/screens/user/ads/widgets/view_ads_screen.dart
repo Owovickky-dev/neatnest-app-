@@ -44,7 +44,12 @@ class _ViewAdsScreenState extends ConsumerState<ViewAdsScreen> {
     final totalAds = myAds?.totalAds;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBarHolder(title: 'My Ads'),
+      appBar: AppBarHolder(
+        title: 'My Ads',
+        function: () {
+          AppNavigatorHelper.push(context, AppRoute.userProfile);
+        },
+      ),
       body: isLoading
           ? LoadingScreen()
           : SafeArea(

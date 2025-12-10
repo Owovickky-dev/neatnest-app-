@@ -8,6 +8,7 @@ import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/app_text.dart';
+import 'package:neat_nest/widget/notificaiton_content.dart';
 
 import '../../../../utilities/constant/colors.dart';
 
@@ -45,17 +46,30 @@ class ViewAdsTemplate extends ConsumerStatefulWidget {
 
 class _ViewAdsTemplateState extends ConsumerState<ViewAdsTemplate> {
   final AdsController _adsController = AdsController();
-  void showConfirmationDialog() {
+
+  void showConfirmationDialog({bool? activate}) {
     showDialog(
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: primaryText(text: "Delete Ads"),
+          title: primaryText(
+            text: activate == null
+                ? "Delete Ads"
+                : widget.isActive
+                ? "Deactivate Ads"
+                : "Activate Ads",
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              secondaryText(text: "Are you sure you want to delete this Ads?"),
+              secondaryText(
+                text: activate == null
+                    ? "Are you sure you want to delete this Ads?"
+                    : widget.isActive
+                    ? "You are making the Ads Inactive, no user will see the ads"
+                    : "You are making the Ads Active,  users can now see the ads",
+              ),
             ],
           ),
           actions: [
@@ -68,9 +82,24 @@ class _ViewAdsTemplateState extends ConsumerState<ViewAdsTemplate> {
             TextButton(
               onPressed: () async {
                 dialogContext.pop();
-                await _adsController.deleteAds(ref, widget.adsId);
+                if (activate == null) {
+                  await _adsController.deleteAds(ref, widget.adsId);
+                } else {
+                  await _adsController.activate(
+                    context,
+                    !widget.isActive,
+                    ref,
+                    widget.adsId,
+                  );
+                }
               },
-              child: secondaryText(text: "Yes Delete"),
+              child: secondaryText(
+                text: activate == null
+                    ? "Yes Delete"
+                    : activate
+                    ? "Yes Deactivate"
+                    : "Yes Activate",
+              ),
             ),
           ],
         );
@@ -145,28 +174,74 @@ class _ViewAdsTemplateState extends ConsumerState<ViewAdsTemplate> {
           ),
           15.ht,
           Row(
+            children: [
+              primaryText(
+                text: "Ads Active: ",
+                fontSize: 14.sp,
+                color: Colors.black45,
+              ),
+              10.wt,
+              Container(
+                height: 20.h,
+                width: 50.w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5.r),
+                  color: Colors.white,
+                ),
+                child: GestureDetector(
+                  onTap: () =>
+                      showConfirmationDialog(activate: widget.isActive),
+                  child: Row(
+                    mainAxisAlignment: widget.isActive
+                        ? MainAxisAlignment.end
+                        : MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 18.h,
+                        width: 18.w,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(9.r),
+                          color: widget.isActive
+                              ? AppColors.primaryColor
+                              : Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          15.ht,
+          Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               GestureDetector(
                 onTap: () {
-                  final adsData = AdsModel(
-                    title: widget.title,
-                    category: widget.category,
-                    basePrice: widget.basePrice,
-                    id: widget.adsId,
-                    country: widget.userCountry,
-                    state: widget.userState,
-                    about: widget.about,
-                    isActive: widget.isActive,
-                    image: widget.image,
-                  );
+                  if (widget.isActive == true) {
+                    showErrorNotification(
+                      message:
+                          "Active Ads cant be update, please kindly deactivate the ads",
+                    );
+                  } else {
+                    final adsData = AdsModel(
+                      title: widget.title,
+                      category: widget.category,
+                      basePrice: widget.basePrice,
+                      id: widget.adsId,
+                      country: widget.userCountry,
+                      state: widget.userState,
+                      about: widget.about,
+                      isActive: widget.isActive,
+                      image: widget.image,
+                    );
 
-                  print("The ads on list page has this ${adsData.title}");
-                  AppNavigatorHelper.push(
-                    context,
-                    AppRoute.postAdsScreen,
-                    extra: adsData,
-                  );
+                    AppNavigatorHelper.push(
+                      context,
+                      AppRoute.postAdsScreen,
+                      extra: adsData,
+                    );
+                  }
                 },
                 child: Icon(Icons.edit_outlined, color: AppColors.primaryColor),
               ),

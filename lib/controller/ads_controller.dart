@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:neat_nest/controller/state%20controller%20/ads/ads_state_controller.dart';
 import 'package:neat_nest/controller/state%20controller%20/ads/user_ads_state_controller.dart';
 import 'package:neat_nest/models/ads_model.dart';
@@ -129,26 +130,43 @@ class AdsController {
     }
   }
 
-  Future<void> updateAds(BuildContext context, WidgetRef ref) async {
-    final String title;
-    final String price;
-    final String imagePath;
-    final String aboutAds;
+  Future<void> updateAds(
+    BuildContext context,
+    WidgetRef ref,
+    AdsModel currentAds,
+  ) async {
+    final String? title;
+    final String? price;
+    final String? imagePath;
+    final String? aboutAds;
 
     title = adsTitleController.text.trim();
     price = adsPriceController.text.trim();
     imagePath = adsImageController.text.trim();
     aboutAds = adsAboutController.text.trim();
 
+    print("The current data is ${currentAds.title}");
+    print("The new data  is $title");
+
     final updateData = AdsModel(
-      title: title,
-      basePrice: int.parse(price),
-      image: imagePath,
-      about: aboutAds,
-      country: country,
-      state: state,
-      category: category,
-      isActive: status,
+      title: (title == currentAds.title && title.isNotEmpty) ? null : title,
+      basePrice: (int.parse(price) == currentAds.basePrice && price.isNotEmpty)
+          ? null
+          : int.parse(price),
+      image: (imagePath == currentAds.image && imagePath.isNotEmpty)
+          ? null
+          : imagePath,
+      about: (aboutAds == currentAds.about && aboutAds.isNotEmpty)
+          ? null
+          : aboutAds,
+      country: (country == currentAds.country && country == null)
+          ? null
+          : country,
+      state: (state == currentAds.state && state == null) ? null : state,
+      category: (category == currentAds.category && category == null)
+          ? null
+          : category,
+      isActive: status == currentAds.isActive ? null : status,
       id: id,
     );
     showDialog(
@@ -164,13 +182,61 @@ class AdsController {
       },
     );
     try {
-      await ref.read(adsStateControllerProvider.notifier).updateAds(updateData);
-      if (!context.mounted) return;
-      context.pop();
-      showSuccessNotification(message: "Ads Successfully updated");
+      final response = await ref
+          .read(userAdsStateControllerProvider.notifier)
+          .updateAds(updateData);
+
+      if (response.statusCode == 200) {
+        await ref.read(userAdsStateControllerProvider.notifier).getUserAds();
+        if (!context.mounted) return;
+        AppNavigatorHelper.go(context, AppRoute.viewAdsScreen);
+        showSuccessNotification(message: "Ads Successfully updated");
+      } else {
+        final errorMessage = response.data["message"];
+        final nextTime = response.data["error"]["extra"]["nextUpdateTime"];
+        final local = DateTime.parse(nextTime).toLocal();
+        final newDateFormat = DateFormat("dd/MM/yy hh:mm a").format(local);
+        if (!context.mounted) return;
+        AppNavigatorHelper.go(context, AppRoute.viewAdsScreen);
+        showErrorNotification(message: "$errorMessage $newDateFormat");
+      }
     } catch (e) {
       if (!context.mounted) return;
       context.pop();
+      if (e is DioException) {
+        showErrorNotification(message: e.error.toString());
+      }
+    }
+  }
+
+  Future<void> activate(
+    BuildContext context,
+    bool active,
+    WidgetRef ref,
+    String adsId,
+  ) async {
+    print("The new ads Status is $active");
+    print("The ID of the ads is $adsId");
+
+    try {
+      final response = await ref
+          .read(userAdsStateControllerProvider.notifier)
+          .activateAds(active, adsId);
+
+      if (response.statusCode == 200) {
+        if (!context.mounted) return;
+        await ref.read(userAdsStateControllerProvider.notifier).getUserAds();
+        showSuccessNotification(
+          message: active
+              ? "Ads successfully Activate"
+              : "Ads successfully deactivate",
+        );
+      } else {
+        final errorMessage = response.data["message"];
+        showErrorNotification(message: errorMessage);
+      }
+    } catch (e) {
+      if (!context.mounted) return;
       if (e is DioException) {
         showErrorNotification(message: e.error.toString());
       }

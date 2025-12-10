@@ -36,7 +36,18 @@ class AdsRepo {
   }
 
   Future<Response> updateAds(AdsModel updateData) async {
-    final response = await _dio.patch(ConstantData.ADS, data: updateData);
+    final response = await _dio.patch(
+      ConstantData.GETUSERADS,
+      data: updateData,
+    );
+    return response;
+  }
+
+  Future<Response> activateAds(bool updateData, String adsId) async {
+    final response = await _dio.patch(
+      ConstantData.GETUSERADS,
+      data: {"isActive": updateData, "adsId": adsId},
+    );
     return response;
   }
 }
