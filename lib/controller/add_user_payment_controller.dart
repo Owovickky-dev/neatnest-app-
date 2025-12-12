@@ -142,7 +142,7 @@ class AddUserPaymentController {
       final deleteMethod = UserPaymentMethodModel(id: methodId);
       await ref
           .read(userPaymentMethodStateProvider.notifier)
-          .deleteUserPayment(deleteMethod);
+          .deleteUserPayment(context, deleteMethod);
 
       if (!context.mounted) return;
       showSuccessNotification(message: 'Payment method removed successfully');

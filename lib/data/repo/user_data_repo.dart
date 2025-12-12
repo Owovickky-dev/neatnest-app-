@@ -40,7 +40,6 @@ class UserDataRepo {
       ConstantData.PAYMENTMETHOd,
       data: updatePayment.toJson(),
     );
-
     return response;
   }
 }

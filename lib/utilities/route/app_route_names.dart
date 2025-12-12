@@ -29,6 +29,8 @@ enum AppRoute {
   postAdsScreen,
   filterResult,
   viewAdsScreen,
+  setAboutMe,
+  viewAboutMeScreen,
 }
 
 extension AppRouteNamesExtension on AppRoute {
@@ -94,6 +96,10 @@ extension AppRouteNamesExtension on AppRoute {
         return "/filterResult";
       case AppRoute.viewAdsScreen:
         return "/viewAdsScreen";
+      case AppRoute.setAboutMe:
+        return "/aboutMeScreen";
+      case AppRoute.viewAboutMeScreen:
+        return "/viewAboutMeScreen";
     }
   }
 }

@@ -10,6 +10,7 @@ import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/app_text.dart';
+import 'package:neat_nest/widget/loading_screen.dart';
 
 import '../../../../widget/app_bar_holder.dart';
 
@@ -22,6 +23,8 @@ class WorkerPaymentMethod extends ConsumerStatefulWidget {
 }
 
 class _WorkerPaymentMethodState extends ConsumerState<WorkerPaymentMethod> {
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
@@ -29,7 +32,12 @@ class _WorkerPaymentMethodState extends ConsumerState<WorkerPaymentMethod> {
   }
 
   Future<void> _getUserData() async {
-    await ref.read(userPaymentMethodStateProvider.notifier).getUserPayment();
+    await ref
+        .read(userPaymentMethodStateProvider.notifier)
+        .getUserPayment(context);
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -51,53 +59,60 @@ class _WorkerPaymentMethodState extends ConsumerState<WorkerPaymentMethod> {
               fontSize: 16.sp,
             ),
             20.ht,
-            Expanded(
-              child: Stack(
-                children: [
-                  methods.isNotEmpty
-                      ? ListView.builder(
-                          itemCount: methods.length,
-                          itemBuilder: (context, index) {
-                            final user = methods[index];
-                            return PaymentMethodHolder(
-                              paymentType: user.paymentType!,
-                              name: loggedUser!.name,
-                              accountNumber: user.accountNumber,
-                              sortCode: user.sortCode,
-                              iban: user.iban,
-                              payPalMail: user.payPalMail,
-                              bankAddress: user.bankAddress,
-                              swiftCode: user.swiftCode,
-                              routingNumber: user.routingNumber,
-                              id: user.id!,
-                              currency: user.currency,
-                              country: user.country,
-                              bankName: user.bankName,
-                            );
-                          },
-                        )
-                      : primaryText(text: "You yet to add a payment method"),
-                  Positioned(
-                    bottom: 40.h,
-                    left: 0,
-                    right: 0,
-                    child: AppButton(
-                      text: "Add Payment Method",
-                      fontSize: 16.sp,
-                      bckColor: AppColors.primaryColor,
-                      textColor: Colors.white,
-                      width: double.infinity,
-                      function: () {
-                        AppNavigatorHelper.push(
-                          context,
-                          AppRoute.addPaymentMethod,
-                        );
-                      },
+            isLoading
+                ? SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    child: Center(child: LoadingScreen()),
+                  )
+                : Expanded(
+                    child: Stack(
+                      children: [
+                        methods.isNotEmpty
+                            ? ListView.builder(
+                                itemCount: methods.length,
+                                itemBuilder: (context, index) {
+                                  final user = methods[index];
+                                  return PaymentMethodHolder(
+                                    paymentType: user.paymentType!,
+                                    name: loggedUser!.name,
+                                    accountNumber: user.accountNumber,
+                                    sortCode: user.sortCode,
+                                    iban: user.iban,
+                                    payPalMail: user.payPalMail,
+                                    bankAddress: user.bankAddress,
+                                    swiftCode: user.swiftCode,
+                                    routingNumber: user.routingNumber,
+                                    id: user.id!,
+                                    currency: user.currency,
+                                    country: user.country,
+                                    bankName: user.bankName,
+                                  );
+                                },
+                              )
+                            : primaryText(
+                                text: "You yet to add a payment method",
+                              ),
+                        Positioned(
+                          bottom: 40.h,
+                          left: 0,
+                          right: 0,
+                          child: AppButton(
+                            text: "Add Payment Method",
+                            fontSize: 16.sp,
+                            bckColor: AppColors.primaryColor,
+                            textColor: Colors.white,
+                            width: double.infinity,
+                            function: () {
+                              AppNavigatorHelper.push(
+                                context,
+                                AppRoute.addPaymentMethod,
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
           ],
         ),
       ),

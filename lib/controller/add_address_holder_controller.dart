@@ -94,7 +94,7 @@ class AddAddressHolderController {
       try {
         await ref
             .read(addressStateControllerProvider.notifier)
-            .addNewAddress(userAddress);
+            .addNewAddress(context, userAddress);
         if (!context.mounted) return;
         showSuccessNotification(message: "Address Added successfully");
 
@@ -113,7 +113,7 @@ class AddAddressHolderController {
     try {
       await ref
           .read(addressStateControllerProvider.notifier)
-          .deleteUserAddress(id);
+          .deleteUserAddress(context, id);
       if (!context.mounted) return;
       showSuccessNotification(message: "Address successfully deleted");
     } catch (e) {
@@ -130,7 +130,7 @@ class AddAddressHolderController {
 
       await ref
           .read(addressStateControllerProvider.notifier)
-          .updateAddressData(isDefault);
+          .updateAddressData(context, isDefault);
 
       if (!context.mounted) return;
       showSuccessNotification(message: "Address successfully set to default");
@@ -170,7 +170,7 @@ class AddAddressHolderController {
     try {
       await ref
           .read(addressStateControllerProvider.notifier)
-          .updateAddressData(updatedUserAddress);
+          .updateAddressData(context, updatedUserAddress);
       if (!context.mounted) return;
       context.pop();
       showSuccessNotification(message: "Address updated");

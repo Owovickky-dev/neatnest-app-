@@ -23,6 +23,7 @@ import 'package:neat_nest/screens/user/user_profile_screen.dart';
 import 'package:neat_nest/screens/user/user_screen.dart';
 import 'package:neat_nest/screens/user/utilities/add_address_holder.dart';
 import 'package:neat_nest/screens/user/widgets/edit_profile/edit_profile_screen.dart';
+import 'package:neat_nest/screens/user/widgets/edit_profile/widget/about.dart';
 import 'package:neat_nest/screens/user/widgets/edit_profile/widget/personal_info_edit.dart';
 import 'package:neat_nest/screens/user/widgets/edit_profile/widget/user_address_screen.dart';
 import 'package:neat_nest/screens/user/widgets/in_reg_screen.dart';
@@ -37,6 +38,7 @@ import 'package:neat_nest/utilities/route/app_router_key.dart';
 
 import '../../screens/onboarding/widgets/splash_screen.dart';
 import '../../screens/user/model/user_payment_method_model.dart';
+import '../../screens/user/widgets/edit_profile/widget/view_about_me.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -183,13 +185,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             key: state.pageKey,
             child: PostAdsScreen(adsData: adsState),
           );
-          ;
         },
       ),
       GoRoute(
         path: AppRoute.updateEmailScreen.path,
         name: AppRoute.updateEmailScreen.name,
         builder: (context, state) => ChangeMailScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.setAboutMe.path,
+        name: AppRoute.setAboutMe.name,
+        builder: (context, state) => About(),
+      ),
+      GoRoute(
+        path: AppRoute.viewAboutMeScreen.path,
+        name: AppRoute.viewAboutMeScreen.name,
+        builder: (context, state) => ViewAboutMe(),
       ),
       GoRoute(
         path: AppRoute.updatePhoneScreen.path,

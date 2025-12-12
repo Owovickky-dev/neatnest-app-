@@ -24,4 +24,22 @@ class AuthRepo {
     );
     return response;
   }
+
+  Future<Response> updateAboutMe(String aboutMe) async {
+    final response = await _dio.patch(
+      ConstantData.ABOUTME,
+      data: {"aboutMe": aboutMe},
+    );
+    return response;
+  }
+
+  Future<Response> getAboutMe() async {
+    final response = await _dio.get(ConstantData.ABOUTME);
+    return response;
+  }
+
+  Future<Response> deleAboutMe() async {
+    final response = await _dio.delete(ConstantData.ABOUTME);
+    return response;
+  }
 }

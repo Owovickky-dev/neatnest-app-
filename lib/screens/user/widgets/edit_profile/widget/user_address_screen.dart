@@ -11,6 +11,7 @@ import 'package:neat_nest/widget/app_text.dart';
 import '../../../../../utilities/app_button.dart';
 import '../../../../../utilities/constant/colors.dart';
 import '../../../../../widget/app_bar_holder.dart';
+import '../../../../../widget/loading_screen.dart';
 
 class UserAddressScreen extends ConsumerStatefulWidget {
   const UserAddressScreen({super.key});
@@ -20,6 +21,8 @@ class UserAddressScreen extends ConsumerStatefulWidget {
 }
 
 class _UserAddressScreenState extends ConsumerState<UserAddressScreen> {
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
@@ -27,7 +30,12 @@ class _UserAddressScreenState extends ConsumerState<UserAddressScreen> {
   }
 
   void _loadUserAddress() async {
-    await ref.read(addressStateControllerProvider.notifier).getUserAddress();
+    await ref
+        .read(addressStateControllerProvider.notifier)
+        .getUserAddress(context);
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -36,68 +44,71 @@ class _UserAddressScreenState extends ConsumerState<UserAddressScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBarHolder(title: 'Addresses'),
-      body: SafeArea(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              20.ht,
-              secondaryText(
-                text: "Below is the list of your addresses",
-                fontSize: 18.sp,
-              ),
-              20.ht,
-              Expanded(
-                child: Stack(
-                  children: [
-                    addresses.isNotEmpty
-                        ? ListView.builder(
-                            itemCount: addresses.length,
-                            itemBuilder: (context, index) {
-                              final myAddresses = addresses[index];
-                              return AddressHolderTemplate(
-                                address: myAddresses.address!,
-                                city: myAddresses.city!,
-                                state: myAddresses.state!,
-                                country: myAddresses.country!,
-                                postalCode: myAddresses.postalCode,
-                                isDefault: myAddresses.isPrimary!,
-                                ref: ref,
-                                addressId: myAddresses.addressId!,
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            20.ht,
+            secondaryText(
+              text: "Below is the list of your addresses",
+              fontSize: 18.sp,
+            ),
+            20.ht,
+            isLoading
+                ? SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    child: Center(child: LoadingScreen()),
+                  )
+                : Expanded(
+                    child: Stack(
+                      children: [
+                        addresses.isNotEmpty
+                            ? ListView.builder(
+                                itemCount: addresses.length,
+                                itemBuilder: (context, index) {
+                                  final myAddresses = addresses[index];
+                                  return AddressHolderTemplate(
+                                    address: myAddresses.address!,
+                                    city: myAddresses.city!,
+                                    state: myAddresses.state!,
+                                    country: myAddresses.country!,
+                                    postalCode: myAddresses.postalCode,
+                                    isDefault: myAddresses.isPrimary!,
+                                    ref: ref,
+                                    addressId: myAddresses.addressId!,
+                                  );
+                                },
+                              )
+                            : Center(
+                                child: secondaryText(
+                                  text:
+                                      "No Address added yet, please add an address",
+                                  color: Colors.red,
+                                ),
+                              ),
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: AppButton(
+                            text: "Add Address",
+                            fontSize: 16.sp,
+                            bckColor: AppColors.primaryColor,
+                            textColor: Colors.white,
+                            width: double.infinity,
+                            function: () {
+                              AppNavigatorHelper.push(
+                                context,
+                                AppRoute.addressHolder,
                               );
                             },
-                          )
-                        : Center(
-                            child: secondaryText(
-                              text:
-                                  "No Address added yet, please add an address",
-                              color: Colors.red,
-                            ),
                           ),
-                    Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      child: AppButton(
-                        text: "Add Address",
-                        fontSize: 16.sp,
-                        bckColor: AppColors.primaryColor,
-                        textColor: Colors.white,
-                        width: double.infinity,
-                        function: () {
-                          AppNavigatorHelper.push(
-                            context,
-                            AppRoute.addressHolder,
-                          );
-                        },
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+                  ),
+          ],
         ),
       ),
     );
