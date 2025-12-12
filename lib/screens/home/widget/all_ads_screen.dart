@@ -49,7 +49,7 @@ class _AllAdsScreenState extends ConsumerState<AllAdsScreen> {
                       crossAxisCount: 2,
                       crossAxisSpacing: 10.w,
                       mainAxisSpacing: 20.h,
-                      childAspectRatio: 0.6,
+                      childAspectRatio: 0.68,
                     ),
                     itemBuilder: (context, index) {
                       final ad = adsData[index];
@@ -59,7 +59,7 @@ class _AllAdsScreenState extends ConsumerState<AllAdsScreen> {
                 : LoadingScreen(),
           ),
           10.ht,
-          ?widget.yesBackButton
+          widget.yesBackButton
               ? GestureDetector(
                   onTap: () {
                     ref
@@ -72,9 +72,6 @@ class _AllAdsScreenState extends ConsumerState<AllAdsScreen> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.r),
                       color: Colors.black12,
-                      // color: AppColors.primaryColor.withValues(
-                      //   alpha: 0.5,
-                      // ),
                     ),
                     child: Center(
                       child: primaryText(
@@ -85,7 +82,7 @@ class _AllAdsScreenState extends ConsumerState<AllAdsScreen> {
                     ),
                   ),
                 )
-              : null,
+              : SizedBox.shrink(),
         ],
       ),
     );
