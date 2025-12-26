@@ -25,6 +25,7 @@ class AdsController {
   String? country;
   String? state;
   String? id;
+  List<String>? timeAvailable;
 
   void updateStatus(String isActive) {
     if (isActive == "True") {
@@ -56,9 +57,13 @@ class AdsController {
     price = adsPriceController.text.trim();
     imagePath = adsImageController.text.trim();
     aboutAds = adsAboutController.text.trim();
-    print("$country and $state");
     if (category == null || category!.isEmpty || status == null) {
       return showErrorNotification(message: "All field must be filed");
+    }
+    if (timeAvailable == null || timeAvailable!.isEmpty) {
+      return showErrorNotification(
+        message: "Please kindly pick your available time",
+      );
     }
 
     final newAds = AdsModel(
@@ -70,7 +75,9 @@ class AdsController {
       state: state,
       image: imagePath,
       isActive: status!,
+      availableTime: timeAvailable,
     );
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -94,7 +101,8 @@ class AdsController {
       } else {
         final errorMessage = response.data["message"];
         if (!context.mounted) return;
-        AppNavigatorHelper.go(context, AppRoute.bottomNavigation);
+        // AppNavigatorHelper.go(context, AppRoute.bottomNavigation);
+        context.pop();
         showErrorNotification(message: errorMessage);
       }
     } catch (e) {

@@ -1,22 +1,33 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
 import 'package:neat_nest/screens/booking/widgets/booking_review_holder.dart';
 import 'package:neat_nest/screens/history/utilities/app_bar_icon.dart';
 import 'package:neat_nest/screens/home/widget/home_screen_icons.dart';
 import 'package:neat_nest/utilities/app_button.dart';
-import 'package:neat_nest/utilities/app_data.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
-import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/app_text.dart';
+import 'package:neat_nest/widget/notificaiton_content.dart';
 
-class BookingScreen extends StatelessWidget {
+import '../../controller/state controller /ads/ads_state_controller.dart';
+import '../../utilities/route/app_route_names.dart';
+
+class BookingScreen extends ConsumerWidget {
   const BookingScreen({super.key, required this.index});
   final int index;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final adsList = ref.watch(adsStateControllerProvider);
+    final adsInfo = adsList[index];
+    final user = ref.watch(userControllerStateProvider);
+    final myDate = DateTime.parse(user!.joinedAt.toString()).toLocal();
+    final myDateFormat = DateFormat("MMMM, yyyy").format(myDate);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SizedBox.expand(
@@ -31,7 +42,7 @@ class BookingScreen extends StatelessWidget {
               child: ClipRRect(
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
-                  imageUrl: AppData.popularImagesPath[index],
+                  imageUrl: adsInfo.image!,
                 ),
               ),
             ),
@@ -41,7 +52,7 @@ class BookingScreen extends StatelessWidget {
               child: AppBarIcon(
                 icons: Icons.arrow_back,
                 function: () {
-                  AppNavigatorHelper.back(context);
+                  context.pop();
                 },
               ),
             ),
@@ -70,7 +81,7 @@ class BookingScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           primaryText(
-                            text: AppData.serviceName[index],
+                            text: adsInfo.title!,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                           ),
@@ -80,9 +91,7 @@ class BookingScreen extends StatelessWidget {
                       5.ht,
                       Row(
                         children: [
-                          secondaryText(
-                            text: AppData.serviceProviderName[index],
-                          ),
+                          secondaryText(text: adsInfo.jobPoster!.username),
                           5.wt,
                           secondaryText(text: '|'),
                           5.wt,
@@ -92,7 +101,7 @@ class BookingScreen extends StatelessWidget {
                             color: AppColors.ratingStarColor,
                           ),
                           secondaryText(
-                            text: '4.2',
+                            text: adsInfo.jobPoster!.ratingAverage.toString(),
                             color: AppColors.ratingStarColor,
                             fontSize: 10.sp,
                           ),
@@ -102,31 +111,22 @@ class BookingScreen extends StatelessWidget {
                       ),
                       20.ht,
                       Row(
+                        children: [
+                          primaryText(text: "Joined:", fontSize: 14.sp),
+                          10.wt,
+                          secondaryText(text: myDateFormat, fontSize: 13.sp),
+                        ],
+                      ),
+                      20.ht,
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              primaryText(text: "Joined:", fontSize: 16.sp),
-                              10.wt,
-                              secondaryText(
-                                text: "Sept, 2025",
-                                fontSize: 16.sp,
-                              ),
-                            ],
+                          HomeScreenIcons(
+                            icons: Icons.location_on,
+                            text: "${adsInfo.country}, ${adsInfo.state}",
                           ),
-                          Row(
-                            children: [
-                              HomeScreenIcons(
-                                icons: Icons.location_on,
-                                text: "Nigeria, Osun",
-                              ),
-                              10.wt,
-                              HomeScreenIcons(
-                                icons: Icons.share,
-                                text: "share",
-                              ),
-                            ],
-                          ),
+                          10.wt,
+                          HomeScreenIcons(icons: Icons.share, text: "share"),
                         ],
                       ),
                       20.ht,
@@ -134,8 +134,7 @@ class BookingScreen extends StatelessWidget {
                       10.ht,
                       secondaryText(
                         textAlign: TextAlign.justify,
-                        text:
-                            "I am a professional Reliable house cleaner with experience in deep cleaning, dusting, mopping, and home organization. Detail-oriented, efficient, and committed to keeping your space fresh and spotless.",
+                        text: adsInfo.about!,
                       ),
                       20.ht,
                       Row(
@@ -197,7 +196,7 @@ class BookingScreen extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                           itemCount: 3,
                           itemBuilder: (context, index) {
-                            return BookingReviewHolder(index: index);
+                            return BookingReviewHolder(index: 1);
                           },
                         ),
                       ),
@@ -207,7 +206,7 @@ class BookingScreen extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              primaryText(text: "\$1,600"),
+                              primaryText(text: "\$${adsInfo.basePrice}"),
                               secondaryText(text: "/hour", fontSize: 11.sp),
                             ],
                           ),
@@ -218,11 +217,18 @@ class BookingScreen extends StatelessWidget {
                             bckColor: AppColors.primaryColor,
                             textColor: Colors.white,
                             function: () {
-                              debugPrint("Booking clicked");
-                              AppNavigatorHelper.push(
-                                context,
-                                AppRoute.bookingFormScreen,
-                              );
+                              final isUser = user.id == adsInfo.jobPoster!.id;
+                              if (isUser == true) {
+                                return showErrorNotification(
+                                  message: "You can't pick your own ads",
+                                );
+                              } else {
+                                AppNavigatorHelper.push(
+                                  context,
+                                  AppRoute.bookingFormScreen,
+                                  extra: index,
+                                );
+                              }
                             },
                           ),
                         ],

@@ -63,24 +63,18 @@ class UserControllerState extends _$UserControllerState {
         final refreshToken = responseData["data"]["refreshToken"];
         if (token != null && refreshToken != null) {
           await SecureStorageHelper.saveToken(token);
-          print("access token saved");
           await SecureStorageHelper.saveRefreshToken(refreshToken);
-          print("refresh token saved");
           final user = UserModel.fromJson(responseData["data"]["loginUser"]);
           await SecureStorageHelper.saveUserData(user);
-
           if (ref.mounted) {
             state = user;
           }
-
           return;
         } else {
           throw Exception("No token received");
         }
       }
     } catch (e, stack) {
-      print("❌ ERROR in UserControllerState.login(): $e");
-      print("❌ Stack trace: $stack");
       rethrow;
     }
   }

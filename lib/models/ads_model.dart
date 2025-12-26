@@ -13,6 +13,7 @@ class AdsModel {
   final bool? isActive;
   final String? workerId;
   final DateTime? createdAt;
+  final List<String>? availableTime;
 
   AdsModel({
     this.id,
@@ -27,6 +28,7 @@ class AdsModel {
     this.createdAt,
     this.country,
     this.state,
+    this.availableTime,
   });
 
   Map<String, dynamic> toJson() {
@@ -60,6 +62,10 @@ class AdsModel {
       data["adsId"] = id;
     }
 
+    if (availableTime != null && availableTime!.isNotEmpty) {
+      data["availableTime"] = availableTime;
+    }
+
     return data;
   }
 
@@ -74,6 +80,9 @@ class AdsModel {
       isActive: json["isActive"] ?? false,
       country: json["country"] ?? "",
       state: json["state"] ?? "",
+      availableTime: json["availableTime"] != null
+          ? List<String>.from(json["availableTime"])
+          : [],
       jobPoster: JobPosterModel.fromJson(json["jobPoster"] ?? {}),
       createdAt: json["createdAt"] != null
           ? DateTime.parse(json["createdAt"])

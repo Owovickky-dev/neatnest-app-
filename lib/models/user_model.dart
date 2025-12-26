@@ -16,7 +16,7 @@ class UserModel {
   final bool? isVerfied;
   final double? ratingAverage;
   final double? ratingQuantity;
-  final DateTime? joinedAt;
+  final String? joinedAt;
 
   UserModel({
     this.id,
@@ -64,9 +64,7 @@ class UserModel {
     try {
       return UserModel(
         id: json["_id"] ?? json["id"],
-        joinedAt: json["joinedAt"] != null
-            ? DateTime.parse(json["joinedAt"])
-            : null,
+        joinedAt: json["joinedAt"]?.toString() ?? "",
         name: json["name"]?.toString() ?? "",
         email: json["email"]?.toString() ?? "",
         gender: json["gender"]?.toString() ?? "",
@@ -95,7 +93,7 @@ class UserModel {
       "username": username,
       "gender": gender,
       "role": role,
-      "joinedAt": joinedAt?.toIso8601String(),
+      "joinedAt": joinedAt,
       "isVerfied": isVerfied,
       "ratingAverage": ratingAverage,
       "ratingQuantity": ratingQuantity,

@@ -42,20 +42,26 @@ class _AllAdsScreenState extends ConsumerState<AllAdsScreen> {
       body: Column(
         children: [
           Expanded(
-            child: adsData.isNotEmpty
-                ? GridView.builder(
-                    itemCount: adsData.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 10.w,
-                      mainAxisSpacing: 20.h,
-                      childAspectRatio: 0.68,
-                    ),
-                    itemBuilder: (context, index) {
-                      final ad = adsData[index];
-                      return FavouriteDataHolder(index: index, adsModel: ad);
-                    },
-                  )
+            child: _initialLoad
+                ? adsData.isNotEmpty
+                      ? GridView.builder(
+                          itemCount: adsData.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 10.w,
+                                mainAxisSpacing: 20.h,
+                                childAspectRatio: 0.68,
+                              ),
+                          itemBuilder: (context, index) {
+                            final ad = adsData[index];
+                            return FavouriteDataHolder(
+                              index: index,
+                              adsModel: ad,
+                            );
+                          },
+                        )
+                      : SizedBox.shrink()
                 : LoadingScreen(),
           ),
           10.ht,

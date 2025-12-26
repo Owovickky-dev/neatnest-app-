@@ -42,7 +42,7 @@ final class AboutMeControllerStateProvider
 }
 
 String _$aboutMeControllerStateHash() =>
-    r'497c1c8ae2f284c02b29c8966e21dd401af8c92a';
+    r'0f9f406f31a3780984e391ef43fa6e67d69fa0c9';
 
 abstract class _$AboutMeControllerState extends $Notifier<String> {
   String build();

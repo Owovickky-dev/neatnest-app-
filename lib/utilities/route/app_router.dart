@@ -100,7 +100,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoute.bookingFormScreen.path,
         name: AppRoute.bookingFormScreen.name,
-        builder: (context, state) => BookingFormScreen(),
+        builder: (context, state) {
+          final indent = state.extra as int;
+          return BookingFormScreen(index: indent);
+        },
       ),
       GoRoute(
         path: AppRoute.userProfile.path,

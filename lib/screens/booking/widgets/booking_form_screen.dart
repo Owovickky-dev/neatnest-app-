@@ -10,12 +10,15 @@ import 'package:neat_nest/screens/home/filter/widget/date_selector.dart';
 import 'package:neat_nest/utilities/app_button.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 
+import '../../../controller/state controller /ads/ads_state_controller.dart';
 import '../../../utilities/constant/colors.dart';
 import '../../../widget/app_text.dart';
 import '../../history/utilities/text_filed_holder.dart';
 
 class BookingFormScreen extends ConsumerStatefulWidget {
-  const BookingFormScreen({super.key});
+  const BookingFormScreen({super.key, required this.index});
+
+  final int index;
 
   @override
   ConsumerState<BookingFormScreen> createState() => _BookingFormScreenState();
@@ -24,11 +27,12 @@ class BookingFormScreen extends ConsumerStatefulWidget {
 class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
   late BookingFormController _bookingFormController;
 
-  final List<String> times = const [
-    "9:00 Am - 12:00Pm",
-    "12:00 Am - 3:00Pm",
-    "11:00 Am - 1:00Pm",
-  ];
+  late List<String>? times = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
@@ -39,6 +43,8 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
   @override
   Widget build(BuildContext context) {
     final bookingTime = ref.watch(bookingTimeStateProvider);
+    final myAvailable = ref.watch(adsStateControllerProvider);
+    times = myAvailable[widget.index].availableTime!;
     return Container(
       color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -82,7 +88,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                 },
               ),
               20.ht,
-              primaryText(text: "Time", fontSize: 15.sp),
+              primaryText(text: "Worker Available  Time", fontSize: 15.sp),
               10.ht,
               Container(
                 padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
@@ -96,7 +102,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                   isExpanded: true,
                   value: bookingTime.isEmpty ? null : bookingTime,
                   underline: SizedBox(),
-                  items: times.map((time) {
+                  items: times?.map((time) {
                     return DropdownMenuItem(
                       value: time,
                       child: secondaryText(text: time),

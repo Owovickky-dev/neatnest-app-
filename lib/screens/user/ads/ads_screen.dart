@@ -54,6 +54,24 @@ class AdsScreen extends ConsumerWidget {
                   AppNavigatorHelper.push(context, AppRoute.viewAdsScreen);
                 },
               ),
+              30.ht,
+              RowDataHolder(
+                text: "Completed Orders",
+                icons: FontAwesomeIcons.lock,
+                function: () {},
+              ),
+              30.ht,
+              RowDataHolder(
+                text: "Pending Orders",
+                icons: FontAwesomeIcons.lock,
+                function: () {},
+              ),
+              30.ht,
+              RowDataHolder(
+                text: "Cancelled Orders",
+                icons: FontAwesomeIcons.lock,
+                function: () {},
+              ),
             ],
           ),
         ),

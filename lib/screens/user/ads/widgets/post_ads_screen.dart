@@ -39,9 +39,37 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
     "Other",
   ];
   final List<String> status = ["True", "False"];
+  final List<String> allTimes = [
+    "1AM",
+    "2AM",
+    "3AM",
+    "4AM",
+    "5AM",
+    "6AM",
+    "7AM",
+    "8AM",
+    "9AM",
+    "10AM",
+    "11AM",
+    "12AM",
+    "1PM",
+    "2PM",
+    "3PM",
+    "4PM",
+    "5PM",
+    "6PM",
+    "7PM",
+    "8PM",
+    "9PM",
+    "10PM",
+    "11PM",
+    "12PM",
+  ];
 
   List<Country> countries = [];
   List<State> states = [];
+  final List<String> selectedTimes = [];
+  bool isOpen = false;
 
   String? categorySelected;
   String? statusSelected;
@@ -224,6 +252,73 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                       }
                       return null;
                     },
+                  ),
+                  20.ht,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      primaryText(text: "Available Time", fontSize: 14.sp),
+                      5.ht,
+                      GestureDetector(
+                        onTap: () {
+                          setState(() => isOpen = !isOpen);
+                          _adsController.timeAvailable = selectedTimes;
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 14,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: secondaryText(
+                                  text: selectedTimes.isEmpty
+                                      ? "Select available time"
+                                      : selectedTimes.join(", "),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              Icon(
+                                isOpen
+                                    ? Icons.keyboard_arrow_up
+                                    : Icons.keyboard_arrow_down,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      if (isOpen)
+                        Container(
+                          margin: const EdgeInsets.only(top: 4),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          constraints: const BoxConstraints(maxHeight: 250),
+                          child: ListView(
+                            shrinkWrap: true,
+                            children: allTimes.map((time) {
+                              return CheckboxListTile(
+                                title: secondaryText(text: time),
+                                value: selectedTimes.contains(time),
+                                onChanged: (value) {
+                                  setState(() {
+                                    value!
+                                        ? selectedTimes.add(time)
+                                        : selectedTimes.remove(time);
+                                  });
+                                },
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                    ],
                   ),
                   20.ht,
                   Column(
