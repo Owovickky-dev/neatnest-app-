@@ -1,28 +1,31 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/widget/app_text.dart';
 
 import '../../../utilities/constant/colors.dart';
 
-class FavouriteDataTemplate extends StatelessWidget {
+class FavouriteDataTemplate extends ConsumerWidget {
   const FavouriteDataTemplate({
     super.key,
     required this.title,
     required this.adsOwner,
     required this.price,
     required this.image,
+    required this.favId,
   });
 
   final String title;
   final String adsOwner;
   final num price;
   final String image;
+  final String favId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       margin: EdgeInsets.only(bottom: 20.h),
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.h),

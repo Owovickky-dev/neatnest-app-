@@ -10,6 +10,7 @@ class FavouriteModel {
   factory FavouriteModel.fromJson(Map<String, dynamic> json) {
     return FavouriteModel(
       favouriteId: json["_id"],
+      adsId: json["adsId"]["_id"] ?? "",
       adsModel: AdsModel.fromJson(json["adsId"] ?? {}),
     );
   }

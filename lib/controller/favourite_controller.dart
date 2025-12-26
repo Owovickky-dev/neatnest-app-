@@ -13,8 +13,6 @@ class FavouriteController {
     String adsId,
     WidgetRef ref,
   ) async {
-    print("The favourite button is clicked");
-
     try {
       final response = await ref
           .read(favouriteStateControllerProvider.notifier)
@@ -22,10 +20,39 @@ class FavouriteController {
       if (response.statusCode == 201) {
         if (!context.mounted) return;
         showSuccessNotification(message: "Added to your favourite");
+      } else if (response.statusCode == 401) {
+        if (!context.mounted) return;
+        final errorText = response.data["message"];
+        showErrorNotification(message: errorText);
       } else {
         if (!context.mounted) return;
-        print(response.data);
         showErrorNotification(message: "Failed to add to your favourite");
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      if (e is DioException) {
+        showErrorNotification(message: e.error.toString());
+      }
+    }
+  }
+
+  Future<void> removeFavourite(
+    BuildContext context,
+    String favouriteId,
+    WidgetRef ref,
+  ) async {
+    try {
+      final response = await ref
+          .read(favouriteStateControllerProvider.notifier)
+          .removeFavourite(favouriteId);
+      if (response.statusCode == 200) {
+        if (!context.mounted) return;
+        showSuccessNotification(message: "Successfully removed from favourite");
+      } else if (response.statusCode == 400) {
+        final errorText = response.data;
+        print(errorText);
+      } else {
+        showErrorNotification(message: "Failed to remove from favourite");
       }
     } catch (e) {
       if (!context.mounted) return;

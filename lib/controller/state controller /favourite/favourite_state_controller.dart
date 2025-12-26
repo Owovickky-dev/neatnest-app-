@@ -11,6 +11,7 @@ class FavouriteStateController extends _$FavouriteStateController {
   @override
   List<FavouriteModel> build() {
     _favouriteRepo = FavouriteRepo();
+    Future(() => getUserFavourite());
     return [];
   }
 
@@ -34,6 +35,20 @@ class FavouriteStateController extends _$FavouriteStateController {
     try {
       final response = await _favouriteRepo.addFavourite(adsId);
       if (response.statusCode == 201) {
+        await getUserFavourite();
+        return response;
+      } else {
+        return response;
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> removeFavourite(String favouriteId) async {
+    try {
+      final response = await _favouriteRepo.deleteFavourite(favouriteId);
+      if (response.statusCode == 200) {
         await getUserFavourite();
         return response;
       } else {

@@ -17,4 +17,9 @@ class FavouriteRepo {
     final response = await _dio.get(ConstantData.FAVOURITE);
     return response;
   }
+
+  Future<Response> deleteFavourite(String id) async {
+    final response = await _dio.delete("${ConstantData.FAVOURITE}/$id");
+    return response;
+  }
 }

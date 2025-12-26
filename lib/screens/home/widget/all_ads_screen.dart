@@ -27,10 +27,13 @@ class _AllAdsScreenState extends ConsumerState<AllAdsScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _loadAds());
   }
 
-  void _loadAds() {
+  void _loadAds() async {
     if (!_initialLoad) {
-      ref.read(adsStateControllerProvider.notifier).getAllAds();
-      _initialLoad = true;
+      await ref.read(adsStateControllerProvider.notifier).getAllAds();
+      setState(() {
+        _initialLoad = true;
+      });
+      ;
     }
   }
 
