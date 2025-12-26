@@ -3,13 +3,14 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:neat_nest/controller/favourite_controller.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/widget/app_text.dart';
 
 import '../../../utilities/constant/colors.dart';
 
 class FavouriteDataTemplate extends ConsumerWidget {
-  const FavouriteDataTemplate({
+  FavouriteDataTemplate({
     super.key,
     required this.title,
     required this.adsOwner,
@@ -17,6 +18,8 @@ class FavouriteDataTemplate extends ConsumerWidget {
     required this.image,
     required this.favId,
   });
+
+  final FavouriteController favouriteController = FavouriteController();
 
   final String title;
   final String adsOwner;
@@ -69,7 +72,9 @@ class FavouriteDataTemplate extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  favouriteController.removeFavourite(context, favId, ref);
+                },
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
                   decoration: BoxDecoration(

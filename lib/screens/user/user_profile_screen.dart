@@ -17,6 +17,7 @@ import 'package:neat_nest/widget/app_bar_holder.dart';
 
 import '../../utilities/app_data.dart';
 import '../../widget/app_text.dart';
+import '../home/notifier/home_display_data_state.dart';
 
 class UserProfileScreen extends ConsumerWidget {
   UserProfileScreen({super.key});
@@ -171,7 +172,12 @@ class UserProfileScreen extends ConsumerWidget {
                 textColor: Colors.white,
                 width: double.infinity,
                 fontSize: 20.sp,
-                function: () => _signInController.logout(context, ref),
+                function: () {
+                  ref
+                      .read(homeDisplayDataStateProvider.notifier)
+                      .displayData(false);
+                  _signInController.logout(context, ref);
+                },
               ),
             ],
           ),
