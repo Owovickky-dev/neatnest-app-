@@ -19,14 +19,55 @@ import '../../controller/state controller /ads/ads_state_controller.dart';
 import '../../utilities/route/app_route_names.dart';
 
 class BookingScreen extends ConsumerWidget {
-  const BookingScreen({super.key, required this.index});
+  const BookingScreen({
+    super.key,
+    required this.index,
+    required this.isFavourite,
+  });
   final int index;
+  final bool isFavourite;
+  void showConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: primaryText(text: "Sign in"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [secondaryText(text: "Do you want to login")],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                dialogContext.pop();
+              },
+              child: secondaryText(text: "Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                dialogContext.pop();
+                AppNavigatorHelper.push(
+                  dialogContext,
+                  AppRoute.signIn,
+                  extra: index,
+                );
+              },
+              child: secondaryText(text: "Yes"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final adsList = ref.watch(adsStateControllerProvider);
     final adsInfo = adsList[index];
+    final posterJoinedDate = adsInfo.jobPoster!.joinedAt;
     final user = ref.watch(userControllerStateProvider);
-    final myDate = DateTime.parse(user!.joinedAt.toString()).toLocal();
+    final myDate = DateTime.parse(posterJoinedDate!).toLocal();
     final myDateFormat = DateFormat("MMMM, yyyy").format(myDate);
     return Scaffold(
       backgroundColor: Colors.white,
@@ -85,7 +126,12 @@ class BookingScreen extends ConsumerWidget {
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                           ),
-                          Icon(Icons.favorite, color: Colors.red),
+                          Icon(
+                            isFavourite
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: isFavourite ? Colors.red : Colors.black,
+                          ),
                         ],
                       ),
                       5.ht,
@@ -217,9 +263,14 @@ class BookingScreen extends ConsumerWidget {
                             bckColor: AppColors.primaryColor,
                             textColor: Colors.white,
                             function: () {
-                              final isUser = user.id == adsInfo.jobPoster!.id;
-                              if (isUser == true) {
-                                return showErrorNotification(
+                              final isUser = user?.id == adsInfo.jobPoster!.id;
+                              if (user == null) {
+                                showErrorNotification(
+                                  message: "Please kindly login to book ",
+                                );
+                                showConfirmationDialog(context);
+                              } else if (isUser == true) {
+                                showErrorNotification(
                                   message: "You can't pick your own ads",
                                 );
                               } else {

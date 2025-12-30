@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/controller/booking_form_controller.dart';
-import 'package:neat_nest/screens/booking/notifiers/booking_date_state.dart';
 import 'package:neat_nest/screens/booking/notifiers/booking_time_state.dart';
 import 'package:neat_nest/screens/booking/widgets/booking_text_field.dart';
 import 'package:neat_nest/screens/history/utilities/app_bar_icon.dart';
-import 'package:neat_nest/screens/home/filter/widget/date_selector.dart';
 import 'package:neat_nest/utilities/app_button.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 
@@ -79,13 +77,11 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                     _bookingFormController.bookingEmailController,
               ),
               20.ht,
-              primaryText(text: "Date", fontSize: 15.sp),
-              10.ht,
-              DateSelector(
-                initialDate: ref.watch(bookingDateStateProvider),
-                onDatePicked: (date) {
-                  ref.read(bookingDateStateProvider.notifier).pickedDate(date);
-                },
+              BookingTextField(
+                titleText: "Enter Address",
+                hintText: "Enter User Address",
+                textEditingController:
+                    _bookingFormController.bookingUserAddress,
               ),
               20.ht,
               primaryText(text: "Worker Available  Time", fontSize: 15.sp),
@@ -119,9 +115,9 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
               ),
               20.ht,
               TextFiledHolder(
-                titleText: 'Additional Note',
+                titleText: 'Work Details',
                 containerHeight: 150.h,
-                hintText: 'Add note...',
+                hintText: 'Add Details...',
                 textAlign: TextAlign.start,
                 controller: _bookingFormController.bookingNoteController,
               ),

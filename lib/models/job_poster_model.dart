@@ -4,6 +4,7 @@ class JobPosterModel {
   final String username;
   final num? ratingAverage;
   final num? ratingQuantity;
+  final String? joinedAt;
 
   JobPosterModel({
     this.id = "",
@@ -11,6 +12,7 @@ class JobPosterModel {
     this.username = "",
     this.ratingQuantity,
     this.ratingAverage,
+    this.joinedAt,
   });
 
   factory JobPosterModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class JobPosterModel {
       username: json['username']?.toString() ?? "",
       ratingAverage: json["ratingAverage"] ?? 0,
       ratingQuantity: json["ratingQuantity"] ?? 0,
+      joinedAt: json["createdAt"] ?? "",
     );
   }
 

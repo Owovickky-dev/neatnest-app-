@@ -4,12 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neat_nest/screens/booking/notifiers/booking_date_state.dart';
 import 'package:neat_nest/screens/booking/notifiers/booking_time_state.dart';
 import 'package:neat_nest/screens/booking/widgets/select_rooms.dart';
+import 'package:neat_nest/widget/notificaiton_content.dart';
 
 class BookingFormController {
   BookingFormController();
 
   TextEditingController bookingNameController = TextEditingController();
   TextEditingController bookingEmailController = TextEditingController();
+  TextEditingController bookingUserAddress = TextEditingController();
   TextEditingController bookingNoteController = TextEditingController();
 
   void onSubmit(WidgetRef ref, BuildContext context) {
@@ -26,9 +28,11 @@ class BookingFormController {
     date = ref.watch(bookingDateStateProvider);
 
     if (name.isEmpty || email.isEmpty || time.isEmpty) {
-      debugPrint("Please kindly supply your information");
+      if (!context.mounted) return;
+      showErrorNotification(message: "Please kindly supply your information");
     } else if (!EmailValidator.validate(email)) {
-      debugPrint("Please enter a valid mail");
+      if (!context.mounted) return;
+      showErrorNotification(message: "Please enter a valid mail");
     } else {
       Navigator.push(
         context,

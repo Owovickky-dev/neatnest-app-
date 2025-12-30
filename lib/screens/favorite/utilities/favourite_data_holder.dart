@@ -50,7 +50,8 @@ class _FavouriteDataHolderState extends ConsumerState<FavouriteDataHolder> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => BookingScreen(index: widget.index),
+            builder: (context) =>
+                BookingScreen(index: widget.index, isFavourite: isFav),
           ),
         );
       },
