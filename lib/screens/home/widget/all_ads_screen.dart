@@ -30,6 +30,7 @@ class _AllAdsScreenState extends ConsumerState<AllAdsScreen> {
   void _loadAds() async {
     if (!_initialLoad) {
       await ref.read(adsStateControllerProvider.notifier).getAllAds();
+      if (!mounted) return;
       setState(() {
         _initialLoad = true;
       });

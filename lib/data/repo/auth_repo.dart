@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:neat_nest/data/api/api_client.dart';
+import 'package:neat_nest/models/update_personal_profile_model.dart';
 import 'package:neat_nest/models/user_model.dart';
 import 'package:neat_nest/utilities/constant/constant_data.dart';
 
@@ -40,6 +41,16 @@ class AuthRepo {
 
   Future<Response> deleAboutMe() async {
     final response = await _dio.delete(ConstantData.ABOUTME);
+    return response;
+  }
+
+  Future<Response> updateMyPersonal(
+    UpdatePersonalProfileModel updatePInfo,
+  ) async {
+    final response = await _dio.patch(
+      ConstantData.UPDATEPERSONALINFO,
+      data: updatePInfo.toJson(),
+    );
     return response;
   }
 }

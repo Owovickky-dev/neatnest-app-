@@ -90,18 +90,5 @@ class UserControllerState extends _$UserControllerState {
     await loadUserData();
   }
 
-  Map<String, dynamic> pendingUserUpdates = {};
-
-  void updatePersonalInformation({
-    String? name,
-    String? email,
-    String? userName,
-    String? phoneNumber,
-  }) {
-    if (name != null) pendingUserUpdates["name"] = name;
-    if (email != null) pendingUserUpdates["email"] = email;
-    if (userName != null) pendingUserUpdates["username"] = userName;
-    if (phoneNumber != null) pendingUserUpdates["phoneNumber"] = phoneNumber;
-    print("The newly entered data is $pendingUserUpdates");
-  }
+  Future<void> updatePersonalInfo() async {}
 }

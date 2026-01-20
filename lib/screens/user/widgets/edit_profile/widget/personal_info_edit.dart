@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,7 +9,6 @@ import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/widget/app_bar_holder.dart';
 import 'package:neat_nest/widget/app_text.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
 
 class PersonalInfoEdit extends ConsumerStatefulWidget {
   const PersonalInfoEdit({super.key});
@@ -25,22 +21,6 @@ class _PersonalInfoEditState extends ConsumerState<PersonalInfoEdit> {
   late EditProfileController _editProfileController;
 
   final _formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-    // Auto refresh countdown for UI
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (mounted) {
-        setState(() {});
-      }
-      // stop the timer when both cooldowns are done
-      if (_editProfileController.canEditDetails() &&
-          _editProfileController.canUserNameDetails()) {
-        timer.cancel();
-      }
-    });
-  }
 
   @override
   void didChangeDependencies() {
@@ -63,7 +43,7 @@ class _PersonalInfoEditState extends ConsumerState<PersonalInfoEdit> {
               10.ht,
               secondaryText(
                 text:
-                    "Kindly note that your FullName and UserName can only be edited once in 90 days and also will need re-verification and kindly remember to click the all chnages to make the changes take effect",
+                    "Kindly note that your FullName can only be updated once in 60 days  and UserName once in 30 days ",
                 color: Colors.red,
               ),
               20.ht,
@@ -75,15 +55,15 @@ class _PersonalInfoEditState extends ConsumerState<PersonalInfoEdit> {
                   FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
                 ],
                 textEditingController: _editProfileController.fNameController,
-                readOnly: !_editProfileController.canEditDetails(),
-                onTap: () {
-                  if (!_editProfileController.canEditDetails()) {
-                    showErrorNotification(
-                      message:
-                          "Name can't be edited for security reasons. Wait ${_editProfileController.timeLeft()}s",
-                    );
-                  }
-                },
+                // readOnly: !_editProfileController.canEditDetails(),
+                // onTap: () {
+                //   if (!_editProfileController.canEditDetails()) {
+                //     showErrorNotification(
+                //       message:
+                //           "Name can't be edited for security reasons. Wait ${_editProfileController.timeLeft()}s",
+                //     );
+                //   }
+                // },
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Full name is required cant be empty";
@@ -101,15 +81,15 @@ class _PersonalInfoEditState extends ConsumerState<PersonalInfoEdit> {
                 ],
                 textEditingController:
                     _editProfileController.userNameController,
-                readOnly: !_editProfileController.canUserNameDetails(),
-                onTap: () {
-                  if (!_editProfileController.canUserNameDetails()) {
-                    showErrorNotification(
-                      message:
-                          "UserName can't be edited for security reasons. Wait ${_editProfileController.userNameTimeLeft()}s",
-                    );
-                  }
-                },
+                // readOnly: !_editProfileController.canUserNameDetails(),
+                // onTap: () {
+                //   if (!_editProfileController.canUserNameDetails()) {
+                //     showErrorNotification(
+                //       message:
+                //           "UserName can't be edited for security reasons. Wait ${_editProfileController.userNameTimeLeft()}s",
+                //     );
+                //   }
+                // },
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "User name is required cant be empty";
@@ -119,29 +99,14 @@ class _PersonalInfoEditState extends ConsumerState<PersonalInfoEdit> {
               ),
               20.ht,
               AuthTextFiled(
-                titleText: "Telephone",
-                hintText: "telephone",
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                textEditingController:
-                    _editProfileController.phoneNumberController,
+                titleText: "Enter Password",
+                secure: true,
+                hintText: "Kindly enter your password",
+                textInputType: TextInputType.text,
+                textEditingController: _editProfileController.userPassword,
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return "Phone number is required cant be empty";
-                  }
-                  return null;
-                },
-              ),
-              20.ht,
-              AuthTextFiled(
-                titleText: "Email",
-                hintText: "Email",
-                textEditingController: _editProfileController.emailController,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Email is required cant be empty";
-                  }
-                  if (!EmailValidator.validate(value)) {
-                    return "Kindly enter a valid mail";
+                    return "Password is required cant be empty";
                   }
                   return null;
                 },
@@ -155,7 +120,7 @@ class _PersonalInfoEditState extends ConsumerState<PersonalInfoEdit> {
                 fontSize: 23.sp,
                 function: () {
                   if (_formKey.currentState!.validate()) {
-                    _editProfileController.continueButton(context, ref);
+                    _editProfileController.saveData();
                   }
                 },
               ),

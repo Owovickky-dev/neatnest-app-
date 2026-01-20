@@ -23,6 +23,12 @@ class FavouriteStateController extends _$FavouriteStateController {
         final favourite = responseData
             .map((fav) => FavouriteModel.fromJson(fav))
             .toList();
+        favourite.sort((a, b) {
+          if (a.createdAt == null && b.createdAt == null) return 0;
+          if (a.createdAt == null) return 1;
+          if (b.createdAt == null) return -1;
+          return b.createdAt!.compareTo(a.createdAt!);
+        });
         if (!ref.mounted) return;
         state = favourite;
       }

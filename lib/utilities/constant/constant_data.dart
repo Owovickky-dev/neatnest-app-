@@ -20,4 +20,5 @@ class ConstantData {
   static const UPDATEPASSWORD = "/auth/updatepassword";
   static const UPDATEEMAIL = "/auth/updateemail";
   static const UPDATEPPHONE = "/auth/updatephonenumber";
+  static const UPDATEPERSONALINFO = "/auth/updatepersonalinfo";
 }

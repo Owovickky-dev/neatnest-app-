@@ -28,6 +28,7 @@ class AdsStateController extends _$AdsStateController {
           if (b.createdAt == null) return -1;
           return b.createdAt!.compareTo(a.createdAt!);
         });
+        if (!ref.mounted) return;
         state = adsData;
       }
     } catch (e) {
