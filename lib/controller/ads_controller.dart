@@ -90,6 +90,7 @@ class AdsController {
         );
       },
     );
+    print(timeAvailable);
     try {
       final response = await ref
           .read(adsStateControllerProvider.notifier)

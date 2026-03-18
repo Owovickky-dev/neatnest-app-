@@ -1,8 +1,10 @@
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:country_state_city/country_state_city.dart';
 import 'package:flutter/material.dart' hide State;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:neat_nest/controller/ads_controller.dart';
 import 'package:neat_nest/models/ads_model.dart';
 import 'package:neat_nest/utilities/app_button.dart';
@@ -39,32 +41,8 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
     "Other",
   ];
   final List<String> status = ["True", "False"];
-  final List<String> allTimes = [
-    "1AM",
-    "2AM",
-    "3AM",
-    "4AM",
-    "5AM",
-    "6AM",
-    "7AM",
-    "8AM",
-    "9AM",
-    "10AM",
-    "11AM",
-    "12AM",
-    "1PM",
-    "2PM",
-    "3PM",
-    "4PM",
-    "5PM",
-    "6PM",
-    "7PM",
-    "8PM",
-    "9PM",
-    "10PM",
-    "11PM",
-    "12PM",
-  ];
+
+  final List<DateTime?> _date = [];
 
   List<Country> countries = [];
   List<State> states = [];
@@ -254,6 +232,72 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                     },
                   ),
                   20.ht,
+                  // Column(
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: [
+                  //     primaryText(text: "Available Time", fontSize: 14.sp),
+                  //     5.ht,
+                  //     GestureDetector(
+                  //       onTap: () {
+                  //         setState(() => isOpen = !isOpen);
+                  //         _adsController.timeAvailable = selectedTimes;
+                  //       },
+                  //       child: Container(
+                  //         padding: const EdgeInsets.symmetric(
+                  //           horizontal: 12,
+                  //           vertical: 14,
+                  //         ),
+                  //         decoration: BoxDecoration(
+                  //           color: Colors.grey.shade200,
+                  //           borderRadius: BorderRadius.circular(10.r),
+                  //         ),
+                  //         child: Row(
+                  //           children: [
+                  //             Expanded(
+                  //               child: secondaryText(
+                  //                 text: selectedTimes.isEmpty
+                  //                     ? "Select available time"
+                  //                     : selectedTimes.join(", "),
+                  //                 overflow: TextOverflow.ellipsis,
+                  //               ),
+                  //             ),
+                  //             Icon(
+                  //               isOpen
+                  //                   ? Icons.keyboard_arrow_up
+                  //                   : Icons.keyboard_arrow_down,
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ),
+                  //
+                  //     if (isOpen)
+                  //       Container(
+                  //         margin: const EdgeInsets.only(top: 4),
+                  //         decoration: BoxDecoration(
+                  //           border: Border.all(color: Colors.grey),
+                  //           borderRadius: BorderRadius.circular(6),
+                  //         ),
+                  //         constraints: const BoxConstraints(maxHeight: 250),
+                  //         child: ListView(
+                  //           shrinkWrap: true,
+                  //           children: allTimes.map((time) {
+                  //             return CheckboxListTile(
+                  //               title: secondaryText(text: time),
+                  //               value: selectedTimes.contains(time),
+                  //               onChanged: (value) {
+                  //                 setState(() {
+                  //                   value!
+                  //                       ? selectedTimes.add(time)
+                  //                       : selectedTimes.remove(time);
+                  //                 });
+                  //               },
+                  //             );
+                  //           }).toList(),
+                  //         ),
+                  //       ),
+                  //   ],
+                  // ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -262,12 +306,11 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                       GestureDetector(
                         onTap: () {
                           setState(() => isOpen = !isOpen);
-                          _adsController.timeAvailable = selectedTimes;
                         },
                         child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 14,
+                          padding: EdgeInsets.symmetric(
+                            vertical: 14.h,
+                            horizontal: 10.w,
                           ),
                           decoration: BoxDecoration(
                             color: Colors.grey.shade200,
@@ -277,9 +320,15 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                             children: [
                               Expanded(
                                 child: secondaryText(
-                                  text: selectedTimes.isEmpty
-                                      ? "Select available time"
-                                      : selectedTimes.join(", "),
+                                  text: _date.isEmpty
+                                      ? "Select Available Dates"
+                                      : _date
+                                            .whereType<DateTime>()
+                                            .map(
+                                              (date) =>
+                                                  "${date.day}/${date.month}/${date.year}",
+                                            )
+                                            .join(", "),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -295,27 +344,36 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
 
                       if (isOpen)
                         Container(
-                          margin: const EdgeInsets.only(top: 4),
+                          margin: EdgeInsets.only(top: 5.h),
+                          padding: EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(6),
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.r),
+                            border: Border.all(color: Colors.grey.shade300),
                           ),
-                          constraints: const BoxConstraints(maxHeight: 250),
-                          child: ListView(
-                            shrinkWrap: true,
-                            children: allTimes.map((time) {
-                              return CheckboxListTile(
-                                title: secondaryText(text: time),
-                                value: selectedTimes.contains(time),
-                                onChanged: (value) {
-                                  setState(() {
-                                    value!
-                                        ? selectedTimes.add(time)
-                                        : selectedTimes.remove(time);
-                                  });
-                                },
-                              );
-                            }).toList(),
+                          child: CalendarDatePicker2(
+                            config: CalendarDatePicker2Config(
+                              calendarType: CalendarDatePicker2Type.multi,
+                              disableModePicker: false,
+                              firstDate: DateTime.now(),
+                            ),
+                            value: _date,
+                            onValueChanged: (dates) {
+                              setState(() {
+                                _date
+                                  ..clear()
+                                  ..addAll(dates);
+                              });
+
+                              _adsController.timeAvailable = _date
+                                  .whereType<DateTime>()
+                                  .map(
+                                    (date) => DateFormat(
+                                      "dd/MM/yyyy",
+                                    ).format(date).toString(),
+                                  )
+                                  .toList();
+                            },
                           ),
                         ),
                     ],

@@ -1,5 +1,6 @@
 import 'package:neat_nest/data/repo/auth_repo.dart';
 import 'package:neat_nest/data/storage/secure_storage_helper.dart';
+import 'package:neat_nest/models/update_personal_profile_model.dart';
 import 'package:neat_nest/models/user_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -74,7 +75,7 @@ class UserControllerState extends _$UserControllerState {
           throw Exception("No token received");
         }
       }
-    } catch (e, stack) {
+    } catch (e) {
       rethrow;
     }
   }
@@ -90,5 +91,14 @@ class UserControllerState extends _$UserControllerState {
     await loadUserData();
   }
 
-  Future<void> updatePersonalInfo() async {}
+  Future<void> updatePersonalInfo(
+    UpdatePersonalProfileModel updatePInfo,
+  ) async {
+    try {
+      final response = await _authRepo.updateMyPersonal(updatePInfo);
+      if (response.statusCode == 201) {}
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

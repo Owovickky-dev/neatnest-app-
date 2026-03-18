@@ -63,7 +63,7 @@ class AdsModel {
     }
 
     if (availableTime != null && availableTime!.isNotEmpty) {
-      data["availableTime"] = availableTime;
+      data["userAvailableTime"] = availableTime;
     }
 
     return data;

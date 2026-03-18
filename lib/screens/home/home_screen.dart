@@ -22,6 +22,7 @@ import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/app_text.dart';
 import 'package:neat_nest/widget/app_text_field.dart';
 
+import '../../controller/state controller /address/address_state_controller.dart';
 import '../../utilities/constant/colors.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -85,6 +86,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final indexProv = ref.watch(homeScreenIndexStateProvider);
     final homePageDisplay = ref.watch(homeDisplayDataStateProvider);
     final userData = ref.watch(userControllerStateProvider);
+    final addresses = ref.watch(addressStateControllerProvider);
     final debouncer = Debouncer(delay: Duration(milliseconds: 500));
 
     return GestureDetector(
@@ -145,7 +147,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     fontSize: 12,
                                   ),
                                   primaryText(
-                                    text: 'Osun, Nigeria',
+                                    text: addresses.isEmpty
+                                        ? "Address not set yet"
+                                        : '${addresses[0].state}, ${addresses[0].country}',
                                     fontSize: 14,
                                   ),
                                 ],

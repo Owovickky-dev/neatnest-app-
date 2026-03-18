@@ -55,15 +55,7 @@ class _PersonalInfoEditState extends ConsumerState<PersonalInfoEdit> {
                   FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
                 ],
                 textEditingController: _editProfileController.fNameController,
-                // readOnly: !_editProfileController.canEditDetails(),
-                // onTap: () {
-                //   if (!_editProfileController.canEditDetails()) {
-                //     showErrorNotification(
-                //       message:
-                //           "Name can't be edited for security reasons. Wait ${_editProfileController.timeLeft()}s",
-                //     );
-                //   }
-                // },
+
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Full name is required cant be empty";
@@ -81,15 +73,6 @@ class _PersonalInfoEditState extends ConsumerState<PersonalInfoEdit> {
                 ],
                 textEditingController:
                     _editProfileController.userNameController,
-                // readOnly: !_editProfileController.canUserNameDetails(),
-                // onTap: () {
-                //   if (!_editProfileController.canUserNameDetails()) {
-                //     showErrorNotification(
-                //       message:
-                //           "UserName can't be edited for security reasons. Wait ${_editProfileController.userNameTimeLeft()}s",
-                //     );
-                //   }
-                // },
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "User name is required cant be empty";
