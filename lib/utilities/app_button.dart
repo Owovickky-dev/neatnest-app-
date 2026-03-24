@@ -29,7 +29,7 @@ class AppButton extends StatelessWidget {
         width: width?.w ?? 135.w,
         padding: EdgeInsets.symmetric(vertical: verticalHeight?.h ?? 10.h),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.r),
+          borderRadius: BorderRadius.circular(15.r),
           color: bckColor,
         ),
         child: Center(

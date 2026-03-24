@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:neat_nest/data/repo/favourite_repo.dart';
+import 'package:neat_nest/data/storage/secure_storage_helper.dart';
 import 'package:neat_nest/models/favourite_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,29 +12,34 @@ class FavouriteStateController extends _$FavouriteStateController {
   @override
   List<FavouriteModel> build() {
     _favouriteRepo = FavouriteRepo();
-    Future(() => getUserFavourite());
+    // Future(() => getUserFavourite());
     return [];
   }
 
   Future<void> getUserFavourite() async {
-    try {
-      final response = await _favouriteRepo.getFavourite();
-      if (response.statusCode == 200) {
-        final List<dynamic> responseData = response.data["data"];
-        final favourite = responseData
-            .map((fav) => FavouriteModel.fromJson(fav))
-            .toList();
-        favourite.sort((a, b) {
-          if (a.createdAt == null && b.createdAt == null) return 0;
-          if (a.createdAt == null) return 1;
-          if (b.createdAt == null) return -1;
-          return b.createdAt!.compareTo(a.createdAt!);
-        });
-        if (!ref.mounted) return;
-        state = favourite;
+    final token = await SecureStorageHelper.getToken();
+    if (token == null || token.isEmpty) {
+      print("Token is empty cant get the favourite");
+    } else {
+      try {
+        final response = await _favouriteRepo.getFavourite();
+        if (response.statusCode == 200) {
+          final List<dynamic> responseData = response.data["data"];
+          final favourite = responseData
+              .map((fav) => FavouriteModel.fromJson(fav))
+              .toList();
+          favourite.sort((a, b) {
+            if (a.createdAt == null && b.createdAt == null) return 0;
+            if (a.createdAt == null) return 1;
+            if (b.createdAt == null) return -1;
+            return b.createdAt!.compareTo(a.createdAt!);
+          });
+          if (!ref.mounted) return;
+          state = favourite;
+        }
+      } catch (e) {
+        rethrow;
       }
-    } catch (e) {
-      rethrow;
     }
   }
 
@@ -64,4 +70,6 @@ class FavouriteStateController extends _$FavouriteStateController {
       rethrow;
     }
   }
+
+  final tokenExist = SecureStorageHelper.getToken();
 }

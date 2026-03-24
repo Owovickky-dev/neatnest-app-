@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/controller/state%20controller%20/favourite/favourite_state_controller.dart';
+import 'package:neat_nest/data/storage/secure_storage_helper.dart';
 import 'package:neat_nest/screens/favorite/widgets/favourite_data_template.dart';
+import 'package:neat_nest/utilities/app_button.dart';
+import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/widget/loading_screen.dart';
 
@@ -20,17 +23,34 @@ class FavoriteScreen extends ConsumerStatefulWidget {
 
 class _FavoriteScreenState extends ConsumerState<FavoriteScreen> {
   bool isLoading = true;
+  bool isLoggedIn = false;
+  bool isCheckingLogin = true;
 
   @override
   void initState() {
     super.initState();
-    getFavourite();
+    checkUser();
+  }
+
+  Future<void> checkUser() async {
+    final userDataExist = await SecureStorageHelper.isDataStored();
+    if (!mounted) return;
+    setState(() {
+      isLoggedIn = userDataExist;
+      isCheckingLogin = false;
+    });
+
+    if (userDataExist) {
+      // await getFavourite();q
+    }
   }
 
   void getFavourite() async {
     await ref
         .read(favouriteStateControllerProvider.notifier)
         .getUserFavourite();
+
+    if (!mounted) return;
     setState(() {
       isLoading = false;
     });
@@ -72,7 +92,48 @@ class _FavoriteScreenState extends ConsumerState<FavoriteScreen> {
               color: Colors.red,
               fontSize: 14.sp,
             ),
-            isLoading
+            !isLoggedIn
+                ? Center(
+                    child: Column(
+                      children: [
+                        30.ht,
+                        Container(
+                          height: 50.h,
+                          width: 50.w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25.r),
+                            color: Colors.grey.shade200,
+                          ),
+                          child: Center(
+                            child: Icon(
+                              Icons.person,
+                              color: AppColors.primaryColor,
+                              size: 30.sp,
+                            ),
+                          ),
+                        ),
+                        15.ht,
+                        secondaryText(
+                          text: "Please sign in to access this content",
+                          color: Colors.black,
+                        ),
+                        15.ht,
+                        secondaryText(
+                          text: "if you are not registered just sign up ",
+                        ),
+                        30.ht,
+                        AppButton(
+                          text: "Sign  In",
+                          fontSize: 15.sp,
+                          width: double.infinity,
+                          bckColor: AppColors.primaryColor,
+                          textColor: Colors.white,
+                          function: () {},
+                        ),
+                      ],
+                    ),
+                  )
+                : isLoading
                 ? Expanded(child: LoadingScreen())
                 : Expanded(
                     child: Column(
