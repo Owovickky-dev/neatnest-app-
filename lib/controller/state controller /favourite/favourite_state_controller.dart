@@ -12,7 +12,6 @@ class FavouriteStateController extends _$FavouriteStateController {
   @override
   List<FavouriteModel> build() {
     _favouriteRepo = FavouriteRepo();
-    // Future(() => getUserFavourite());
     return [];
   }
 
@@ -70,6 +69,4 @@ class FavouriteStateController extends _$FavouriteStateController {
       rethrow;
     }
   }
-
-  final tokenExist = SecureStorageHelper.getToken();
 }

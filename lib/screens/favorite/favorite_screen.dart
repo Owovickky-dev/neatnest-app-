@@ -11,6 +11,8 @@ import 'package:neat_nest/widget/loading_screen.dart';
 
 import '../../utilities/bottom_nav/bottom_navigation_screen.dart';
 import '../../utilities/bottom_nav/widget/bottom_nav_notifiers.dart';
+import '../../utilities/route/app_naviation_helper.dart';
+import '../../utilities/route/app_route_names.dart';
 import '../../widget/app_text.dart';
 import '../history/utilities/app_bar_icon.dart';
 
@@ -41,19 +43,15 @@ class _FavoriteScreenState extends ConsumerState<FavoriteScreen> {
     });
 
     if (userDataExist) {
-      // await getFavourite();q
+      await ref
+          .read(favouriteStateControllerProvider.notifier)
+          .getUserFavourite();
+
+      if (!mounted) return;
+      setState(() {
+        isLoading = false;
+      });
     }
-  }
-
-  void getFavourite() async {
-    await ref
-        .read(favouriteStateControllerProvider.notifier)
-        .getUserFavourite();
-
-    if (!mounted) return;
-    setState(() {
-      isLoading = false;
-    });
   }
 
   @override
@@ -128,7 +126,9 @@ class _FavoriteScreenState extends ConsumerState<FavoriteScreen> {
                           width: double.infinity,
                           bckColor: AppColors.primaryColor,
                           textColor: Colors.white,
-                          function: () {},
+                          function: () {
+                            AppNavigatorHelper.push(context, AppRoute.signIn);
+                          },
                         ),
                       ],
                     ),

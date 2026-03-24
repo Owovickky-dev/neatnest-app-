@@ -7,13 +7,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neat_nest/controller/filter_search_controller.dart';
+import 'package:neat_nest/controller/state%20controller%20/ads/popular_service_controller.dart';
 import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
 import 'package:neat_nest/screens/home/filter/notifier/filter_state.dart';
 import 'package:neat_nest/screens/home/notifier/home_display_data_state.dart';
 import 'package:neat_nest/screens/home/utilities/home_screen_index_state.dart';
 import 'package:neat_nest/screens/home/widget/all_ads_screen.dart';
 import 'package:neat_nest/screens/home/widget/home_screen_icons.dart';
-import 'package:neat_nest/screens/home/widget/popula_service_images.dart';
+import 'package:neat_nest/screens/home/widget/popular_service.dart';
 import 'package:neat_nest/screens/home/widget/searching_screen.dart';
 import 'package:neat_nest/utilities/app_data.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
@@ -44,6 +45,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     pageController = PageController();
     filterSearchController = FilterSearchController();
     _startAutoScroll();
+    _getPopularService();
+  }
+
+  void _getPopularService() async {
+    await ref.read(popularServiceControllerProvider.notifier).getPopularAds();
   }
 
   @override
@@ -87,6 +93,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final homePageDisplay = ref.watch(homeDisplayDataStateProvider);
     final userData = ref.watch(userControllerStateProvider);
     final addresses = ref.watch(addressStateControllerProvider);
+    final popularServices = ref.watch(popularServiceControllerProvider);
     final debouncer = Debouncer(delay: Duration(milliseconds: 500));
 
     return GestureDetector(
@@ -197,7 +204,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   iconPrefix: Icons.search,
                   iconSuffix: Icons.menu,
                   onChanged: (value) {
-                    print(value);
                     ref
                         .read(homeDisplayDataStateProvider.notifier)
                         .displayData(true);
@@ -328,7 +334,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                 .notifier,
                                           )
                                           .displayData(true);
-                                      print("Home page display all is clicked");
                                     },
                                     child: secondaryText(
                                       text: 'view all',
@@ -339,14 +344,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               ),
                               10.ht,
                               SizedBox(
-                                height: 130.h,
+                                height: 200.h,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: AppData.popularImagesPath.length,
+                                  itemCount: popularServices.length,
                                   itemBuilder: (context, index) {
-                                    return PopulaServiceImages(
-                                      imagePath:
-                                          AppData.popularImagesPath[index],
+                                    final popularService =
+                                        popularServices[index];
+                                    return PopularService(
+                                      index: index,
+                                      adsModel: popularService,
                                     );
                                   },
                                 ),

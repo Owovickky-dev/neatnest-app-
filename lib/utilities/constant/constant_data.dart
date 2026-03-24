@@ -11,6 +11,7 @@ class ConstantData {
   static const REGISTER = "/auth/register";
   static const REFRESHTOKEN = "/auth/refreshtoken";
   static const ADS = "/ads";
+  static const GETPOPULARADS = "/ads/popularads";
   static const FAVOURITE = "/favourite";
   static const GETUSERADS = "/ads/me";
   static const PAYMENTMETHOd = "/payment-method";

@@ -43,6 +43,11 @@ class AdsRepo {
     return response;
   }
 
+  Future<Response> getPopularAds() async {
+    final response = await _dio.get(ConstantData.GETPOPULARADS);
+    return response;
+  }
+
   Future<Response> activateAds(bool updateData, String adsId) async {
     final response = await _dio.patch(
       ConstantData.GETUSERADS,
