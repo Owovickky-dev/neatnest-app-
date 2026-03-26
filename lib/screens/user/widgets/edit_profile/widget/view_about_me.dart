@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:neat_nest/controller/about_me_controller.dart';
 import 'package:neat_nest/screens/user/notifiers/about_me_controller_state.dart';
 import 'package:neat_nest/utilities/app_button.dart';
@@ -9,6 +8,7 @@ import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
+import 'package:neat_nest/widget/app_confirmation_button.dart';
 import 'package:neat_nest/widget/app_text.dart';
 import 'package:neat_nest/widget/loading_screen.dart';
 
@@ -37,41 +37,6 @@ class _ViewAboutMeState extends ConsumerState<ViewAboutMe> {
     setState(() {
       isLoading = false;
     });
-  }
-
-  void showConfirmation() async {
-    showDialog(
-      context: context,
-      builder: (dialogContext) {
-        return AlertDialog(
-          title: primaryText(text: "Delete About"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              secondaryText(
-                text:
-                    "Are you sure you want to delete about cant be reverse once delete",
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                dialogContext.pop();
-              },
-              child: secondaryText(text: "Cancel"),
-            ),
-            TextButton(
-              onPressed: () async {
-                dialogContext.pop();
-                await _aboutMeController.deleteAboutMe(context, ref);
-              },
-              child: secondaryText(text: "Yes"),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -139,7 +104,23 @@ class _ViewAboutMeState extends ConsumerState<ViewAboutMe> {
                                         ),
                                         10.wt,
                                         GestureDetector(
-                                          onTap: showConfirmation,
+                                          onTap: () {
+                                            appConfirmationButton(
+                                              context: context,
+                                              title: "Delete About",
+                                              subTitle:
+                                                  "Are you sure you want to delete about cant be reverse once delete",
+                                              textButtonTextLeft: "Cancel",
+                                              textButtonTextRight: "Yes",
+                                              function: () async {
+                                                await _aboutMeController
+                                                    .deleteAboutMe(
+                                                      context,
+                                                      ref,
+                                                    );
+                                              },
+                                            );
+                                          },
                                           child: Icon(
                                             Icons.delete,
                                             color: Colors.red,

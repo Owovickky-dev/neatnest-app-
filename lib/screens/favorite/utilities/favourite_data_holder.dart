@@ -2,56 +2,41 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:neat_nest/controller/favourite_controller.dart';
-import 'package:neat_nest/controller/state%20controller%20/favourite/favourite_state_controller.dart';
+import 'package:neat_nest/controller/state controller /favourite/favourite_state_controller.dart';
 import 'package:neat_nest/models/ads_model.dart';
-import 'package:neat_nest/screens/booking/booking_screen.dart';
+import 'package:neat_nest/screens/booking/ads_details_screen.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 
+import '../../../controller/favourite_controller.dart';
 import '../../../widget/app_text.dart';
+import '../../../widget/capitalize_first_character.dart';
 
-class FavouriteDataHolder extends ConsumerStatefulWidget {
+class FavouriteDataHolder extends ConsumerWidget {
   const FavouriteDataHolder({super.key, required this.index, this.adsModel});
 
   final int index;
   final AdsModel? adsModel;
 
   @override
-  ConsumerState<FavouriteDataHolder> createState() =>
-      _FavouriteDataHolderState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final FavouriteController favouriteController = FavouriteController();
 
-class _FavouriteDataHolderState extends ConsumerState<FavouriteDataHolder> {
-  final FavouriteController _favouriteController = FavouriteController();
+    final ads = adsModel!;
 
-  String capitalizeFirst(String? text) {
-    if (text == null || text.isEmpty) return '';
-    return text[0].toUpperCase() + text.substring(1);
-  }
+    final favourites = ref.watch(favouriteStateControllerProvider);
 
-  String? getFavId(String adsId) {
-    final adsFav = ref.watch(favouriteStateControllerProvider);
-    try {
-      final matchId = adsFav.firstWhere((fav) => fav.adsId == adsId);
-      return matchId.favouriteId;
-    } catch (e) {
-      return null;
-    }
-  }
+    final fav = favourites.where((f) => f.adsId == ads.id).toList();
 
-  @override
-  Widget build(BuildContext context) {
-    final ads = widget.adsModel!;
-    final favId = getFavId(ads.id!);
-    final isFav = favId != null;
+    final isFav = fav.isNotEmpty;
+    final favId = isFav ? fav.first.favouriteId : null;
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                BookingScreen(index: widget.index, isFavourite: isFav),
+            builder: (_) => AdsDetailsScreen(index: index, isFavourite: isFav),
           ),
         );
       },
@@ -74,6 +59,7 @@ class _FavouriteDataHolderState extends ConsumerState<FavouriteDataHolder> {
                 ),
               ),
             ),
+
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
               child: Column(
@@ -86,6 +72,7 @@ class _FavouriteDataHolderState extends ConsumerState<FavouriteDataHolder> {
                         text: ads.jobPoster!.username.toUpperCase(),
                         fontSize: 12.sp,
                       ),
+
                       Row(
                         children: [
                           Icon(
@@ -111,7 +98,7 @@ class _FavouriteDataHolderState extends ConsumerState<FavouriteDataHolder> {
                   ),
                   6.ht,
                   secondaryText(
-                    text: capitalizeFirst(ads.category),
+                    text: capitalizeFirstCharacter(ads.category),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     fontSize: 12.sp,
@@ -132,13 +119,13 @@ class _FavouriteDataHolderState extends ConsumerState<FavouriteDataHolder> {
                       GestureDetector(
                         onTap: () async {
                           if (isFav) {
-                            await _favouriteController.removeFavourite(
+                            await favouriteController.removeFavourite(
                               context,
-                              favId,
+                              favId!,
                               ref,
                             );
                           } else {
-                            await _favouriteController.addFavourite(
+                            await favouriteController.addFavourite(
                               context,
                               ads.id!,
                               ref,

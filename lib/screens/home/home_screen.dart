@@ -50,6 +50,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   void _getPopularService() async {
     await ref.read(popularServiceControllerProvider.notifier).getPopularAds();
+    if (!mounted) return;
+    await ref
+        .read(addressStateControllerProvider.notifier)
+        .getUserAddress(context);
   }
 
   @override

@@ -50,7 +50,6 @@ class _AboutState extends ConsumerState<About> {
               hintText:
                   'Write Short About Ads... only 150 character is allowed',
               textAlign: TextAlign.start,
-              // controller: _adsController.adsAboutController,
             ),
             30.ht,
             AppButton(

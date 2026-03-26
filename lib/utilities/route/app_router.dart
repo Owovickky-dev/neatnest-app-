@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:neat_nest/models/ads_model.dart';
+import 'package:neat_nest/models/booking_navigation_args.dart';
 import 'package:neat_nest/screens/booking/widgets/booking_form_screen.dart';
 import 'package:neat_nest/screens/home/filter/filter_screen.dart';
 import 'package:neat_nest/screens/home/filter/widget/filter_result_screen.dart';
@@ -101,8 +102,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoute.bookingFormScreen.path,
         name: AppRoute.bookingFormScreen.name,
         builder: (context, state) {
-          final indent = state.extra as int;
-          return BookingFormScreen(index: indent);
+          final args = state.extra as BookingNavigationArgs?;
+          return BookingFormScreen(
+            index: args?.index ?? 0,
+            isMe: args?.isMe ?? false,
+          );
         },
       ),
       GoRoute(

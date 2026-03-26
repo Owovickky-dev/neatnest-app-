@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
+import 'package:neat_nest/models/booking_navigation_args.dart';
 import 'package:neat_nest/screens/booking/widgets/booking_review_holder.dart';
 import 'package:neat_nest/screens/history/utilities/app_bar_icon.dart';
 import 'package:neat_nest/screens/home/widget/home_screen_icons.dart';
@@ -12,14 +13,16 @@ import 'package:neat_nest/utilities/app_button.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
+import 'package:neat_nest/widget/app_confirmation_button.dart';
 import 'package:neat_nest/widget/app_text.dart';
 import 'package:neat_nest/widget/notificaiton_content.dart';
 
 import '../../controller/state controller /ads/ads_state_controller.dart';
 import '../../utilities/route/app_route_names.dart';
+import '../../widget/capitalize_first_character.dart';
 
-class BookingScreen extends ConsumerWidget {
-  const BookingScreen({
+class AdsDetailsScreen extends ConsumerWidget {
+  const AdsDetailsScreen({
     super.key,
     required this.index,
     required this.isFavourite,
@@ -135,9 +138,18 @@ class BookingScreen extends ConsumerWidget {
                         ],
                       ),
                       5.ht,
+                      secondaryText(
+                        text: capitalizeFirstCharacter(adsInfo.category),
+                        fontSize: 20.sp,
+                      ),
+                      5.ht,
                       Row(
                         children: [
-                          secondaryText(text: adsInfo.jobPoster!.username),
+                          secondaryText(
+                            text: capitalizeFirstCharacter(
+                              adsInfo.jobPoster!.username,
+                            ),
+                          ),
                           5.wt,
                           secondaryText(text: '|'),
                           5.wt,
@@ -169,7 +181,9 @@ class BookingScreen extends ConsumerWidget {
                         children: [
                           HomeScreenIcons(
                             icons: Icons.location_on,
-                            text: "${adsInfo.country}, ${adsInfo.state}",
+                            text: adsInfo.country!.isNotEmpty
+                                ? "${adsInfo.country}, ${adsInfo.state}"
+                                : " No location",
                           ),
                           10.wt,
                           HomeScreenIcons(icons: Icons.share, text: "share"),
@@ -274,10 +288,33 @@ class BookingScreen extends ConsumerWidget {
                                   message: "You can't pick your own ads",
                                 );
                               } else {
-                                AppNavigatorHelper.push(
-                                  context,
-                                  AppRoute.bookingFormScreen,
-                                  extra: index,
+                                appConfirmationButton(
+                                  context: context,
+                                  title: "Book Ads",
+                                  subTitle: "Who is the Booking for?",
+                                  textButtonTextLeft: "MYSELF",
+                                  textButtonTextRight: "OTHER",
+                                  function: () {
+                                    AppNavigatorHelper.push(
+                                      context,
+                                      AppRoute.bookingFormScreen,
+                                      extra: BookingNavigationArgs(
+                                        isMe: false,
+                                        index: index,
+                                      ),
+                                    );
+                                  },
+                                  functionLeft: () {
+                                    context.pop();
+                                    AppNavigatorHelper.push(
+                                      context,
+                                      AppRoute.bookingFormScreen,
+                                      extra: BookingNavigationArgs(
+                                        isMe: true,
+                                        index: index,
+                                      ),
+                                    );
+                                  },
                                 );
                               }
                             },

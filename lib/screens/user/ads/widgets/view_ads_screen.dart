@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:neat_nest/controller/ads_controller.dart';
 import 'package:neat_nest/controller/state%20controller%20/ads/user_ads_state_controller.dart';
 import 'package:neat_nest/screens/user/ads/utilities/view_ads_template.dart';
@@ -47,7 +48,7 @@ class _ViewAdsScreenState extends ConsumerState<ViewAdsScreen> {
       appBar: AppBarHolder(
         title: 'My Ads',
         function: () {
-          AppNavigatorHelper.push(context, AppRoute.userProfile);
+          context.pop();
         },
       ),
       body: isLoading

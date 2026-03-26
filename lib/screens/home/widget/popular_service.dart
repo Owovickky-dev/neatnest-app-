@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:neat_nest/screens/booking/ads_details_screen.dart';
 
 import '../../../controller/favourite_controller.dart';
 import '../../../controller/state controller /favourite/favourite_state_controller.dart';
@@ -9,7 +10,6 @@ import '../../../models/ads_model.dart';
 import '../../../utilities/constant/colors.dart';
 import '../../../utilities/constant/extension.dart';
 import '../../../widget/app_text.dart';
-import '../../booking/booking_screen.dart';
 
 class PopularService extends ConsumerStatefulWidget {
   const PopularService({super.key, required this.index, this.adsModel});
@@ -62,8 +62,12 @@ class _PopularServiceState extends ConsumerState<PopularService> {
     // =================================
 
     final ads = widget.adsModel!;
-    final favId = getFavId(ads.id!);
-    final isFav = favId != null;
+    final favourites = ref.watch(favouriteStateControllerProvider);
+
+    final fav = favourites.where((f) => f.adsId == ads.id).toList();
+
+    final isFav = fav.isNotEmpty;
+    final favId = isFav ? fav.first.favouriteId : null;
 
     return GestureDetector(
       onTap: () {
@@ -71,7 +75,7 @@ class _PopularServiceState extends ConsumerState<PopularService> {
           context,
           MaterialPageRoute(
             builder: (context) =>
-                BookingScreen(index: widget.index, isFavourite: isFav),
+                AdsDetailsScreen(index: widget.index, isFavourite: isFav),
           ),
         );
       },
@@ -162,17 +166,13 @@ class _PopularServiceState extends ConsumerState<PopularService> {
                       GestureDetector(
                         onTap: () async {
                           if (isFav) {
-                            await _favouriteController.removeFavourite(
-                              context,
-                              favId,
-                              ref,
-                            );
+                            await ref
+                                .read(favouriteStateControllerProvider.notifier)
+                                .removeFavourite(favId!);
                           } else {
-                            await _favouriteController.addFavourite(
-                              context,
-                              ads.id!,
-                              ref,
-                            );
+                            await ref
+                                .read(favouriteStateControllerProvider.notifier)
+                                .addFavourite(ads.id!);
                           }
                         },
                         child: Icon(

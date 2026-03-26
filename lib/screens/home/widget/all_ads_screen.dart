@@ -5,6 +5,7 @@ import 'package:neat_nest/controller/state%20controller%20/ads/ads_state_control
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/widget/loading_screen.dart';
 
+import '../../../controller/state controller /favourite/favourite_state_controller.dart';
 import '../../../utilities/constant/colors.dart';
 import '../../../widget/app_text.dart';
 import '../../favorite/utilities/favourite_data_holder.dart';
@@ -30,11 +31,13 @@ class _AllAdsScreenState extends ConsumerState<AllAdsScreen> {
   void _loadAds() async {
     if (!_initialLoad) {
       await ref.read(adsStateControllerProvider.notifier).getAllAds();
+      await ref
+          .read(favouriteStateControllerProvider.notifier)
+          .getUserFavourite();
       if (!mounted) return;
       setState(() {
         _initialLoad = true;
       });
-      ;
     }
   }
 

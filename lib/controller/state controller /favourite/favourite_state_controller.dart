@@ -12,6 +12,7 @@ class FavouriteStateController extends _$FavouriteStateController {
   @override
   List<FavouriteModel> build() {
     _favouriteRepo = FavouriteRepo();
+    getUserFavourite();
     return [];
   }
 

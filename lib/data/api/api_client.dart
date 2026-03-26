@@ -40,7 +40,6 @@ class DioClient {
           return handler.next(response);
         },
         onError: (DioException e, handler) async {
-          // Check for token expiration
           if (e.response?.statusCode == 500) {
             final responseData = e.response?.data;
             final message = responseData?["message"];
@@ -118,7 +117,6 @@ class DioClient {
         if (newRefreshToken != null) {
           await SecureStorageHelper.saveRefreshToken(newRefreshToken);
         }
-
         return newToken;
       } else {
         return null;

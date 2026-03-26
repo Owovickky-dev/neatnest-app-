@@ -41,13 +41,12 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
     "Other",
   ];
   final List<String> status = ["True", "False"];
-
   final List<DateTime?> _date = [];
-
   List<Country> countries = [];
   List<State> states = [];
   final List<String> selectedTimes = [];
   bool isOpen = false;
+  int _currentTilteTextLenght = 0;
 
   String? categorySelected;
   String? statusSelected;
@@ -142,26 +141,51 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                   ),
                   20.ht,
                   secondaryText(
-                    text: "For the about only 100 character is allowed!!!",
+                    text: "For the Title only 30 character max is allowed!!!",
                     color: Colors.red,
                   ),
                   20.ht,
-                  AuthTextFiled(
-                    titleText: "Ad Title",
-                    hintText: "Ads title",
-                    textEditingController: _adsController.adsTitleController,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z\s]")),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AuthTextFiled(
+                        titleText: "Ad Title",
+                        hintText: "Ads title",
+                        textEditingController:
+                            _adsController.adsTitleController,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                            RegExp(r"[a-zA-Z\s]"),
+                          ),
+                          LengthLimitingTextInputFormatter(30),
+                        ],
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Filed need to be filled";
+                          }
+                          if (value.length > 30) {
+                            return "Cant be more than 30 Character";
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            _currentTilteTextLenght = value.length;
+                          });
+                        },
+                      ),
+                      Row(
+                        children: [
+                          Container(width: 50.w),
+                          secondaryText(
+                            text: "$_currentTilteTextLenght /30",
+                            color: _currentTilteTextLenght > 25
+                                ? Colors.red
+                                : AppColors.primaryColor,
+                          ),
+                        ],
+                      ),
                     ],
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Filed need to be filled";
-                      }
-                      if (value.length > 22) {
-                        return "Cant be more than 20 Character";
-                      }
-                      return null;
-                    },
                   ),
                   20.ht,
                   Column(
@@ -232,72 +256,6 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                     },
                   ),
                   20.ht,
-                  // Column(
-                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                  //   children: [
-                  //     primaryText(text: "Available Time", fontSize: 14.sp),
-                  //     5.ht,
-                  //     GestureDetector(
-                  //       onTap: () {
-                  //         setState(() => isOpen = !isOpen);
-                  //         _adsController.timeAvailable = selectedTimes;
-                  //       },
-                  //       child: Container(
-                  //         padding: const EdgeInsets.symmetric(
-                  //           horizontal: 12,
-                  //           vertical: 14,
-                  //         ),
-                  //         decoration: BoxDecoration(
-                  //           color: Colors.grey.shade200,
-                  //           borderRadius: BorderRadius.circular(10.r),
-                  //         ),
-                  //         child: Row(
-                  //           children: [
-                  //             Expanded(
-                  //               child: secondaryText(
-                  //                 text: selectedTimes.isEmpty
-                  //                     ? "Select available time"
-                  //                     : selectedTimes.join(", "),
-                  //                 overflow: TextOverflow.ellipsis,
-                  //               ),
-                  //             ),
-                  //             Icon(
-                  //               isOpen
-                  //                   ? Icons.keyboard_arrow_up
-                  //                   : Icons.keyboard_arrow_down,
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //     ),
-                  //
-                  //     if (isOpen)
-                  //       Container(
-                  //         margin: const EdgeInsets.only(top: 4),
-                  //         decoration: BoxDecoration(
-                  //           border: Border.all(color: Colors.grey),
-                  //           borderRadius: BorderRadius.circular(6),
-                  //         ),
-                  //         constraints: const BoxConstraints(maxHeight: 250),
-                  //         child: ListView(
-                  //           shrinkWrap: true,
-                  //           children: allTimes.map((time) {
-                  //             return CheckboxListTile(
-                  //               title: secondaryText(text: time),
-                  //               value: selectedTimes.contains(time),
-                  //               onChanged: (value) {
-                  //                 setState(() {
-                  //                   value!
-                  //                       ? selectedTimes.add(time)
-                  //                       : selectedTimes.remove(time);
-                  //                 });
-                  //               },
-                  //             );
-                  //           }).toList(),
-                  //         ),
-                  //       ),
-                  //   ],
-                  // ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
