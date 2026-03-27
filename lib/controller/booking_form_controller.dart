@@ -1,9 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:neat_nest/screens/booking/notifiers/booking_date_state.dart';
 import 'package:neat_nest/screens/booking/notifiers/booking_time_state.dart';
-import 'package:neat_nest/screens/booking/widgets/select_rooms.dart';
 import 'package:neat_nest/widget/notificaiton_content.dart';
 
 class BookingFormController {
@@ -13,31 +11,39 @@ class BookingFormController {
   TextEditingController bookingEmailController = TextEditingController();
   TextEditingController bookingUserAddress = TextEditingController();
   TextEditingController bookingNoteController = TextEditingController();
+  TextEditingController bookingUserNos = TextEditingController();
 
   void onSubmit(WidgetRef ref, BuildContext context) {
-    String name;
-    String email;
-    DateTime date;
-    String time;
-    String note;
+    final name = bookingNameController.text.trim();
+    final email = bookingEmailController.text.trim();
+    final address = bookingUserAddress.text.trim();
+    final phoneNumber = bookingUserNos.text.trim();
+    final note = bookingNoteController.text.trim();
+    final date = ref.read(bookingTimeStateProvider);
 
-    name = bookingNameController.text;
-    email = bookingEmailController.text;
-    note = bookingNoteController.text;
-    time = ref.watch(bookingTimeStateProvider);
-    date = ref.watch(bookingDateStateProvider);
-
-    if (name.isEmpty || email.isEmpty || time.isEmpty) {
-      if (!context.mounted) return;
-      showErrorNotification(message: "Please kindly supply your information");
-    } else if (!EmailValidator.validate(email)) {
-      if (!context.mounted) return;
-      showErrorNotification(message: "Please enter a valid mail");
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => SelectRooms()),
+    if (name.isEmpty) {
+      return showErrorNotification(message: "Please enter your name");
+    }
+    if (email.isEmpty) {
+      return showErrorNotification(message: "Please enter your email");
+    }
+    if (!EmailValidator.validate(email)) {
+      return showErrorNotification(message: "Please enter a valid email");
+    }
+    if (phoneNumber.isEmpty) {
+      return showErrorNotification(message: "Please enter your phone number");
+    }
+    if (address.isEmpty) {
+      return showErrorNotification(message: "Please enter your address");
+    }
+    if (date.isEmpty) {
+      return showErrorNotification(message: "Please select available time");
+    }
+    if (note.isEmpty) {
+      return showErrorNotification(
+        message: "Please type in short details about the order",
       );
     }
+    print("Form Booked");
   }
 }

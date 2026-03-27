@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 
@@ -16,6 +17,7 @@ class BookingTextField extends StatefulWidget {
     this.title = true,
     this.iconName,
     this.iconNamePre,
+    this.inputFormatters,
   });
 
   final String? titleText;
@@ -26,6 +28,7 @@ class BookingTextField extends StatefulWidget {
   final IconData? iconName;
   final IconData? iconNamePre;
   final bool title;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   State<BookingTextField> createState() => _BookingTextFieldState();
@@ -49,6 +52,7 @@ class _BookingTextFieldState extends State<BookingTextField> {
           ),
           child: TextField(
             controller: widget.textEditingController,
+            inputFormatters: widget.inputFormatters,
             style: TextStyle(
               color: AppColors.blackTextColor,
               fontWeight: FontWeight.bold,

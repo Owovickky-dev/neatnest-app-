@@ -1,5 +1,6 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/controller/booking_form_controller.dart';
@@ -10,7 +11,9 @@ import 'package:neat_nest/utilities/app_button.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/widget/capitalize_first_character.dart';
 
+import '../../../controller/state controller /address/address_state_controller.dart';
 import '../../../controller/state controller /ads/ads_state_controller.dart';
+import '../../../controller/state controller /user/user_controller_state.dart';
 import '../../../utilities/constant/colors.dart';
 import '../../../widget/app_text.dart';
 import '../../history/utilities/text_filed_holder.dart';
@@ -33,12 +36,30 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
   @override
   void initState() {
     super.initState();
+    _bookingFormController = BookingFormController();
+    if (widget.isMe) {
+      prefiledData();
+    }
   }
 
-  @override
-  void didChangeDependencies() {
-    _bookingFormController = BookingFormController();
-    super.didChangeDependencies();
+  void prefiledData() {
+    final userData = ref.read(userControllerStateProvider);
+    final userAddressData = ref.read(addressStateControllerProvider)[0];
+
+    _bookingFormController.bookingNameController.text = userData!.name;
+    _bookingFormController.bookingEmailController.text = userData.email;
+    _bookingFormController.bookingUserNos.text = userData.phoneNumber.isEmpty
+        ? " "
+        : userData.phoneNumber;
+
+    if (userAddressData.state!.isNotEmpty &&
+        userAddressData.country!.isNotEmpty &&
+        userAddressData.address!.isNotEmpty) {
+      _bookingFormController.bookingUserAddress.text =
+          "${userAddressData.address}, ${userAddressData.state}, ${userAddressData.country}";
+    } else {
+      _bookingFormController.bookingUserAddress.text = " ";
+    }
   }
 
   @override
@@ -80,22 +101,24 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                   children: [
                     Row(
                       children: [
-                        primaryText(text: "Service Title: ", fontSize: 13.sp),
+                        primaryText(text: "Service Title: ", fontSize: 15.sp),
                         5.wt,
                         secondaryText(
                           text: capitalizeFirstCharacter(adsInfo.title!),
+                          fontSize: 15.sp,
                         ),
                       ],
                     ),
                     5.ht,
                     Row(
                       children: [
-                        primaryText(text: "Service Poster: ", fontSize: 13.sp),
+                        primaryText(text: "Service Poster: ", fontSize: 15.sp),
                         5.wt,
                         secondaryText(
                           text: capitalizeFirstCharacter(
                             adsInfo.jobPoster!.username,
                           ),
+                          fontSize: 15.sp,
                         ),
                       ],
                     ),
@@ -104,11 +127,12 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                       children: [
                         primaryText(
                           text: "Service Category: ",
-                          fontSize: 13.sp,
+                          fontSize: 15.sp,
                         ),
                         5.wt,
                         secondaryText(
                           text: capitalizeFirstCharacter(adsInfo.category!),
+                          fontSize: 15.sp,
                         ),
                       ],
                     ),
@@ -117,11 +141,12 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                       children: [
                         primaryText(
                           text: "Service BasePrice: ",
-                          fontSize: 13.sp,
+                          fontSize: 15.sp,
                         ),
                         5.wt,
                         secondaryText(
                           text: "\$${adsInfo.basePrice.toString()} / hour",
+                          fontSize: 15.sp,
                         ),
                       ],
                     ),
@@ -141,6 +166,16 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
               ),
               20.ht,
               BookingTextField(
+                titleText: "Phone Number",
+                hintText: "Enter email Address",
+                textEditingController: _bookingFormController.bookingUserNos,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9()+\-\s]')),
+                  LengthLimitingTextInputFormatter(20),
+                ],
+              ),
+              20.ht,
+              BookingTextField(
                 titleText: "Email Address",
                 hintText: "Enter email Address",
                 textEditingController:
@@ -148,7 +183,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
               ),
               20.ht,
               BookingTextField(
-                titleText: "Enter Address",
+                titleText: "Enter Address (Address, State, Country)",
                 hintText: "Enter User Address",
                 textEditingController:
                     _bookingFormController.bookingUserAddress,
@@ -163,7 +198,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                   borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: DropdownButton(
-                  hint: secondaryText(text: "Select Time"),
+                  hint: secondaryText(text: "Select Date"),
                   icon: Icon(Icons.keyboard_arrow_down_outlined),
                   isExpanded: true,
                   value: bookingTime.isEmpty ? null : bookingTime,
@@ -178,7 +213,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                     if (value != null) {
                       ref
                           .read(bookingTimeStateProvider.notifier)
-                          .timePicked(value);
+                          .datePicked(value);
                     }
                   },
                 ),

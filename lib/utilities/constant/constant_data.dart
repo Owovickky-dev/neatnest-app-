@@ -3,8 +3,11 @@ import 'dart:io';
 class ConstantData {
   static const String APP_NAME = "NEATNEST";
   static const int APP_VERSION = 1;
+  // static final BASE_URL = Platform.isAndroid
+  //     ? "http://10.0.2.2:8000/api/v1"
+  //     : "http://127.0.0.1:8000/api/v1";
   static final BASE_URL = Platform.isAndroid
-      ? "http://10.0.2.2:8000/api/v1"
+      ? "http://192.168.1.153:8000/api/v1"
       : "http://127.0.0.1:8000/api/v1";
   static const LOGIN = "/auth/login";
   static const ABOUTME = "/auth/me";
