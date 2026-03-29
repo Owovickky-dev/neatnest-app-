@@ -1,6 +1,6 @@
 # neat_nest
 
-Professional cleaning services at your fingertips — book, track, and enjoy a spotless home with NeatNest.
+NeatNest is a mobile service marketplace that connects users with trusted craftsmen and service professionals for a wide range of needs. From plumbing, electrical work, cleaning services, and carpentry to household repairs and vehicle maintenance, the platform makes it easy to find skilled professionals nearby. Users can discover services, book appointments, track job progress, and manage service requests seamlessly from their mobile devices.
 
 ## Getting Started
 
