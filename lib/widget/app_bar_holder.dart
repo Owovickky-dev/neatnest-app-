@@ -26,6 +26,10 @@ class AppBarHolder extends StatelessWidget implements PreferredSizeWidget {
         function: function ?? () => context.pop(),
       ),
       title: primaryText(text: title, fontSize: 22.sp),
+      bottom: PreferredSize(
+        preferredSize: Size.fromHeight(1),
+        child: Container(color: Colors.grey.withValues(alpha: .5), height: 1),
+      ),
     );
   }
 

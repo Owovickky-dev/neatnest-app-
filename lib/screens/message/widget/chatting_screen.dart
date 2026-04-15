@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/screens/booking/widgets/booking_text_field.dart';
 import 'package:neat_nest/screens/history/utilities/app_bar_icon.dart';
-import 'package:neat_nest/screens/message/notifier/messages_state.dart';
 import 'package:neat_nest/screens/message/widget/chatting_screen_data.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 
@@ -28,7 +27,6 @@ class _ChattingScreenState extends ConsumerState<ChattingScreen> {
   @override
   Widget build(BuildContext context) {
     bool active = ref.watch(chattingStateProvider);
-    final messages = ref.watch(messagesStateProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -105,19 +103,18 @@ class _ChattingScreenState extends ConsumerState<ChattingScreen> {
               ),
               20.ht,
               DottedLine(
-                dashColor: AppColors.secondaryTextColor.withOpacity(0.5),
+                dashColor: AppColors.secondaryTextColor.withValues(alpha: 0.5),
               ),
               20.ht,
               Expanded(
                 child: ListView.builder(
                   reverse: true,
-                  itemCount: messages.length,
+                  itemCount: 2,
                   itemBuilder: (context, index) {
-                    final msg = messages[index];
                     return ChattingScreenData(
-                      message: msg.message,
-                      isSender: msg.isSender,
-                      time: msg.time,
+                      message: "text",
+                      isSender: true,
+                      time: "time",
                     );
                   },
                 ),
@@ -151,12 +148,6 @@ class _ChattingScreenState extends ConsumerState<ChattingScreen> {
                           senderTest = !senderTest;
                         });
                         if (_controller.text.trim().isNotEmpty) {
-                          ref
-                              .read(messagesStateProvider.notifier)
-                              .sendNewMessage(
-                                _controller.text.trim(),
-                                isSender: senderTest,
-                              );
                           _controller.clear();
                         }
                       },

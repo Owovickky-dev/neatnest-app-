@@ -34,7 +34,7 @@ final class AppInitializerControllerProvider
 }
 
 String _$appInitializerControllerHash() =>
-    r'b7d2b33754a1abc369ba28cabe0aacb331f98496';
+    r'ce3dd142866200d1f9d4e0ae0de1e9d254c270d1';
 
 abstract class _$AppInitializerController extends $AsyncNotifier<void> {
   FutureOr<void> build();

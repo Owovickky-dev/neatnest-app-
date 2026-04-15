@@ -14,6 +14,8 @@ import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/app_text.dart';
 
+import '../../../../widget/app_bar_holder.dart';
+
 class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
 
@@ -42,15 +44,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Icon(Icons.arrow_back),
-        ),
-        title: primaryText(text: 'Sign Up'),
+      appBar: AppBarHolder(
+        title: 'Sign Up',
+        function: () {
+          AppNavigatorHelper.go(context, AppRoute.bottomNavigation);
+        },
       ),
       body: SafeArea(
         child: SingleChildScrollView(

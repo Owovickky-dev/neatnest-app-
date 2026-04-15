@@ -32,7 +32,7 @@ class DioClient {
           if (token != null && token.isNotEmpty) {
             options.headers["Authorization"] = "Bearer $token";
           } else {
-            print("❌ Request without token");
+            // print("❌ Request without token");
           }
           return handler.next(options);
         },
@@ -50,7 +50,7 @@ class DioClient {
                 error["name"] == "TokenExpiredError") {
               final newToken = await _refreshToken();
               if (newToken != null) {
-                print("✅ AUTO-REFRESH SUCCESSFUL");
+                // print("✅ AUTO-REFRESH SUCCESSFUL");
                 // Update the request with new token
                 e.requestOptions.headers["Authorization"] = "Bearer $newToken";
                 // Retry the original request

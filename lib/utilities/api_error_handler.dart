@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 class ApiErrorHandler {
   static String getErrorMessage(DioException e) {
-    // 🚫 Network-related errors
+    //  Network-related errors
     if (e.type == DioExceptionType.connectionError ||
         e.type == DioExceptionType.unknown) {
       return "No internet connection. Please check your network.";
@@ -23,7 +23,7 @@ class ApiErrorHandler {
         responseData["message"] != null) {
       return responseData["message"] ?? "An error has occurred";
     }
-    // 🔙 Safe extraction of message
+    //  Safe extraction of message
     String getMessage() {
       if (responseData is Map && responseData.containsKey('message')) {
         return responseData['message']?.toString() ?? "Something went wrong";
@@ -50,7 +50,7 @@ class ApiErrorHandler {
               return "$message $nextUpdateDate";
             }
           } catch (e) {
-            print('⚠️ Extra data parsing failed: $e');
+            print(' Extra data parsing failed: $e');
           }
           return message;
 
@@ -61,7 +61,7 @@ class ApiErrorHandler {
           return getMessage();
 
         case 500:
-          // ✅ SAFE: Only check for duplicate email if the structure exists
+          //  SAFE: Only check for duplicate email if the structure exists
           try {
             final duplicateEmail = responseData?['error']?['keyValue']?['email']
                 ?.toString();
@@ -69,7 +69,7 @@ class ApiErrorHandler {
               return "Email $duplicateEmail already used by another user";
             }
           } catch (e) {
-            print('⚠️ Duplicate email parsing failed: $e');
+            print(' Duplicate email parsing failed: $e');
           }
           return getMessage();
 

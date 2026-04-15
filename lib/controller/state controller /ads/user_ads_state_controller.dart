@@ -30,8 +30,6 @@ class UserAdsStateController extends _$UserAdsStateController {
         final getActiveAds = totalActiveAdsResponseData
             .map((activeAds) => AdsModel.fromJson(activeAds))
             .toList();
-
-        print("The total ads is ${getTotalAds.length}");
         if (!ref.mounted) return;
         state = UserAdsModel(activeAds: getActiveAds, totalAds: getTotalAds);
       }

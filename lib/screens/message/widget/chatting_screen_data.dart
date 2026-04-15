@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/widget/app_text.dart';
@@ -15,7 +14,7 @@ class ChattingScreenData extends StatelessWidget {
 
   final String message;
   final bool isSender;
-  final DateTime time;
+  final String time; // chnage to time when all is set
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +47,7 @@ class ChattingScreenData extends StatelessWidget {
             Align(
               alignment: Alignment.bottomRight,
               child: secondaryText(
-                text: DateFormat('hh:mm a ').format(time),
+                text: time,
                 fontSize: 8.sp,
                 color: isSender ? Colors.white : Colors.black54,
               ),

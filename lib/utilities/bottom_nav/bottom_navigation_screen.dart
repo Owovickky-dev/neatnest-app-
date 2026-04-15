@@ -6,10 +6,11 @@ import 'package:neat_nest/providers/is_logged_in_state.dart';
 import 'package:neat_nest/screens/favorite/favorite_screen.dart';
 import 'package:neat_nest/screens/history/history_screen.dart';
 import 'package:neat_nest/screens/home/home_screen.dart';
-import 'package:neat_nest/screens/message/messages_list_screen.dart';
 import 'package:neat_nest/screens/user/user_screen.dart';
 import 'package:neat_nest/utilities/bottom_nav/widget/bottom_nav_notifiers.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
+
+import '../../screens/message/chat_list_screen.dart';
 
 class BottomNavigationScreen extends ConsumerStatefulWidget {
   const BottomNavigationScreen({super.key});
@@ -37,7 +38,7 @@ class _BottomNavigationScreenState
       HomeScreen(),
       HistoryScreen(),
       FavoriteScreen(),
-      MessagesScreen(),
+      ChatListScreen(),
       UserScreen(isDataAvailable: isLoggedIn),
     ];
   }
