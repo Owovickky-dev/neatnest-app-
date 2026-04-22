@@ -10,8 +10,8 @@ import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/widget/app_text.dart';
 
-class MessageDataHolder extends ConsumerWidget {
-  const MessageDataHolder({
+class ChatListDataHolder extends ConsumerWidget {
+  const ChatListDataHolder({
     super.key,
     required this.senderUsername,
     required this.timeSent,

@@ -8,6 +8,7 @@ import 'package:neat_nest/screens/home/filter/filter_screen.dart';
 import 'package:neat_nest/screens/home/filter/widget/filter_result_screen.dart';
 import 'package:neat_nest/screens/home/widget/all_ads_screen.dart';
 import 'package:neat_nest/screens/home/widget/notification_screen.dart';
+import 'package:neat_nest/screens/message/widget/chatting_screen.dart';
 import 'package:neat_nest/screens/onboarding/welcome_screen.dart';
 import 'package:neat_nest/screens/user/ads/ads_screen.dart';
 import 'package:neat_nest/screens/user/ads/widgets/post_ads_screen.dart';
@@ -37,6 +38,7 @@ import 'package:neat_nest/utilities/bottom_nav/bottom_navigation_screen.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/utilities/route/app_router_key.dart';
 
+import '../../models/message_model.dart';
 import '../../screens/onboarding/widgets/splash_screen.dart';
 import '../../screens/user/model/user_payment_method_model.dart';
 import '../../screens/user/widgets/edit_profile/widget/view_about_me.dart';
@@ -198,6 +200,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoute.updateEmailScreen.path,
         name: AppRoute.updateEmailScreen.name,
         builder: (context, state) => ChangeMailScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.chattingScreen.path,
+        name: AppRoute.chattingScreen.name,
+        builder: (context, state) {
+          final msgScreenPreData = state.extra as ChattingScreenPreData;
+          return ChattingScreen(
+            chatId: msgScreenPreData.chatId,
+            senderUserName: msgScreenPreData.senderUserName,
+            recipientId: msgScreenPreData.recipientId,
+          );
+        },
       ),
       GoRoute(
         path: AppRoute.setAboutMe.path,

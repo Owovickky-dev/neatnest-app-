@@ -46,6 +46,8 @@ dependencies:
   table_calendar: ^3.2.0
   calendar_date_picker2: ^2.0.1
   ionicons: ^0.2.2
+  chat_bubbles: ^1.9.0
+  socket_io_client: ^3.1.4
 
 
 dev_dependencies:

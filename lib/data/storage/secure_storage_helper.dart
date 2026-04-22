@@ -68,6 +68,5 @@ class SecureStorageHelper {
 
   static Future<void> clearAll() async {
     await _storage.deleteAll();
-    print("All storage cleared");
   }
 }

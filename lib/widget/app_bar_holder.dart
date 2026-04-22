@@ -21,6 +21,7 @@ class AppBarHolder extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.white,
+      centerTitle: true,
       leading: AppBarIcon(
         icons: iconName ?? Icons.arrow_back,
         function: function ?? () => context.pop(),

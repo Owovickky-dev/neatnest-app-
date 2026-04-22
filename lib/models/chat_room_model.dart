@@ -46,12 +46,13 @@ class ChatRoomModel {
 
   factory ChatRoomModel.fromJson(Map<String, dynamic> json) {
     return ChatRoomModel(
-      chatId: json["id"] ?? "",
+      chatId: json["chatId"] ?? "",
       chatName: json["chatName"] ?? "",
       chatType: json["chatType"] ?? "",
       status: json["status"],
       isDispute: json["dispute"]?["isDispute"] ?? false,
       partnerUsername: json["partnerUsername"] ?? "",
+      recipientId: json["partnerId"] ?? "",
 
       participants: (json["participants"] as List<dynamic>?)
           ?.map((p) => Participant.fromJson(p))

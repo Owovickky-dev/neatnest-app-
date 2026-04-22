@@ -18,6 +18,7 @@ class BookingTextField extends StatefulWidget {
     this.iconName,
     this.iconNamePre,
     this.inputFormatters,
+    this.onChange,
   });
 
   final String? titleText;
@@ -29,6 +30,7 @@ class BookingTextField extends StatefulWidget {
   final IconData? iconNamePre;
   final bool title;
   final List<TextInputFormatter>? inputFormatters;
+  final void Function(String)? onChange;
 
   @override
   State<BookingTextField> createState() => _BookingTextFieldState();
@@ -45,7 +47,7 @@ class _BookingTextFieldState extends State<BookingTextField> {
             : null,
         5.ht,
         Container(
-          height: 50.h,
+          constraints: BoxConstraints(minHeight: 50.h, maxHeight: 120.h),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.r),
             color: AppColors.textFieldBckColor.withValues(alpha: 0.35),
@@ -53,6 +55,11 @@ class _BookingTextFieldState extends State<BookingTextField> {
           child: TextField(
             controller: widget.textEditingController,
             inputFormatters: widget.inputFormatters,
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
+            minLines: 1,
+            onChanged: widget.onChange,
+            textInputAction: TextInputAction.newline,
             style: TextStyle(
               color: AppColors.blackTextColor,
               fontWeight: FontWeight.bold,

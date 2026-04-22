@@ -18,7 +18,7 @@ class TextingDataRepo {
 
   Future<Response> sendMessage(MessageModel messageData) async {
     final response = await _dio.post(
-      ConstantData.CHATURL,
+      ConstantData.MESSAGEURL,
       data: messageData.toJson(),
     );
     return response;
@@ -29,8 +29,8 @@ class TextingDataRepo {
     return response;
   }
 
-  Future<Response> getMessages(String messageId) async {
-    final response = await _dio.get("${ConstantData.MESSAGEURL}/$messageId");
+  Future<Response> getMessages(String chatId) async {
+    final response = await _dio.get("${ConstantData.MESSAGEURL}/$chatId");
     return response;
   }
 }
