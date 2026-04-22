@@ -28,7 +28,7 @@ class VerificationOptionsItemsHolder extends StatelessWidget {
     "Cancel",
   ];
 
-  IconData? verification(String text) {
+  dynamic verification(String text) {
     switch (text) {
       case "Cancel":
         return FontAwesomeIcons.xmark;

@@ -313,7 +313,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   5.wt,
                                   HomeScreenIcons(
                                     text: 'More',
-                                    icons: Icons.apps,
+                                    icons: FontAwesomeIcons.grip,
                                   ),
                                   5.wt,
                                 ],

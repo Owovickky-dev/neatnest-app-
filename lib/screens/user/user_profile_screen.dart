@@ -123,7 +123,7 @@ class UserProfileScreen extends ConsumerWidget {
                 text: userData?.role == "Worker"
                     ? "My Account Summary"
                     : 'My booking',
-                icons: Icons.calendar_month_outlined,
+                icons: FontAwesomeIcons.calendarDays,
                 function: () {},
               ),
               ?userData?.role == "Worker"
@@ -146,7 +146,7 @@ class UserProfileScreen extends ConsumerWidget {
               20.ht,
               RowDataHolder(
                 text: 'Security',
-                icons: Icons.security,
+                icons: FontAwesomeIcons.shieldHalved,
                 function: () {
                   AppNavigatorHelper.push(context, AppRoute.securityScreen);
                 },
@@ -154,7 +154,7 @@ class UserProfileScreen extends ConsumerWidget {
               20.ht,
               RowDataHolder(
                 text: 'Settings',
-                icons: Icons.settings,
+                icons: FontAwesomeIcons.gear,
                 function: () {
                   AppNavigatorHelper.push(context, AppRoute.settingsScreen);
                 },

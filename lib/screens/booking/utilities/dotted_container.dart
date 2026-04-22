@@ -15,12 +15,12 @@ class DottedContainer extends StatelessWidget {
     return GestureDetector(
       onTap: function,
       child: DottedBorder(
-        color: AppColors.primaryColor,
-        borderType: BorderType.RRect,
-        strokeWidth: 2,
-        padding: EdgeInsets.zero,
-        dashPattern: [6, 8],
-        radius: Radius.circular(20.r),
+        options: RoundedRectDottedBorderOptions(
+          color: AppColors.primaryColor,
+          strokeWidth: 2,
+          dashPattern: [6, 8],
+          radius: Radius.circular(20.r),
+        ),
         child: Container(
           height: 50.h,
           width: double.infinity,

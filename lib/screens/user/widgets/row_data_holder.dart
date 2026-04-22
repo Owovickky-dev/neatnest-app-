@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/widget/app_text.dart';
@@ -13,7 +14,7 @@ class RowDataHolder extends StatelessWidget {
   });
 
   final String text;
-  final IconData icons;
+  final FaIconData icons;
   final VoidCallback function;
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class RowDataHolder extends StatelessWidget {
                 color: AppColors.primaryColor.withValues(alpha: .2),
               ),
               child: Center(
-                child: Icon(icons, color: AppColors.primaryColor, size: 20.r),
+                child: FaIcon(icons, color: AppColors.primaryColor, size: 20.r),
               ),
             ),
             10.wt,

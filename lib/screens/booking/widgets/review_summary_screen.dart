@@ -37,11 +37,12 @@ class ReviewSummaryScreen extends StatelessWidget {
           children: [
             25.ht,
             DottedBorder(
-              color: AppColors.secondaryTextColor.withValues(alpha: 0.5),
-              strokeWidth: 2,
-              dashPattern: [5, 5], // [dash length, gap length]
-              borderType: BorderType.RRect,
-              radius: Radius.circular(8.r),
+              options: RoundedRectDottedBorderOptions(
+                color: AppColors.secondaryTextColor.withValues(alpha: 0.5),
+                strokeWidth: 2,
+                dashPattern: [5, 5],
+                radius: Radius.circular(8.r),
+              ),
               child: SizedBox(
                 height: MediaQuery.of(context).size.height * 0.65,
                 width: double.maxFinite,

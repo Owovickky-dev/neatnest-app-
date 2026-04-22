@@ -2,8 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:neat_nest/controller/state%20controller%20/address/address_state_controller.dart';
 import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
 import 'package:neat_nest/models/booking_navigation_args.dart';
 import 'package:neat_nest/screens/booking/widgets/booking_review_holder.dart';
@@ -67,6 +69,7 @@ class AdsDetailsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final adsList = ref.watch(adsStateControllerProvider);
+    final addressExist = ref.watch(addressStateControllerProvider);
     final adsInfo = adsList[index];
     final posterJoinedDate = adsInfo.jobPoster!.joinedAt;
     final user = ref.watch(userControllerStateProvider);
@@ -180,13 +183,16 @@ class AdsDetailsScreen extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           HomeScreenIcons(
-                            icons: Icons.location_on,
+                            icons: FontAwesomeIcons.locationDot,
                             text: adsInfo.country!.isNotEmpty
                                 ? "${adsInfo.country}, ${adsInfo.state}"
                                 : " No location",
                           ),
                           10.wt,
-                          HomeScreenIcons(icons: Icons.share, text: "share"),
+                          HomeScreenIcons(
+                            icons: FontAwesomeIcons.shareNodes,
+                            text: "share",
+                          ),
                         ],
                       ),
                       20.ht,
@@ -306,14 +312,29 @@ class AdsDetailsScreen extends ConsumerWidget {
                                   },
                                   functionLeft: () {
                                     context.pop();
-                                    AppNavigatorHelper.push(
-                                      context,
-                                      AppRoute.bookingFormScreen,
-                                      extra: BookingNavigationArgs(
-                                        isMe: true,
-                                        index: index,
-                                      ),
-                                    );
+                                    if (addressExist.isNotEmpty) {
+                                      AppNavigatorHelper.push(
+                                        context,
+                                        AppRoute.bookingFormScreen,
+                                        extra: BookingNavigationArgs(
+                                          isMe: true,
+                                          index: index,
+                                        ),
+                                      );
+                                    } else {
+                                      showSuccessNotification(
+                                        message:
+                                            "You don't have any exist address please fill in details",
+                                      );
+                                      AppNavigatorHelper.push(
+                                        context,
+                                        AppRoute.bookingFormScreen,
+                                        extra: BookingNavigationArgs(
+                                          isMe: false,
+                                          index: index,
+                                        ),
+                                      );
+                                    }
                                   },
                                 );
                               }

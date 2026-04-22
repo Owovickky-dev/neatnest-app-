@@ -54,6 +54,8 @@ class _AccountVerificationScreenState extends State<AccountVerificationScreen> {
                   keyboardType: TextInputType.number,
                   animationType: AnimationType.fade,
                   length: 4,
+                  controller: _accountVerificationController.otpController,
+                  onChanged: (value) {},
                   pinTheme: PinTheme(
                     shape: PinCodeFieldShape.box,
                     borderRadius: BorderRadius.circular(10.r),
@@ -61,10 +63,6 @@ class _AccountVerificationScreenState extends State<AccountVerificationScreen> {
                     fieldWidth: 60.w,
                     activeFillColor: AppColors.containerLightBackground,
                   ),
-                  controller: _accountVerificationController.otpController,
-                  // onCompleted: (val) {
-                  //   _accountVerificationController.submitCode(val);
-                  // },
                 ),
                 10.ht,
                 Row(

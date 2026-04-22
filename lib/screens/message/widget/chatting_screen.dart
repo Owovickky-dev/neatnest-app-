@@ -62,11 +62,14 @@ class _ChattingScreenState extends ConsumerState<ChattingScreen> {
   }
 
   Future<void> connect() async {
-    socket = IO.io(ConstantData.SOCKET_IO, {
-      "transports": ["websocket"],
-      "autoConnect": false,
-    });
-
+    socket = IO.io(
+      ConstantData.SOCKET_IO,
+      IO.OptionBuilder()
+          .setTransports(['websocket'])
+          .setPath('/socket.io')
+          .disableAutoConnect()
+          .build(),
+    );
     socket!.connect();
 
     socket!.onConnect((_) async {

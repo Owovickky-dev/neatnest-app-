@@ -27,7 +27,10 @@ class SecurityScreen extends StatelessWidget {
               30.ht,
               Row(
                 children: [
-                  Icon(FontAwesomeIcons.userShield, color: Colors.grey),
+                  Icon(
+                    FontAwesomeIcons.userShield as IconData?,
+                    color: Colors.grey,
+                  ),
                   10.wt,
                   secondaryText(text: "Account Activity"),
                 ],
@@ -63,7 +66,7 @@ class SecurityScreen extends StatelessWidget {
               30.ht,
               RowDataHolder(
                 text: "Change Email",
-                icons: Icons.mail,
+                icons: FontAwesomeIcons.envelope,
                 function: () {
                   AppNavigatorHelper.push(context, AppRoute.updateEmailScreen);
                 },
@@ -71,7 +74,7 @@ class SecurityScreen extends StatelessWidget {
               30.ht,
               RowDataHolder(
                 text: "Change Phone Number",
-                icons: Icons.phone,
+                icons: FontAwesomeIcons.phone,
                 function: () {
                   AppNavigatorHelper.push(context, AppRoute.updatePhoneScreen);
                 },
@@ -79,7 +82,7 @@ class SecurityScreen extends StatelessWidget {
               20.ht,
               RowDataHolder(
                 text: "Withdrawal Password",
-                icons: Icons.lock_clock,
+                icons: FontAwesomeIcons.userLock,
                 function: () {},
               ),
             ],

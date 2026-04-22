@@ -104,7 +104,7 @@ class EditProfileScreen extends ConsumerWidget {
                   children: [
                     RowDataHolder(
                       text: 'Personal Information',
-                      icons: Icons.person,
+                      icons: FontAwesomeIcons.user,
                       function: () {
                         AppNavigatorHelper.push(
                           context,

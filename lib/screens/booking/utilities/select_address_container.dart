@@ -13,7 +13,7 @@ class SelectRoomsContainer extends ConsumerWidget {
 
   final int index;
 
-  final List<IconData> icons = const [
+  final List<dynamic> icons = const [
     Icons.chair,
     FontAwesomeIcons.bed,
     FontAwesomeIcons.plateWheat,

@@ -15,7 +15,7 @@ class AppBarIcon extends StatelessWidget {
     this.radius,
   });
 
-  final IconData icons;
+  final dynamic icons;
   final VoidCallback? function;
   final double? height;
   final double? width;

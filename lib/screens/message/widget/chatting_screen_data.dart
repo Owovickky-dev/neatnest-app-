@@ -30,7 +30,6 @@ class ChattingScreenData extends StatelessWidget {
 
     final isFailed = messageStatus == MessageStatus.failed;
     return GestureDetector(
-      // ✅ NEW: tap the bubble to retry if it failed
       onTap: isFailed ? onTapRetry : null,
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 4.h),
@@ -38,7 +37,6 @@ class ChattingScreenData extends StatelessWidget {
           constraints: BoxConstraints(maxWidth: 0.75.sw),
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
           decoration: BoxDecoration(
-            // ✅ NEW: failed messages get a reddish tint so user notices
             color: isFailed
                 ? Colors.red.shade100
                 : isSender
@@ -102,17 +100,9 @@ class ChattingScreenData extends StatelessWidget {
 Widget _buildStatusIcon(MessageStatus messageStatus) {
   switch (messageStatus) {
     case MessageStatus.pending:
-      return Icon(
-        Icons.done, // single tick
-        size: 14.sp,
-        color: Colors.white70,
-      );
+      return Icon(Icons.done, size: 14.sp, color: Colors.white70);
     case MessageStatus.sent:
-      return Icon(
-        Icons.done_all_outlined, // double tick
-        size: 14.sp,
-        color: Colors.white70,
-      );
+      return Icon(Icons.done_all_outlined, size: 14.sp, color: Colors.white70);
     case MessageStatus.failed:
       return Icon(Icons.error_outline, size: 14.sp, color: Colors.red.shade700);
   }

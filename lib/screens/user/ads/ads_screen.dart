@@ -27,7 +27,10 @@ class AdsScreen extends ConsumerWidget {
               30.ht,
               Row(
                 children: [
-                  Icon(FontAwesomeIcons.bookOpenReader, color: Colors.grey),
+                  Icon(
+                    FontAwesomeIcons.bookOpenReader as IconData?,
+                    color: Colors.grey,
+                  ),
                   10.wt,
                   secondaryText(text: "Ads Activity"),
                 ],
