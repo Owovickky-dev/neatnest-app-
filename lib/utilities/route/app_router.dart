@@ -108,6 +108,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           return BookingFormScreen(
             index: args?.index ?? 0,
             isMe: args?.isMe ?? false,
+            isPopularAds: args!.isPopularAds,
           );
         },
       ),

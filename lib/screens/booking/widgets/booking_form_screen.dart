@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:neat_nest/controller/booking_form_controller.dart';
-import 'package:neat_nest/screens/booking/notifiers/booking_time_state.dart';
+import 'package:neat_nest/controller/state%20controller%20/ads/popular_service_controller.dart';
 import 'package:neat_nest/screens/booking/widgets/booking_text_field.dart';
 import 'package:neat_nest/screens/history/utilities/app_bar_icon.dart';
 import 'package:neat_nest/utilities/app_button.dart';
@@ -19,10 +20,16 @@ import '../../../widget/app_text.dart';
 import '../../history/utilities/text_filed_holder.dart';
 
 class BookingFormScreen extends ConsumerStatefulWidget {
-  const BookingFormScreen({super.key, required this.index, required this.isMe});
+  const BookingFormScreen({
+    super.key,
+    required this.index,
+    required this.isMe,
+    required this.isPopularAds,
+  });
 
   final int index;
   final bool isMe;
+  final bool isPopularAds;
 
   @override
   ConsumerState<BookingFormScreen> createState() => _BookingFormScreenState();
@@ -31,7 +38,9 @@ class BookingFormScreen extends ConsumerStatefulWidget {
 class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
   late BookingFormController _bookingFormController;
 
-  late List<String>? times = [];
+  List<String> workerTimes = [];
+  String? selectedDate;
+  String? selectedTime;
 
   @override
   void initState() {
@@ -64,10 +73,30 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bookingTime = ref.watch(bookingTimeStateProvider);
-    final adsInfo = ref.watch(adsStateControllerProvider)[widget.index];
-    final myAvailable = ref.watch(adsStateControllerProvider);
-    times = myAvailable[widget.index].availableTime!;
+    final popularAds = ref.watch(popularServiceControllerProvider);
+    final generalAds = ref.watch(adsStateControllerProvider);
+    final ads = widget.isPopularAds ? popularAds : generalAds;
+    final adsInfo = ads[widget.index];
+    final myAvailable = adsInfo.availableTime ?? [];
+    final dates = myAvailable.map((date) {
+      final formattedDate = DateTime.parse(date.workerAvailableDates).toLocal();
+      final dates = DateFormat('dd/MM/yy').format(formattedDate);
+      return dates;
+    }).toList();
+
+    if (selectedDate != null) {
+      final selected = myAvailable.firstWhere((item) {
+        final formatted = DateFormat(
+          'dd/MM/yy',
+        ).format(DateTime.parse(item.workerAvailableDates).toLocal());
+        return formatted == selectedDate;
+      });
+      workerTimes = selected.workerAvailableTimes.map((e) => e.time).toList();
+    } else {
+      setState(() {
+        workerTimes = [];
+      });
+    }
 
     return Container(
       color: Colors.white,
@@ -198,23 +227,58 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                   borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: DropdownButton(
-                  hint: secondaryText(text: "Select Date"),
+                  hint: secondaryText(
+                    text: myAvailable.isEmpty
+                        ? "No date available yet"
+                        : "Select Date",
+                  ),
                   icon: Icon(Icons.keyboard_arrow_down_outlined),
                   isExpanded: true,
-                  value: bookingTime.isEmpty ? null : bookingTime,
+                  value: selectedDate,
                   underline: SizedBox(),
-                  items: times?.map((time) {
-                    return DropdownMenuItem(
+                  items: dates.map((date) {
+                    return DropdownMenuItem<String>(
+                      value: date,
+                      child: secondaryText(text: date),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedDate = value;
+                      selectedTime = null;
+                    });
+                  },
+                ),
+              ),
+              10.ht,
+              primaryText(text: "Worker Available  Time", fontSize: 15.sp),
+              10.ht,
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
+                decoration: BoxDecoration(
+                  color: AppColors.containerLightBackground,
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: DropdownButton(
+                  hint: secondaryText(
+                    text: workerTimes.isEmpty
+                        ? "No time available yet"
+                        : "Select Time",
+                  ),
+                  icon: Icon(Icons.keyboard_arrow_down_outlined),
+                  isExpanded: true,
+                  value: selectedTime,
+                  underline: SizedBox(),
+                  items: workerTimes.map((time) {
+                    return DropdownMenuItem<String>(
                       value: time,
                       child: secondaryText(text: time),
                     );
                   }).toList(),
                   onChanged: (value) {
-                    if (value != null) {
-                      ref
-                          .read(bookingTimeStateProvider.notifier)
-                          .datePicked(value);
-                    }
+                    setState(() {
+                      selectedTime = value;
+                    });
                   },
                 ),
               ),

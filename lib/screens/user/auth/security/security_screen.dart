@@ -27,10 +27,7 @@ class SecurityScreen extends StatelessWidget {
               30.ht,
               Row(
                 children: [
-                  Icon(
-                    FontAwesomeIcons.userShield as IconData?,
-                    color: Colors.grey,
-                  ),
+                  Icon(Icons.verified_user_sharp, color: Colors.grey),
                   10.wt,
                   secondaryText(text: "Account Activity"),
                 ],

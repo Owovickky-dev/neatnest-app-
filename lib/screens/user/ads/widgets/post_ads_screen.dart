@@ -4,7 +4,6 @@ import 'package:flutter/material.dart' hide State;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import 'package:neat_nest/controller/ads_controller.dart';
 import 'package:neat_nest/models/ads_model.dart';
 import 'package:neat_nest/utilities/app_button.dart';
@@ -46,7 +45,7 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
   List<State> states = [];
   final List<String> selectedTimes = [];
   bool isOpen = false;
-  int _currentTilteTextLenght = 0;
+  int _currentTitleTextLength = 0;
 
   String? categorySelected;
   String? statusSelected;
@@ -170,7 +169,7 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                         },
                         onChanged: (value) {
                           setState(() {
-                            _currentTilteTextLenght = value.length;
+                            _currentTitleTextLength = value.length;
                           });
                         },
                       ),
@@ -178,8 +177,8 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                         children: [
                           Container(width: 50.w),
                           secondaryText(
-                            text: "$_currentTilteTextLenght /30",
-                            color: _currentTilteTextLenght > 25
+                            text: "$_currentTitleTextLength /30",
+                            color: _currentTitleTextLength > 25
                                 ? Colors.red
                                 : AppColors.primaryColor,
                           ),
@@ -316,22 +315,22 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                               firstDate: DateTime.now(),
                             ),
                             value: _date,
-                            onValueChanged: (dates) {
-                              setState(() {
-                                _date
-                                  ..clear()
-                                  ..addAll(dates);
-                              });
-
-                              _adsController.timeAvailable = _date
-                                  .whereType<DateTime>()
-                                  .map(
-                                    (date) => DateFormat(
-                                      "dd/MM/yyyy",
-                                    ).format(date).toString(),
-                                  )
-                                  .toList();
-                            },
+                            // onValueChanged: (dates) {
+                            //   setState(() {
+                            //     _date
+                            //       ..clear()
+                            //       ..addAll(dates);
+                            //   });
+                            //
+                            //   _adsController.timeAvailable = _date
+                            //       .whereType<DateTime>()
+                            //       .map(
+                            //         (date) => DateFormat(
+                            //           "dd/MM/yyyy",
+                            //         ).format(date).toString(),
+                            //       )
+                            //       .toList();
+                            // },
                           ),
                         ),
                     ],

@@ -13,7 +13,7 @@ class AdsModel {
   final bool? isActive;
   final String? workerId;
   final DateTime? createdAt;
-  final List<String>? availableTime;
+  final List<WorkerAvailableInfoModel>? availableTime;
 
   AdsModel({
     this.id,
@@ -80,13 +80,47 @@ class AdsModel {
       isActive: json["isActive"] ?? false,
       country: json["country"] ?? "",
       state: json["state"] ?? "",
-      availableTime: json["availableTime"] != null
-          ? List<String>.from(json["availableTime"])
+      availableTime: json["workerAvailableInfo"] != null
+          ? (json["workerAvailableInfo"] as List)
+                .map((e) => WorkerAvailableInfoModel.fromJson(e))
+                .toList()
           : [],
       jobPoster: JobPosterModel.fromJson(json["jobPoster"] ?? {}),
       createdAt: json["createdAt"] != null
           ? DateTime.parse(json["createdAt"])
           : null,
     );
+  }
+}
+
+class WorkerAvailableInfoModel {
+  final String workerAvailableDates;
+  final List<WorkerAvailableTime> workerAvailableTimes;
+
+  WorkerAvailableInfoModel({
+    required this.workerAvailableDates,
+    required this.workerAvailableTimes,
+  });
+
+  factory WorkerAvailableInfoModel.fromJson(Map<String, dynamic> json) {
+    return WorkerAvailableInfoModel(
+      workerAvailableDates: json["workerAvailableDates"] ?? "",
+      workerAvailableTimes: json["workerAvailableTimes"] != null
+          ? (json["workerAvailableTimes"] as List)
+                .map((e) => WorkerAvailableTime.fromJson(e))
+                .toList()
+          : [],
+    );
+  }
+}
+
+class WorkerAvailableTime {
+  final String time;
+  final bool isBooked;
+
+  WorkerAvailableTime({required this.time, required this.isBooked});
+
+  factory WorkerAvailableTime.fromJson(Map<String, dynamic> json) {
+    return WorkerAvailableTime(time: json["time"], isBooked: json["isBooked"]);
   }
 }

@@ -51,64 +51,62 @@ class ReviewSummaryScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       20.ht,
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(5.r),
-                                  child: CachedNetworkImage(
-                                    height: 70.h,
-                                    width: 70.w,
-                                    fit: BoxFit.cover,
-                                    imageUrl: AppData.imagePathway[1],
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(5.r),
+                                child: CachedNetworkImage(
+                                  height: 70.h,
+                                  width: 70.w,
+                                  fit: BoxFit.cover,
+                                  imageUrl: AppData.imagePathway[1],
+                                ),
+                              ),
+                              10.wt,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  primaryText(
+                                    text: AppData.serviceName[1],
+                                    fontSize: 14.sp,
                                   ),
-                                ),
-                                10.wt,
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    primaryText(
-                                      text: AppData.serviceName[1],
-                                      fontSize: 14.sp,
-                                    ),
-                                    10.ht,
-                                    secondaryText(
-                                      text: AppData.serviceProviderName[1],
-                                    ),
-                                    10.ht,
-                                    Row(
-                                      children: [
-                                        primaryText(
-                                          text: "\$${AppData.price[1]}",
-                                          fontSize: 14.sp,
-                                        ),
-                                        secondaryText(text: "/hour"),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.star,
-                                  color: AppColors.ratingStarColor,
-                                ),
-                                secondaryText(text: "4.5"),
-                              ],
-                            ),
-                          ],
-                        ),
+                                  10.ht,
+                                  secondaryText(
+                                    text: AppData.serviceProviderName[1],
+                                  ),
+                                  10.ht,
+                                  Row(
+                                    children: [
+                                      primaryText(
+                                        text: "\$${AppData.price[1]}",
+                                        fontSize: 14.sp,
+                                      ),
+                                      secondaryText(text: "/hour"),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.star,
+                                color: AppColors.ratingStarColor,
+                              ),
+                              secondaryText(text: "4.5"),
+                            ],
+                          ),
+                        ],
                       ),
                       20.ht,
                       DottedLine(
-                        dashColor: AppColors.secondaryTextColor.withOpacity(
-                          0.5,
+                        dashColor: AppColors.secondaryTextColor.withValues(
+                          alpha: 0.5,
                         ),
                       ),
                       20.ht,

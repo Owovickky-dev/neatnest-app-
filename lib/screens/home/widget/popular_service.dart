@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/screens/booking/ads_details_screen.dart';
 
-import '../../../controller/favourite_controller.dart';
 import '../../../controller/state controller /favourite/favourite_state_controller.dart';
 import '../../../models/ads_model.dart';
 import '../../../utilities/constant/colors.dart';
@@ -22,8 +21,6 @@ class PopularService extends ConsumerStatefulWidget {
 }
 
 class _PopularServiceState extends ConsumerState<PopularService> {
-  final FavouriteController _favouriteController = FavouriteController();
-
   String capitalizeFirst(String? text) {
     if (text == null || text.isEmpty) return '';
     return text[0].toUpperCase() + text.substring(1);
@@ -41,7 +38,6 @@ class _PopularServiceState extends ConsumerState<PopularService> {
 
   @override
   Widget build(BuildContext context) {
-    // ========== SAFETY CHECK ==========
     if (widget.adsModel == null) {
       return Container(
         width: 200.w,
@@ -59,7 +55,6 @@ class _PopularServiceState extends ConsumerState<PopularService> {
         ),
       );
     }
-    // =================================
 
     final ads = widget.adsModel!;
     final favourites = ref.watch(favouriteStateControllerProvider);
@@ -74,8 +69,11 @@ class _PopularServiceState extends ConsumerState<PopularService> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                AdsDetailsScreen(index: widget.index, isFavourite: isFav),
+            builder: (context) => AdsDetailsScreen(
+              index: widget.index,
+              isFavourite: isFav,
+              isPopularAds: true,
+            ),
           ),
         );
       },

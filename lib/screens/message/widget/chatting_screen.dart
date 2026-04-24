@@ -430,7 +430,7 @@ class _SingleDotState extends State<_SingleDot>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _anim,
-      builder: (_, __) => Transform.translate(
+      builder: (_, _) => Transform.translate(
         offset: Offset(0, _anim.value),
         child: Container(
           width: 6,

@@ -27,7 +27,6 @@ class ChattingScreenData extends StatelessWidget {
     final formattedTime = DateFormat.jm().format(
       DateTime.parse(time).toLocal(),
     );
-
     final isFailed = messageStatus == MessageStatus.failed;
     return GestureDetector(
       onTap: isFailed ? onTapRetry : null,

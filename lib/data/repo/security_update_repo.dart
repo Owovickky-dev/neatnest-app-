@@ -16,7 +16,7 @@ class SecurityUpdateRepo {
 
   Future<Response> updateEmail(SecurityUpdateModel newData) async {
     final response = _dio.patch(
-      ConstantData.UPDATEEMAIL,
+      ConstantData.UPDATEMAIL,
       data: newData.toJson(),
     );
     return response;

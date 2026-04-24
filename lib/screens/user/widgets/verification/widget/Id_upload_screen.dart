@@ -158,10 +158,9 @@ class _IdUploadScreenState extends ConsumerState<IdUploadScreen> {
   Widget build(BuildContext context) {
     final identity = ref.read(dataFlowStateProvider);
 
-    final identityIndex = identity[0].identityVerifyIndex ?? 0;
-    final methodIndex = identity[0].methodVerifyIndex ?? 0;
+    final identityIndex = identity[0].identityVerifyIndex;
+    final methodIndex = identity[0].methodVerifyIndex;
 
-    // SAFE TITLE ACCESS
     String titleText;
     if (methodIndex < appBarTitle.length &&
         identityIndex < appBarTitle[methodIndex].length) {

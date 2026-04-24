@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:neat_nest/controller/state%20controller%20/address/address_state_controller.dart';
+import 'package:neat_nest/controller/state%20controller%20/ads/popular_service_controller.dart';
 import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
 import 'package:neat_nest/models/booking_navigation_args.dart';
 import 'package:neat_nest/screens/booking/widgets/booking_review_holder.dart';
@@ -28,9 +29,11 @@ class AdsDetailsScreen extends ConsumerWidget {
     super.key,
     required this.index,
     required this.isFavourite,
+    required this.isPopularAds,
   });
   final int index;
   final bool isFavourite;
+  final bool isPopularAds;
   void showConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -69,12 +72,15 @@ class AdsDetailsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final adsList = ref.watch(adsStateControllerProvider);
+    final popularList = ref.watch(popularServiceControllerProvider);
     final addressExist = ref.watch(addressStateControllerProvider);
-    final adsInfo = adsList[index];
+    final ads = isPopularAds ? popularList : adsList;
+    final adsInfo = ads[index];
     final posterJoinedDate = adsInfo.jobPoster!.joinedAt;
     final user = ref.watch(userControllerStateProvider);
     final myDate = DateTime.parse(posterJoinedDate!).toLocal();
     final myDateFormat = DateFormat("MMMM, yyyy").format(myDate);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SizedBox.expand(
@@ -307,6 +313,7 @@ class AdsDetailsScreen extends ConsumerWidget {
                                       extra: BookingNavigationArgs(
                                         isMe: false,
                                         index: index,
+                                        isPopularAds: isPopularAds,
                                       ),
                                     );
                                   },
@@ -319,6 +326,7 @@ class AdsDetailsScreen extends ConsumerWidget {
                                         extra: BookingNavigationArgs(
                                           isMe: true,
                                           index: index,
+                                          isPopularAds: isPopularAds,
                                         ),
                                       );
                                     } else {
@@ -332,6 +340,7 @@ class AdsDetailsScreen extends ConsumerWidget {
                                         extra: BookingNavigationArgs(
                                           isMe: false,
                                           index: index,
+                                          isPopularAds: isPopularAds,
                                         ),
                                       );
                                     }

@@ -25,7 +25,7 @@ class AdsController {
   String? country;
   String? state;
   String? id;
-  List<String>? timeAvailable;
+  List<WorkerAvailableInfoModel>? timeAvailable;
 
   void updateStatus(String isActive) {
     if (isActive == "True") {

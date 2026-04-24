@@ -36,7 +36,11 @@ class FavouriteDataHolder extends ConsumerWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => AdsDetailsScreen(index: index, isFavourite: isFav),
+            builder: (_) => AdsDetailsScreen(
+              index: index,
+              isFavourite: isFav,
+              isPopularAds: false,
+            ),
           ),
         );
       },

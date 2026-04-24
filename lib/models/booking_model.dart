@@ -13,7 +13,6 @@ class BookingModel {
     required this.serviceProvider,
   });
 
-  // this convert object to a map  for storing
   Map<String, dynamic> toJson() {
     return {
       'serviceName': serviceName,

@@ -7,7 +7,7 @@ class WorkerAccountHistoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Container(child: Center(child: Text("Worker Account  History"))),
+      body: Center(child: Text("Worker Account  History")),
     );
   }
 }
