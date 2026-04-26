@@ -8,6 +8,9 @@ class UserPaymentMethodModel {
   final String? sortCode;
   final String? bankAddress;
   final String? payPalMail;
+  final String? bankName;
+  final String? country;
+  final String? currency;
 
   UserPaymentMethodModel({
     this.paymentType,
@@ -19,21 +22,10 @@ class UserPaymentMethodModel {
     this.sortCode,
     this.swiftCode,
     this.id,
+    this.country,
+    this.bankName,
+    this.currency,
   });
-
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     "paymentType": paymentType,
-  //     "accountNumber": accountNumber,
-  //     "bankAddress": bankAddress,
-  //     "iban": iban,
-  //     "payPalMail": payPalMail,
-  //     "routingNumber": routingNumber,
-  //     "sortCode": sortCode,
-  //     "swiftCode": swiftCode,
-  //     "methodId": id,
-  //   };
-  // }
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{'paymentType': paymentType};
@@ -59,6 +51,18 @@ class UserPaymentMethodModel {
     if (payPalMail != null && payPalMail!.isNotEmpty) {
       data['payPalMail'] = payPalMail;
     }
+    if (id != null && id!.isNotEmpty) {
+      data['id'] = id;
+    }
+    if (currency != null && currency!.isNotEmpty) {
+      data['currency'] = currency;
+    }
+    if (country != null && country!.isNotEmpty) {
+      data['country'] = country;
+    }
+    if (bankName != null && bankName!.isNotEmpty) {
+      data['bankName'] = bankName;
+    }
 
     return data;
   }
@@ -74,6 +78,9 @@ class UserPaymentMethodModel {
       sortCode: json["sortCode"] ?? "",
       swiftCode: json["swiftCode"] ?? "",
       id: json["_id"] ?? "",
+      bankName: json["bankName"] ?? "",
+      currency: json["currency"] ?? "",
+      country: json["country"] ?? "",
     );
   }
 
@@ -87,6 +94,9 @@ class UserPaymentMethodModel {
     String? sortCode,
     String? bankAddress,
     String? payPalMail,
+    String? country,
+    String? currency,
+    String? bankName,
   }) {
     return UserPaymentMethodModel(
       paymentType: paymentType ?? this.paymentType,
@@ -98,6 +108,9 @@ class UserPaymentMethodModel {
       bankAddress: bankAddress ?? this.bankAddress,
       sortCode: sortCode ?? this.sortCode,
       routingNumber: routingNumber ?? this.routingNumber,
+      currency: currency ?? this.currency,
+      bankName: bankName ?? this.bankName,
+      country: country ?? this.country,
     );
   }
 }

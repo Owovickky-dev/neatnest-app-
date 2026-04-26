@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -54,17 +53,11 @@ class SignUpController {
     phoneNumber = phoneNumberController.text;
 
     if (role == null || role!.isEmpty) {
-      showErrorNotification(
-        context: context,
-        message: "Please kindly select a role ",
-      );
+      showErrorNotification(message: "Please kindly select a role ");
     } else if (gender == null || gender!.isEmpty) {
-      showErrorNotification(context: context, message: "Please select gender");
+      showErrorNotification(message: "Please select gender");
     } else if (!isChecked) {
-      showErrorNotification(
-        context: context,
-        message: "Please agree to the terms",
-      );
+      showErrorNotification(message: "Please agree to the terms");
     } else {
       final user = UserModel(
         name: name,
@@ -87,33 +80,14 @@ class SignUpController {
 
         context.pop();
         if (!context.mounted) return;
-        showSuccessNotification(
-          context: context,
-          message: "Registration Successful",
-        );
+        showSuccessNotification(message: "Registration Successful");
         ref.read(isLoggedInStateProvider.notifier).yesLogged(true);
         AppNavigatorHelper.pushReplacement(context, AppRoute.bottomNavigation);
       } catch (e) {
         if (!context.mounted) return;
         context.pop();
         if (e is DioException) {
-          if (e.response?.statusCode == 500) {
-            showErrorNotification(
-              context: context,
-              message: e.response?.data["message"],
-            );
-          } else if (e.response?.statusCode == 500 &&
-              e.response?.data["error"]["errorResponse"]["code"] == 11000) {
-            showErrorNotification(
-              context: context,
-              message: "$mail already exist please register with another mail ",
-            );
-          } else {
-            showErrorNotification(context: context, message: "Network error");
-            if (kDebugMode) {
-              print(e.message);
-            }
-          }
+          showErrorNotification(message: e.error.toString());
         }
       }
     }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 
@@ -16,6 +17,8 @@ class BookingTextField extends StatefulWidget {
     this.title = true,
     this.iconName,
     this.iconNamePre,
+    this.inputFormatters,
+    this.onChange,
   });
 
   final String? titleText;
@@ -26,6 +29,8 @@ class BookingTextField extends StatefulWidget {
   final IconData? iconName;
   final IconData? iconNamePre;
   final bool title;
+  final List<TextInputFormatter>? inputFormatters;
+  final void Function(String)? onChange;
 
   @override
   State<BookingTextField> createState() => _BookingTextFieldState();
@@ -42,13 +47,19 @@ class _BookingTextFieldState extends State<BookingTextField> {
             : null,
         5.ht,
         Container(
-          height: 50.h,
+          constraints: BoxConstraints(minHeight: 50.h, maxHeight: 120.h),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.r),
             color: AppColors.textFieldBckColor.withValues(alpha: 0.35),
           ),
           child: TextField(
             controller: widget.textEditingController,
+            inputFormatters: widget.inputFormatters,
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
+            minLines: 1,
+            onChanged: widget.onChange,
+            textInputAction: TextInputAction.newline,
             style: TextStyle(
               color: AppColors.blackTextColor,
               fontWeight: FontWeight.bold,

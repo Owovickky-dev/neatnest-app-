@@ -9,7 +9,7 @@ class BookingTimeState extends _$BookingTimeState {
     return "";
   }
 
-  void timePicked(String value) {
+  void datePicked(String value) {
     state = value;
   }
 }

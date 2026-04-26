@@ -6,29 +6,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
 import 'package:neat_nest/screens/user/widgets/row_data_holder.dart';
-import 'package:neat_nest/utilities/app_button.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/app_bar_holder.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
 
 import '../../../../widget/app_text.dart';
 
 class EditProfileScreen extends ConsumerWidget {
   const EditProfileScreen({super.key});
-
-  Future<void> _handleSave(BuildContext context) async {
-    showSuccessNotification(
-      context: context,
-      message: "Changes saved successfully",
-    );
-    await Future.delayed(Duration(seconds: 2));
-    if (context.mounted) {
-      AppNavigatorHelper.replace(context, AppRoute.userProfile);
-    }
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -117,7 +104,7 @@ class EditProfileScreen extends ConsumerWidget {
                   children: [
                     RowDataHolder(
                       text: 'Personal Information',
-                      icons: Icons.person,
+                      icons: FontAwesomeIcons.user,
                       function: () {
                         AppNavigatorHelper.push(
                           context,
@@ -145,23 +132,25 @@ class EditProfileScreen extends ConsumerWidget {
                     RowDataHolder(
                       text: 'Address Information',
                       icons: FontAwesomeIcons.locationDot,
-                      function: () {},
+                      function: () {
+                        AppNavigatorHelper.push(
+                          context,
+                          AppRoute.userAddresses,
+                        );
+                      },
                     ),
                     15.ht,
                     RowDataHolder(
                       text: 'About MySelf',
                       icons: FontAwesomeIcons.user,
-                      function: () {},
+                      function: () {
+                        AppNavigatorHelper.push(
+                          context,
+                          AppRoute.viewAboutMeScreen,
+                        );
+                      },
                     ),
                     30.ht,
-                    AppButton(
-                      text: "Save All Changes",
-                      fontSize: 18.sp,
-                      bckColor: AppColors.primaryColor,
-                      textColor: Colors.white,
-                      width: double.infinity,
-                      function: () => _handleSave(context),
-                    ),
                   ],
                 ),
               ),

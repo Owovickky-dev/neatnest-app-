@@ -94,10 +94,10 @@ class AppData {
   ];
   static List<String> ratingTextRange = [
     "5.0",
-    "4.0 - 4.9",
-    "3.0 - 3.9",
-    "2.0 - 2.9",
-    "1.0 - 1.9",
+    "4.0 - 5.0",
+    "3.0 - 4.0",
+    "2.0 - 3.0",
+    "1.0 - 2.0",
   ];
 
   static Map<String, List<String>> desireMethod = {
@@ -107,7 +107,7 @@ class AppData {
       "Account Number",
       "IBAN",
       "Address",
-      "Swift Code or BIC",
+      "Swift/BIC",
       "Bank Name",
       "Bank Address",
       "Country",
@@ -116,7 +116,7 @@ class AppData {
       "Account Number",
       "Address",
       "Routing Number",
-      "SWIFT or BIC Code",
+      "Swift/BIC",
       "Bank Name",
       "Bank Address",
       "Country",
@@ -125,7 +125,7 @@ class AppData {
       "Account Number",
       "Bank Address",
       "IBAN",
-      "SWIFT or BIC Code",
+      "Swift/BIC",
       "Bank Name",
       "Bank Address",
       "Country",
@@ -133,7 +133,7 @@ class AppData {
     "International Africa": [
       "Account Number",
       "Bank Address",
-      "SWIFT or BIC Code",
+      "Swift/BIC",
       "Bank Name",
       "Country",
       "Currency",

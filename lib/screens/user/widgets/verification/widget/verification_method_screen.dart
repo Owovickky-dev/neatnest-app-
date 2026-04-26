@@ -31,7 +31,7 @@ class _VerificationMethodScreenState
     "Kindly take a selfie",
   ];
 
-  List<IconData> icons = [
+  List<dynamic> icons = [
     FontAwesomeIcons.file,
     FontAwesomeIcons.locationDot,
     FontAwesomeIcons.cameraRotate,
@@ -60,7 +60,6 @@ class _VerificationMethodScreenState
                 onTap: verificationStatus == "Pending"
                     ? () {
                         showErrorNotification(
-                          context: context,
                           message: "Your data is under verification",
                         );
                       }

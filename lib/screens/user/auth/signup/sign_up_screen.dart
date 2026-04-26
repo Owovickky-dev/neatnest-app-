@@ -14,6 +14,8 @@ import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/app_text.dart';
 
+import '../../../../widget/app_bar_holder.dart';
+
 class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
 
@@ -30,7 +32,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final List<String> gender = const ["Male", "Female"];
   String? positionGen;
   String? position;
-  String? onChange;
+  String? enteredPassword;
 
   @override
   void didChangeDependencies() {
@@ -42,15 +44,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Icon(Icons.arrow_back),
-        ),
-        title: primaryText(text: 'Sign Up'),
+      appBar: AppBarHolder(
+        title: 'Sign Up',
+        function: () {
+          AppNavigatorHelper.go(context, AppRoute.bottomNavigation);
+        },
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -138,11 +136,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     titleText: 'UserName',
                     hintText: 'Enter UserName',
                     textEditingController: _signUpController.userNameController,
-                    onChanged: (val) {
-                      setState(() {
-                        onChange = val;
-                      });
-                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "UserName is required";
@@ -166,11 +159,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     ],
                     textEditingController:
                         _signUpController.phoneNumberController,
-                    onChanged: (val) {
-                      setState(() {
-                        onChange = val;
-                      });
-                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Your phone number is required";
@@ -230,7 +218,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     textEditingController: _signUpController.passwordController,
                     onChanged: (val) {
                       setState(() {
-                        onChange = val;
+                        enteredPassword = val;
                       });
                     },
                     validator: (value) {
@@ -239,6 +227,15 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       }
                       if (value.length < 8) {
                         return "Password must be more than 8 character";
+                      }
+                      if (!value.contains(RegExp(r'[A-Z]'))) {
+                        return "Password must contain  at least one capital letter";
+                      }
+                      if (!value.contains(RegExp(r'[a-z]'))) {
+                        return "Password must contain  at least one small letter";
+                      }
+                      if (!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+                        return "Password must contain at least one special character";
                       }
                       return null;
                     },
@@ -254,7 +251,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       if (value == null || value.isEmpty) {
                         return "Must not be empty";
                       }
-                      if (value != onChange) {
+                      if (value != enteredPassword) {
+                        print(enteredPassword);
                         return "Password don't match";
                       }
                       return null;

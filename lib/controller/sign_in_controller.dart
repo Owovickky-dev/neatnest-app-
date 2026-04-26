@@ -46,29 +46,19 @@ class SignInController {
       ref.read(isLoggedInStateProvider.notifier).yesLogged(true);
       context.pop();
       if (!context.mounted) return;
-      showSuccessNotification(context: context, message: "Login Successful");
+      showSuccessNotification(message: "Login Successful");
       if (!context.mounted) return;
       AppNavigatorHelper.pushReplacement(context, AppRoute.bottomNavigation);
     } catch (e) {
       if (!context.mounted) return;
       context.pop();
       if (e is DioException) {
-        if (e.response?.statusCode == 401) {
-          showErrorNotification(
-            context: context,
-            message: e.response?.data["message"],
-          );
-        } else {
-          showErrorNotification(context: context, message: "Network error");
-          if (kDebugMode) {
-            print(e.message);
-          }
-        }
+        showErrorNotification(message: e.error.toString());
       }
     }
   }
 
-  void logout(BuildContext context, WidgetRef ref) async {
+  void logout(BuildContext context, WidgetRef ref, {String? update}) async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -77,17 +67,16 @@ class SignInController {
     try {
       await ref.read(userControllerStateProvider.notifier).logOut();
       if (!context.mounted) return;
-      showSuccessNotification(
-        context: context,
-        message: "Successfully logged out",
-      );
+      update == null
+          ? showSuccessNotification(message: "Successfully logged out")
+          : null;
       ref.read(isLoggedInStateProvider.notifier).yesLogged(false);
       if (!context.mounted) return;
-      AppNavigatorHelper.pushReplacement(context, AppRoute.bottomNavigation);
+      AppNavigatorHelper.pushReplacement(context, AppRoute.signIn);
     } catch (e) {
       if (!context.mounted) return;
       context.pop();
-      showErrorNotification(context: context, message: "Logout failed");
+      showErrorNotification(message: "Logout failed");
     }
   }
 }

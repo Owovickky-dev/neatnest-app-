@@ -3,32 +3,26 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 
-void showSuccessNotification({
-  required BuildContext context,
-  required String message,
-}) {
+void showSuccessNotification({required String message}) {
   Fluttertoast.showToast(
     msg: message,
     gravity: ToastGravity.TOP,
     toastLength: Toast.LENGTH_LONG,
-    timeInSecForIosWeb: 2,
+    timeInSecForIosWeb: 3,
     backgroundColor: AppColors.primaryColor,
     textColor: Colors.white,
-    fontSize: 16.sp,
+    fontSize: 15.sp,
   );
 }
 
-void showErrorNotification({
-  required BuildContext context,
-  required String message,
-}) {
+void showErrorNotification({required String message}) {
   Fluttertoast.showToast(
     msg: message,
     gravity: ToastGravity.TOP,
     toastLength: Toast.LENGTH_LONG,
-    timeInSecForIosWeb: 2,
+    timeInSecForIosWeb: 7,
     backgroundColor: Colors.red,
     textColor: Colors.white,
-    fontSize: 16.sp,
+    fontSize: 15.sp,
   );
 }

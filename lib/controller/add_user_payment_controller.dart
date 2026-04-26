@@ -19,10 +19,7 @@ class AddUserPaymentController {
     required Map<String, TextEditingController> controllers,
   }) async {
     if (selectedCountry == null) {
-      showErrorNotification(
-        context: context,
-        message: "Please select a payment method",
-      );
+      showErrorNotification(message: "Please select a payment method");
       return;
     }
 
@@ -30,10 +27,7 @@ class AddUserPaymentController {
     final requiredFields = AppData.desireMethod[selectedCountry]!;
     for (var field in requiredFields) {
       if (controllers[field]!.text.trim().isEmpty) {
-        showErrorNotification(
-          context: context,
-          message: 'Please fill in $field',
-        );
+        showErrorNotification(message: 'Please fill in $field');
         return;
       }
     }
@@ -47,15 +41,15 @@ class AddUserPaymentController {
         payPalMail: _getFieldValue(controllers, "Email"),
         routingNumber: _getFieldValue(controllers, "Routing Number"),
         sortCode: _getFieldValue(controllers, "Sort Code"),
-        swiftCode: _getFieldValue(controllers, "SWIFT Code"),
+        swiftCode: _getFieldValue(controllers, "Swift/BIC"),
+        country: _getFieldValue(controllers, "Country"),
+        bankName: _getFieldValue(controllers, "Bank Name"),
+        currency: _getFieldValue(controllers, "Currency"),
       );
 
       if (paymentMethod.payPalMail != null &&
           !EmailValidator.validate(paymentMethod.payPalMail!)) {
-        showErrorNotification(
-          context: context,
-          message: "Invalid Email address",
-        );
+        showErrorNotification(message: "Invalid Email address");
         return;
       }
 
@@ -64,10 +58,7 @@ class AddUserPaymentController {
           .saveUserPaymentInfo(paymentMethod);
 
       if (!context.mounted) return;
-      showSuccessNotification(
-        context: context,
-        message: 'Payment method saved successfully',
-      );
+      showSuccessNotification(message: 'Payment method saved successfully');
 
       // Close the screen
       if (context.mounted) {
@@ -77,11 +68,91 @@ class AddUserPaymentController {
       if (!context.mounted) return;
       context.pop();
       final errorMessage = e.toString().replaceFirst('Exception: ', '');
-      showErrorNotification(context: context, message: errorMessage);
+      showErrorNotification(message: errorMessage);
     }
   }
 
-  Future<void> getUserPaymentMethod() async {}
+  // Add this method to your AddUserPaymentController class
+  Future<void> updatePaymentMethod({
+    required BuildContext context,
+    required String methodId,
+    required String? selectedCountry,
+    required Map<String, TextEditingController> controllers,
+  }) async {
+    if (selectedCountry == null) {
+      showErrorNotification(message: "Payment method type is required");
+      return;
+    }
+
+    // Validate required fields for selected country
+    final requiredFields = AppData.desireMethod[selectedCountry]!;
+    for (var field in requiredFields) {
+      if (controllers[field]!.text.trim().isEmpty) {
+        showErrorNotification(message: 'Please fill in $field');
+        return;
+      }
+    }
+
+    try {
+      final paymentMethod = UserPaymentMethodModel(
+        id: methodId,
+        paymentType: selectedCountry,
+        accountNumber: _getFieldValue(controllers, "Account Number"),
+        bankAddress: _getFieldValue(controllers, "Bank Address"),
+        iban: _getFieldValue(controllers, "IBAN"),
+        payPalMail: _getFieldValue(controllers, "Email"),
+        routingNumber: _getFieldValue(controllers, "Routing Number"),
+        sortCode: _getFieldValue(controllers, "Sort Code"),
+        swiftCode: _getFieldValue(controllers, "Swift/BIC"),
+        currency: _getFieldValue(controllers, "Currency"),
+        country: _getFieldValue(controllers, "Country"),
+        bankName: _getFieldValue(controllers, "Bank Name"),
+      );
+
+      if (paymentMethod.payPalMail != null &&
+          !EmailValidator.validate(paymentMethod.payPalMail!)) {
+        showErrorNotification(message: "Invalid Email address");
+        return;
+      }
+
+      await ref
+          .read(userPaymentMethodStateProvider.notifier)
+          .updatePaymentMethod(paymentMethod);
+
+      if (!context.mounted) return;
+      showSuccessNotification(message: 'Payment method updated successfully');
+
+      // Close the screen
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      context.pop();
+      final errorMessage = e.toString().replaceFirst('Exception: ', '');
+      showErrorNotification(message: errorMessage);
+    }
+  }
+
+  Future<void> deleteUserPaymentMethod({
+    required BuildContext context,
+    required String methodId,
+  }) async {
+    try {
+      final deleteMethod = UserPaymentMethodModel(id: methodId);
+      await ref
+          .read(userPaymentMethodStateProvider.notifier)
+          .deleteUserPayment(context, deleteMethod);
+
+      if (!context.mounted) return;
+      showSuccessNotification(message: 'Payment method removed successfully');
+    } catch (e) {
+      if (!context.mounted) return;
+      context.pop();
+      final errorMessage = e.toString().replaceFirst('Exception: ', '');
+      showErrorNotification(message: errorMessage);
+    }
+  }
 
   // field collectors ...
   String? _getFieldValue(

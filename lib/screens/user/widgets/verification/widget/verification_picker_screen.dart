@@ -37,7 +37,7 @@ class _VerificationPickerScreenState
     "NIN or Any Valid Id card",
     "Valid Driver Licence",
   ];
-  List<IconData> icons = [
+  List<dynamic> icons = [
     FontAwesomeIcons.passport,
     FontAwesomeIcons.idCard,
     FontAwesomeIcons.idCard,

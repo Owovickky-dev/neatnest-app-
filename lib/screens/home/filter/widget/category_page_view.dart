@@ -16,7 +16,7 @@ class CategoryPageView extends StatelessWidget {
   final int index;
   final bool clickedItem;
 
-  final List<IconData> icons = const [
+  final List<dynamic> icons = const [
     FontAwesomeIcons.broom,
     FontAwesomeIcons.hammer,
     FontAwesomeIcons.paintRoller,

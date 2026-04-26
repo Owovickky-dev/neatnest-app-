@@ -25,10 +25,8 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
     final Map<DateTime, List<NotificationModel>> grouped = {};
 
     for (var notif in notifications) {
-      // convert to local date/time to avoid timezone issues
       final local = notif.datetime.toLocal();
 
-      // create a date-only so that it will be used as each group name...
       final dateOnly = DateTime(local.year, local.month, local.day);
 
       grouped.putIfAbsent(dateOnly, () => []).add(notif);
@@ -67,7 +65,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: primaryText(text: 'Notifications'),
-        centerTitle: false,
+        centerTitle: true,
         leading: AppBarIcon(
           icons: Icons.arrow_back,
           function: () {

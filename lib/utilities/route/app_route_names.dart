@@ -18,6 +18,20 @@ enum AppRoute {
   workerPaymentMethod,
   userPaymentMethod,
   addPaymentMethod,
+  userAddresses,
+  addressHolder,
+  updatePasswordScreen,
+  settingsScreen,
+  securityScreen,
+  updateEmailScreen,
+  updatePhoneScreen,
+  adsScreen,
+  postAdsScreen,
+  filterResult,
+  viewAdsScreen,
+  setAboutMe,
+  viewAboutMeScreen,
+  chattingScreen,
 }
 
 extension AppRouteNamesExtension on AppRoute {
@@ -61,6 +75,34 @@ extension AppRouteNamesExtension on AppRoute {
         return "/workerPaymentScreen";
       case AppRoute.addPaymentMethod:
         return "/addPaymentMethod";
+      case AppRoute.userAddresses:
+        return "/userAddresses";
+      case AppRoute.addressHolder:
+        return "/addressHolder";
+      case AppRoute.updatePasswordScreen:
+        return "/updatePasswordScreen";
+      case AppRoute.settingsScreen:
+        return "/settingsScreen";
+      case AppRoute.securityScreen:
+        return "/securityScreen";
+      case AppRoute.updateEmailScreen:
+        return "/updateEmailScreen";
+      case AppRoute.updatePhoneScreen:
+        return "/updatePhoneScreen";
+      case AppRoute.adsScreen:
+        return "/adsScreen";
+      case AppRoute.postAdsScreen:
+        return "/postAdsScreen";
+      case AppRoute.filterResult:
+        return "/filterResult";
+      case AppRoute.viewAdsScreen:
+        return "/viewAdsScreen";
+      case AppRoute.setAboutMe:
+        return "/aboutMeScreen";
+      case AppRoute.viewAboutMeScreen:
+        return "/viewAboutMeScreen";
+      case AppRoute.chattingScreen:
+        return "/chattingScreen";
     }
   }
 }

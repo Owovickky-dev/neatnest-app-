@@ -1,37 +1,50 @@
 class BookingModel {
-  final String serviceName;
-  final String serviceProvider;
-  final String date;
-  final double price;
-  final String image;
+  final String serviceId;
+  final String customerName;
+  final String customerPhoneNumber;
+  final String customerAddress;
+  final String customerEmail;
+  final String customerNote;
+  final String preferredDate;
+  final String preferredTime;
 
   BookingModel({
-    required this.date,
-    required this.image,
-    required this.price,
-    required this.serviceName,
-    required this.serviceProvider,
+    required this.serviceId,
+    required this.customerName,
+    required this.customerPhoneNumber,
+    required this.customerAddress,
+    required this.customerEmail,
+    required this.customerNote,
+    required this.preferredDate,
+    required this.preferredTime,
   });
 
-  // this convert object to a map  for storing
   Map<String, dynamic> toJson() {
-    return {
-      'serviceName': serviceName,
-      'serviceProvider': serviceProvider,
-      'date': date,
-      'price': price,
-      'imagePath': image,
-    };
-  }
-
-  // this convert map to object for retrieving and make it useful
-  factory BookingModel.fromJson(Map<String, dynamic> json) {
-    return BookingModel(
-      date: json['date'],
-      image: json['imagePath'],
-      price: json['price'],
-      serviceName: json['serviceName'],
-      serviceProvider: json['serviceProvider'],
-    );
+    final data = <String, dynamic>{};
+    if (serviceId.isNotEmpty) {
+      data["serviceId"] = serviceId;
+    }
+    if (customerName.isNotEmpty) {
+      data["customerName"] = customerName;
+    }
+    if (customerAddress.isNotEmpty) {
+      data["customerAddress"] = customerAddress;
+    }
+    if (customerEmail.isNotEmpty) {
+      data["customerEmail"] = customerEmail;
+    }
+    if (customerNote.isNotEmpty) {
+      data["customerNote"] = customerNote;
+    }
+    if (customerPhoneNumber.isNotEmpty) {
+      data["customerPhoneNumber"] = customerPhoneNumber;
+    }
+    if (preferredDate.isNotEmpty) {
+      data["preferredDate"] = preferredDate;
+    }
+    if (preferredTime.isNotEmpty) {
+      data["preferredTime"] = preferredTime;
+    }
+    return data;
   }
 }

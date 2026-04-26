@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 
 class PaymentMethodModel {
   final String title;
-  final IconData icon;
+  final dynamic icon;
 
   PaymentMethodModel({required this.title, required this.icon});
 

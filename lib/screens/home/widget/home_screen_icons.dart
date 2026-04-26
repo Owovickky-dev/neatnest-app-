@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/widget/app_text.dart';
@@ -16,7 +17,7 @@ class HomeScreenIcons extends StatelessWidget {
   });
 
   final String? text;
-  final IconData? icons;
+  final FaIconData? icons;
   final double? radius;
   final double? height;
   final double? width;
@@ -34,7 +35,7 @@ class HomeScreenIcons extends StatelessWidget {
             color: AppColors.primaryColor.withOpacity(0.1),
           ),
           child: Center(
-            child: Icon(icons, color: iconColor ?? AppColors.primaryColor),
+            child: FaIcon(icons, color: iconColor ?? AppColors.primaryColor),
           ),
         ),
         5.ht,

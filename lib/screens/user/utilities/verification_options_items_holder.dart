@@ -18,7 +18,7 @@ class VerificationOptionsItemsHolder extends StatelessWidget {
   final bool isClicked;
   final String title;
   final String subTitle;
-  final IconData icons;
+  final FaIconData icons;
   final String? textIn;
 
   final List<String> verify = const [
@@ -28,7 +28,7 @@ class VerificationOptionsItemsHolder extends StatelessWidget {
     "Cancel",
   ];
 
-  IconData? verification(String text) {
+  dynamic verification(String text) {
     switch (text) {
       case "Cancel":
         return FontAwesomeIcons.xmark;
@@ -86,9 +86,11 @@ class VerificationOptionsItemsHolder extends StatelessWidget {
                       : Colors.grey.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(10.r),
                 ),
-                child: Icon(
-                  icons,
-                  color: isClicked ? Colors.white : Colors.grey,
+                child: Center(
+                  child: FaIcon(
+                    icons,
+                    color: isClicked ? Colors.white : Colors.grey,
+                  ),
                 ),
               ),
               10.wt,
@@ -110,7 +112,7 @@ class VerificationOptionsItemsHolder extends StatelessWidget {
               color: verificationColor(textIn ?? verify[0]),
             ),
             child: Center(
-              child: Icon(
+              child: FaIcon(
                 verification(textIn ?? verify[0]),
                 color: Colors.white,
                 size: 20.sp,

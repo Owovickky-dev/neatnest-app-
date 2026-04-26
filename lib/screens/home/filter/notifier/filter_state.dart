@@ -10,24 +10,32 @@ class FilterState extends _$FilterState {
     return null;
   }
 
-  void setLocation(String? location) {
-    state = (state ?? FilterSearchModel()).copyWith(location: location);
+  void setCountry(String? country) {
+    state = (state ?? FilterSearchModel()).copyWith(country: country);
+  }
+
+  void setUserState(String? userState) {
+    state = (state ?? FilterSearchModel()).copyWith(userState: userState);
   }
 
   void setCategory(String? category) {
     state = (state ?? FilterSearchModel()).copyWith(category: category);
   }
 
-  void setMaxPrice(double? maxPrice) {
+  void setMaxPrice(int? maxPrice) {
     state = (state ?? FilterSearchModel()).copyWith(maxPrice: maxPrice);
   }
 
-  void setMinPrice(double? minPrice) {
+  void setMinPrice(int? minPrice) {
     state = (state ?? FilterSearchModel()).copyWith(minPrice: minPrice);
   }
 
-  void setRating(String? rating) {
-    state = (state ?? FilterSearchModel()).copyWith(rating: rating);
+  void setMinRating(double? minRating) {
+    state = (state ?? FilterSearchModel()).copyWith(minRating: minRating);
+  }
+
+  void setMaxRating(double? maxRating) {
+    state = (state ?? FilterSearchModel()).copyWith(maxRating: maxRating);
   }
 
   void reset() {

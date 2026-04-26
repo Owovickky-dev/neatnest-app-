@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/widget/app_text.dart';
@@ -13,45 +14,47 @@ class RowDataHolder extends StatelessWidget {
   });
 
   final String text;
-  final IconData icons;
+  final FaIconData icons;
   final VoidCallback function;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 60.h,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.r),
-        color: AppColors.containerLightBackground,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Container(
-                margin: EdgeInsets.only(left: 10.w),
-                height: 42,
-                width: 42,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(21.r),
-                  color: AppColors.primaryColor.withOpacity(0.2),
-                ),
-                child: Center(
-                  child: Icon(icons, color: AppColors.primaryColor, size: 20.r),
-                ),
+    return GestureDetector(
+      onTap: function,
+      child: Container(
+        height: 60.h,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.r),
+          color: AppColors.containerLightBackground,
+        ),
+        child: Row(
+          children: [
+            Container(
+              margin: EdgeInsets.only(left: 10.w),
+              height: 42,
+              width: 42,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(21.r),
+                color: AppColors.primaryColor.withValues(alpha: .2),
               ),
-              10.wt,
-              secondaryText(text: text, fontSize: 15.sp),
-            ],
-          ),
-          GestureDetector(
-            onTap: function,
-            child: Icon(
-              Icons.arrow_forward_ios,
-              color: AppColors.secondaryTextColor,
+              child: Center(
+                child: FaIcon(icons, color: AppColors.primaryColor, size: 20.r),
+              ),
             ),
-          ),
-        ],
+            10.wt,
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  secondaryText(text: text, fontSize: 15.sp),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppColors.secondaryTextColor,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
