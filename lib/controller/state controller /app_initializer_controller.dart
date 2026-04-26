@@ -9,7 +9,6 @@ class AppInitializerController extends _$AppInitializerController {
   Future<void> build() async {}
 
   Future<void> loadInitialData() async {
-    // await ref.read(addressStateControllerProvider.notifier).getUserAddress(context);
     await ref
         .read(favouriteStateControllerProvider.notifier)
         .getUserFavourite();

@@ -94,7 +94,7 @@ class _PopularServiceState extends ConsumerState<PopularService> {
                 borderRadius: BorderRadius.circular(2.r),
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
-                  imageUrl: ads.image ?? '',
+                  imageUrl: ads.imageFrmServer ?? '',
                   errorWidget: (context, url, error) => Container(
                     color: Colors.grey.shade200,
                     child: Icon(Icons.error, size: 30.sp),

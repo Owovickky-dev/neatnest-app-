@@ -29,15 +29,21 @@ class _AllAdsScreenState extends ConsumerState<AllAdsScreen> {
   }
 
   void _loadAds() async {
-    if (!_initialLoad) {
-      await ref.read(adsStateControllerProvider.notifier).getAllAds();
-      await ref
-          .read(favouriteStateControllerProvider.notifier)
-          .getUserFavourite();
+    if (_initialLoad) return;
+
+    final adsNotifier = ref.read(adsStateControllerProvider.notifier);
+    final favNotifier = ref.read(favouriteStateControllerProvider.notifier);
+
+    try {
+      await adsNotifier.getAllAds();
+      if (!mounted) return;
+      await favNotifier.getUserFavourite();
       if (!mounted) return;
       setState(() {
         _initialLoad = true;
       });
+    } catch (e) {
+      print(e);
     }
   }
 

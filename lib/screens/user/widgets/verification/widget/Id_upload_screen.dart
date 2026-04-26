@@ -1,20 +1,17 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:neat_nest/screens/user/notifiers/data_flow_state.dart';
 import 'package:neat_nest/screens/user/notifiers/on_submit_index.dart';
 import 'package:neat_nest/screens/user/widgets/verification/worker_verification_screen.dart';
 import 'package:neat_nest/utilities/app_button.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
+import 'package:neat_nest/widget/image_upload_helper.dart';
 import 'package:neat_nest/widget/notificaiton_content.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:neat_nest/widget/select_image_helper.dart';
 
 import '../../../../../widget/app_text.dart';
 import '../../../../history/utilities/app_bar_icon.dart';
@@ -34,7 +31,6 @@ class _IdUploadScreenState extends ConsumerState<IdUploadScreen> {
   ];
   File? selectedFront;
   File? selectedBack;
-  final picker = ImagePicker();
 
   late bool isLoading = false;
 
@@ -45,114 +41,6 @@ class _IdUploadScreenState extends ConsumerState<IdUploadScreen> {
   ];
 
   List<String> testing = ["Aina", "Deji"];
-
-  Future<File?> _compressImage(File file) async {
-    try {
-      final dir = await getTemporaryDirectory();
-      final targetPath =
-          '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
-      final output = await FlutterImageCompress.compressAndGetFile(
-        file.absolute.path,
-        targetPath,
-        quality: 80,
-        minHeight: 800,
-        minWidth: 1000,
-      );
-
-      if (output != null && await File(output.path).exists()) {
-        final compressedFile = File(output.path);
-        if (kDebugMode) {
-          print(
-            'Compression successful: ${file.lengthSync() ~/ 1024}KB → ${compressedFile.lengthSync() ~/ 1024}KB',
-          );
-        }
-        return compressedFile;
-      } else {
-        if (kDebugMode) {
-          print('Compression failed, returning original file');
-        }
-        return file;
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Compression error: $e');
-      }
-      return file;
-    }
-  }
-
-  Future<void> selectImage(bool frontImage, ImageSource source) async {
-    try {
-      final result = await picker.pickImage(source: source, imageQuality: 100);
-
-      setState(() {
-        isLoading = true;
-      });
-
-      if (result != null) {
-        File pickedImage = File(result.path);
-        File? compressedImage = await _compressImage(pickedImage);
-        if (compressedImage != null) {
-          setState(() {
-            if (frontImage) {
-              selectedFront = compressedImage;
-            } else {
-              selectedBack = compressedImage;
-            }
-            isLoading = false;
-          });
-        } else {
-          setState(() => isLoading = false);
-        }
-      } else {
-        setState(() => isLoading = false);
-      }
-    } catch (e) {
-      print(e);
-      setState(() => isLoading = false);
-    }
-  }
-
-  void showImageSource(bool frontImage) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return Container(
-          margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 15.h),
-          padding: EdgeInsets.all(16.sp),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(20.r),
-              bottom: Radius.circular(10.r),
-            ),
-          ),
-          child: Wrap(
-            children: [
-              ListTile(
-                leading: Icon(Icons.camera_alt, color: Colors.blue),
-                title: Text('Take Photo'),
-                onTap: () {
-                  Navigator.pop(context);
-                  selectImage(frontImage, ImageSource.camera);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.photo_library, color: Colors.green),
-                title: Text('Choose from Gallery'),
-                onTap: () {
-                  Navigator.pop(context);
-                  selectImage(frontImage, ImageSource.gallery);
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -214,95 +102,69 @@ class _IdUploadScreenState extends ConsumerState<IdUploadScreen> {
                   10.ht,
 
                   // FRONT IMAGE/UPLOAD
-                  Container(
-                    height: isSelfie ? 250.h : 150.h,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                      border: Border.all(
-                        color: AppColors.primaryColor,
-                        width: 2,
-                      ),
-                      image: selectedFront != null
-                          ? DecorationImage(
-                              image: FileImage(selectedFront!),
-                              fit: BoxFit.cover,
-                            )
-                          : null,
-                    ),
-                    child: selectedFront != null
-                        ? null
-                        : Center(
-                            child: isLoading
-                                ? CircularProgressIndicator.adaptive(
-                                    backgroundColor: AppColors.primaryColor,
-                                  )
-                                : Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      AppBarIcon(
-                                        icons: Icons.add_a_photo,
-                                        height: 60.h,
-                                        width: 60.w,
-                                        radius: 30.r,
-                                        function: () => showImageSource(true),
-                                      ),
-                                      5.ht,
-                                      secondaryText(
-                                        text: isSelfie
-                                            ? "Take Selfie"
-                                            : "Upload the front",
-                                      ),
-                                    ],
-                                  ),
-                          ),
+                  ImageSelectWidget(
+                    type: ImageType.verification,
+                    onImageSelected: (file) {
+                      setState(() {
+                        selectedFront = file;
+                      });
+                    },
                   ),
-
+                  20.ht,
                   // ONLY SHOW BACK UPLOAD FOR DOCUMENTS (NOT SELFIE)
-                  if (!isSelfie) ...[
-                    20.ht,
-                    Container(
-                      height: 150.h,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.r),
-                        border: Border.all(
-                          color: AppColors.primaryColor,
-                          width: 2,
-                        ),
-                        image: selectedBack != null
-                            ? DecorationImage(
-                                image: FileImage(selectedBack!),
-                                fit: BoxFit.cover,
-                              )
-                            : null,
-                      ),
-                      child: selectedBack != null
-                          ? null
-                          : Center(
-                              child: isLoading
-                                  ? CircularProgressIndicator.adaptive(
-                                      backgroundColor: AppColors.primaryColor,
-                                    )
-                                  : Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        AppBarIcon(
-                                          icons: Icons.add_a_photo,
-                                          height: 60.h,
-                                          width: 60.w,
-                                          radius: 30.r,
-                                          function: () =>
-                                              showImageSource(false),
-                                        ),
-                                        5.ht,
-                                        secondaryText(text: "Upload the back"),
-                                      ],
-                                    ),
-                            ),
+                  // if (!isSelfie) ...[
+                  //   20.ht,
+                  //   Container(
+                  //     height: 150.h,
+                  //     width: double.infinity,
+                  //     decoration: BoxDecoration(
+                  //       borderRadius: BorderRadius.circular(10.r),
+                  //       border: Border.all(
+                  //         color: AppColors.primaryColor,
+                  //         width: 2,
+                  //       ),
+                  //       image: selectedBack != null
+                  //           ? DecorationImage(
+                  //               image: FileImage(selectedBack!),
+                  //               fit: BoxFit.cover,
+                  //             )
+                  //           : null,
+                  //     ),
+                  //     child: selectedBack != null
+                  //         ? null
+                  //         : Center(
+                  //             child: isLoading
+                  //                 ? CircularProgressIndicator.adaptive(
+                  //                     backgroundColor: AppColors.primaryColor,
+                  //                   )
+                  //                 : Column(
+                  //                     mainAxisAlignment:
+                  //                         MainAxisAlignment.center,
+                  //                     children: [
+                  //                       AppBarIcon(
+                  //                         icons: Icons.add_a_photo,
+                  //                         height: 60.h,
+                  //                         width: 60.w,
+                  //                         radius: 30.r,
+                  //                         function: () =>
+                  //                             showImageSource(false),
+                  //                       ),
+                  //                       5.ht,
+                  //                       secondaryText(text: "Upload the back"),
+                  //                     ],
+                  //                   ),
+                  //           ),
+                  //   ),
+                  // ],
+                  if (!isSelfie)
+                    ImageSelectWidget(
+                      type: ImageType.verification,
+                      onImageSelected: (file) {
+                        setState(() {
+                          selectedBack = file;
+                        });
+                      },
                     ),
-                  ],
                 ],
               ),
             ),
@@ -317,7 +179,7 @@ class _IdUploadScreenState extends ConsumerState<IdUploadScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     AppBarIcon(
-                      icons: FontAwesomeIcons.rotateRight,
+                      icons: Icons.rotate_left_sharp,
                       height: 60.h,
                       width: 60.w,
                       radius: 30.r,

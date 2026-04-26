@@ -32,7 +32,7 @@ class DioClient {
           if (token != null && token.isNotEmpty) {
             options.headers["Authorization"] = "Bearer $token";
           } else {
-            // print("❌ Request without token");
+            print("❌ Request without token");
           }
           return handler.next(options);
         },

@@ -65,7 +65,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: primaryText(text: 'Notifications'),
-        centerTitle: false,
+        centerTitle: true,
         leading: AppBarIcon(
           icons: Icons.arrow_back,
           function: () {

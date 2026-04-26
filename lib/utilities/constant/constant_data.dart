@@ -1,12 +1,8 @@
-import 'dart:io';
-
 class ConstantData {
   static const String APP_NAME = "NEATNEST";
   static const int APP_VERSION = 1;
-  static final BASE_URL = Platform.isAndroid
-      ? "http://192.168.1.153:8000/api/v1"
-      : "http://127.0.0.1:8000/api/v1";
-
+  static final BASE_URL =
+      "https://sevenfold-chance-giggle.ngrok-free.dev/api/v1";
   static final SOCKET_IO = "https://sevenfold-chance-giggle.ngrok-free.dev";
   static const LOGIN = "/auth/login";
   static const ABOUTME = "/auth/me";
@@ -26,4 +22,5 @@ class ConstantData {
   static const UPDATEPERSONALINFO = "/auth/updatepersonalinfo";
   static const CHATURL = "/chats/";
   static const MESSAGEURL = "/messages/";
+  static const BOOKINGURL = "/booking";
 }

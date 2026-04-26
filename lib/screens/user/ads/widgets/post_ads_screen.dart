@@ -10,6 +10,8 @@ import 'package:neat_nest/utilities/app_button.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/widget/app_text.dart';
+import 'package:neat_nest/widget/image_upload_helper.dart';
+import 'package:neat_nest/widget/select_image_helper.dart';
 
 import '../../../../widget/app_bar_holder.dart';
 import '../../../history/utilities/text_filed_holder.dart';
@@ -39,6 +41,32 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
     "Repair",
     "Other",
   ];
+  List<String> timeSlots = [
+    "1:00AM",
+    "1:00PM",
+    "2:00AM",
+    "2:00PM",
+    "3:00AM",
+    "3:00PM",
+    "4:00AM",
+    "4:00PM",
+    "5:00AM",
+    "5:00PM",
+    "6:00AM",
+    "6:00PM",
+    "7:00AM",
+    "7:00PM",
+    "8:00AM",
+    "8:00PM",
+    "9:00AM",
+    "9:00PM",
+    "10:00AM",
+    "10:00PM",
+    "11:00AM",
+    "11:00PM",
+    "12:00AM",
+    "12:00PM",
+  ];
   final List<String> status = ["True", "False"];
   final List<DateTime?> _date = [];
   List<Country> countries = [];
@@ -46,6 +74,7 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
   final List<String> selectedTimes = [];
   bool isOpen = false;
   int _currentTitleTextLength = 0;
+  List<WorkerAvailableInfoModel> workerAvailableTime = [];
 
   String? categorySelected;
   String? statusSelected;
@@ -69,7 +98,6 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
     final myAds = widget.adsData!;
     _adsController.adsAboutController.text = myAds.about!;
     _adsController.adsPriceController.text = myAds.basePrice!.toString();
-    _adsController.adsImageController.text = myAds.image!;
     _adsController.adsTitleController.text = myAds.title!;
     String category =
         myAds.category![0].toUpperCase() +
@@ -190,7 +218,7 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      primaryText(text: "Category", fontSize: 14.sp),
+                      primaryText(text: "Category", fontSize: 18.sp),
                       5.ht,
                       Container(
                         padding: EdgeInsets.symmetric(
@@ -243,22 +271,24 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                     },
                   ),
                   20.ht,
-                  AuthTextFiled(
-                    titleText: "Ad Image",
-                    hintText: "ads image",
-                    textEditingController: _adsController.adsImageController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Filed need to be filled";
-                      }
-                      return null;
-                    },
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      primaryText(text: "Upload Pic", fontSize: 18.sp),
+                      5.ht,
+                      ImageSelectWidget(
+                        type: ImageType.ads,
+                        onImageSelected: (file) {
+                          _adsController.imageSelected = file;
+                        },
+                      ),
+                    ],
                   ),
                   20.ht,
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      primaryText(text: "Available Time", fontSize: 14.sp),
+                      primaryText(text: "Available Date", fontSize: 18.sp),
                       5.ht,
                       GestureDetector(
                         onTap: () {
@@ -315,22 +345,7 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                               firstDate: DateTime.now(),
                             ),
                             value: _date,
-                            // onValueChanged: (dates) {
-                            //   setState(() {
-                            //     _date
-                            //       ..clear()
-                            //       ..addAll(dates);
-                            //   });
-                            //
-                            //   _adsController.timeAvailable = _date
-                            //       .whereType<DateTime>()
-                            //       .map(
-                            //         (date) => DateFormat(
-                            //           "dd/MM/yyyy",
-                            //         ).format(date).toString(),
-                            //       )
-                            //       .toList();
-                            // },
+                            onValueChanged: (dates) {},
                           ),
                         ),
                     ],
@@ -339,7 +354,7 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      primaryText(text: "Ads Active", fontSize: 14.sp),
+                      primaryText(text: "Ads Active", fontSize: 18.sp),
                       5.ht,
                       Container(
                         padding: EdgeInsets.symmetric(
@@ -376,7 +391,7 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      primaryText(text: "Ads Country", fontSize: 14.sp),
+                      primaryText(text: "Ads Country", fontSize: 18.sp),
                       5.ht,
                       Container(
                         padding: EdgeInsets.symmetric(
@@ -418,7 +433,7 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      primaryText(text: "Ads State", fontSize: 14.sp),
+                      primaryText(text: "Ads State", fontSize: 18.sp),
                       5.ht,
                       Container(
                         padding: EdgeInsets.symmetric(

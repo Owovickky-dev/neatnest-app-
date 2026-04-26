@@ -324,7 +324,7 @@ class _ChattingScreenState extends ConsumerState<ChattingScreen> {
                     ),
                     10.wt,
                     AppBarIcon(
-                      icons: Icons.send_sharp,
+                      icons: Icons.send,
                       height: 50.h,
                       width: 50.w,
                       radius: 25.r,

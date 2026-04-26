@@ -36,6 +36,9 @@ class FavouriteStateController extends _$FavouriteStateController {
           });
           if (!ref.mounted) return;
           state = favourite;
+        } else {
+          final errorText = response.data["message"];
+          print("The get error text is $errorText");
         }
       } catch (e) {
         rethrow;
@@ -53,6 +56,7 @@ class FavouriteStateController extends _$FavouriteStateController {
         return response;
       }
     } catch (e) {
+      print("The favourite error message is ${e.toString()}");
       rethrow;
     }
   }

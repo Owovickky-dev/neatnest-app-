@@ -20,13 +20,15 @@ class ChatStateController extends _$ChatStateController {
 
     try {
       final response = await _textingDataRepo.getAllChatRoomList();
-
+      if (response.data is! Map<String, dynamic>) {
+        throw Exception("Invalid response format: ${response.data}");
+      }
       final List data = response.data["data"] ?? [];
-
       final chats = data.map((e) => ChatRoomModel.fromJson(e)).toList();
 
       state = AsyncData(chats);
     } catch (e, st) {
+      print(e);
       state = AsyncError(e, st);
     }
   }

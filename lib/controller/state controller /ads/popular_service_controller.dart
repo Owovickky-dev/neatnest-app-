@@ -26,6 +26,7 @@ class PopularServiceController extends _$PopularServiceController {
         state = popularServiceData;
       }
     } catch (e) {
+      print(e);
       rethrow;
     }
   }

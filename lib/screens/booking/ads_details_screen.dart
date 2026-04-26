@@ -88,14 +88,14 @@ class AdsDetailsScreen extends ConsumerWidget {
           children: [
             Container(
               width: double.infinity,
-              height: 200.h,
+              height: 270.h,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.r),
               ),
               child: ClipRRect(
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
-                  imageUrl: adsInfo.image!,
+                  imageUrl: adsInfo.imageFrmServer!,
                 ),
               ),
             ),
@@ -110,7 +110,7 @@ class AdsDetailsScreen extends ConsumerWidget {
               ),
             ),
             Positioned(
-              top: 180.h,
+              top: 260.h,
               right: 0,
               left: 0,
               bottom: 0,
@@ -306,7 +306,7 @@ class AdsDetailsScreen extends ConsumerWidget {
                                   subTitle: "Who is the Booking for?",
                                   textButtonTextLeft: "MYSELF",
                                   textButtonTextRight: "OTHER",
-                                  function: () {
+                                  functionRight: () {
                                     AppNavigatorHelper.push(
                                       context,
                                       AppRoute.bookingFormScreen,

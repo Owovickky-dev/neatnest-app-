@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,12 +20,12 @@ class AdsController {
   TextEditingController adsTitleController = TextEditingController();
   TextEditingController adsPriceController = TextEditingController();
   TextEditingController adsAboutController = TextEditingController();
-  TextEditingController adsImageController = TextEditingController();
 
   String? category;
   bool? status;
   String? country;
   String? state;
+  File? imageSelected;
   String? id;
   List<WorkerAvailableInfoModel>? timeAvailable;
 
@@ -48,14 +50,14 @@ class AdsController {
   }
 
   Future<void> postAds(BuildContext context, WidgetRef ref) async {
+    print("the selected image details is $imageSelected");
     final String title;
     final String price;
-    final String imagePath;
     final String aboutAds;
 
     title = adsTitleController.text.trim();
     price = adsPriceController.text.trim();
-    imagePath = adsImageController.text.trim();
+
     aboutAds = adsAboutController.text.trim();
     if (category == null || category!.isEmpty || status == null) {
       return showErrorNotification(message: "All field must be filed");
@@ -73,9 +75,9 @@ class AdsController {
       category: category!.toLowerCase(),
       country: country,
       state: state,
-      image: imagePath,
+      image: imageSelected,
       isActive: status!,
-      availableTime: timeAvailable,
+      availableSchedule: timeAvailable,
     );
 
     showDialog(
@@ -102,7 +104,6 @@ class AdsController {
       } else {
         final errorMessage = response.data["message"];
         if (!context.mounted) return;
-        // AppNavigatorHelper.go(context, AppRoute.bottomNavigation);
         context.pop();
         showErrorNotification(message: errorMessage);
       }
@@ -146,25 +147,17 @@ class AdsController {
   ) async {
     final String? title;
     final String? price;
-    final String? imagePath;
     final String? aboutAds;
 
     title = adsTitleController.text.trim();
     price = adsPriceController.text.trim();
-    imagePath = adsImageController.text.trim();
     aboutAds = adsAboutController.text.trim();
-
-    print("The current data is ${currentAds.title}");
-    print("The new data  is $title");
 
     final updateData = AdsModel(
       title: (title == currentAds.title && title.isNotEmpty) ? null : title,
       basePrice: (int.parse(price) == currentAds.basePrice && price.isNotEmpty)
           ? null
           : int.parse(price),
-      image: (imagePath == currentAds.image && imagePath.isNotEmpty)
-          ? null
-          : imagePath,
       about: (aboutAds == currentAds.about && aboutAds.isNotEmpty)
           ? null
           : aboutAds,

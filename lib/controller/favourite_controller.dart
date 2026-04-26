@@ -25,8 +25,10 @@ class FavouriteController {
         final errorText = response.data["message"];
         showErrorNotification(message: errorText);
       } else {
+        final errorText = response.data["message"];
         if (!context.mounted) return;
         showErrorNotification(message: "Failed to add to your favourite");
+        print("The error message is caused by $errorText");
       }
     } catch (e) {
       if (!context.mounted) return;

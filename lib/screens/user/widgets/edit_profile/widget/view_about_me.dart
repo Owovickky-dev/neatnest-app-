@@ -112,7 +112,7 @@ class _ViewAboutMeState extends ConsumerState<ViewAboutMe> {
                                                   "Are you sure you want to delete about cant be reverse once delete",
                                               textButtonTextLeft: "Cancel",
                                               textButtonTextRight: "Yes",
-                                              function: () async {
+                                              functionRight: () async {
                                                 await _aboutMeController
                                                     .deleteAboutMe(
                                                       context,

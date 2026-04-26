@@ -157,7 +157,9 @@ class _FavoriteScreenState extends ConsumerState<FavoriteScreen> {
                                           .jobPoster!
                                           .username,
                                       price: userFavourite.adsModel!.basePrice!,
-                                      image: userFavourite.adsModel!.image!,
+                                      image: userFavourite
+                                          .adsModel!
+                                          .imageFrmServer!,
                                       favId: userFavourite.favouriteId!,
                                     );
                                   },

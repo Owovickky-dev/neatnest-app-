@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+
 import 'job_poster_model.dart';
 
 class AdsModel {
@@ -5,7 +9,8 @@ class AdsModel {
   final String? title;
   final String? about;
   final num? basePrice;
-  final String? image;
+  final String? imageFrmServer;
+  final File? image;
   final String? country;
   final String? state;
   final JobPosterModel? jobPoster;
@@ -13,7 +18,7 @@ class AdsModel {
   final bool? isActive;
   final String? workerId;
   final DateTime? createdAt;
-  final List<WorkerAvailableInfoModel>? availableTime;
+  final List<WorkerAvailableInfoModel>? availableSchedule;
 
   AdsModel({
     this.id,
@@ -21,14 +26,15 @@ class AdsModel {
     this.about,
     this.basePrice,
     this.category,
-    this.image,
+    this.imageFrmServer,
     this.isActive,
     this.jobPoster,
     this.workerId,
     this.createdAt,
     this.country,
     this.state,
-    this.availableTime,
+    this.availableSchedule,
+    this.image,
   });
 
   Map<String, dynamic> toJson() {
@@ -42,9 +48,6 @@ class AdsModel {
     }
     if (about != null && about!.isNotEmpty) {
       data["about"] = about;
-    }
-    if (image != null && image!.isNotEmpty) {
-      data["image"] = image;
     }
     if (isActive != null) {
       data["isActive"] = isActive;
@@ -62,11 +65,23 @@ class AdsModel {
       data["adsId"] = id;
     }
 
-    if (availableTime != null && availableTime!.isNotEmpty) {
-      data["userAvailableTime"] = availableTime;
+    if (availableSchedule != null && availableSchedule!.isNotEmpty) {
+      data["availableSchedule"] = availableSchedule;
     }
 
     return data;
+  }
+
+  Future<FormData> toFormData() async {
+    final map = toJson();
+
+    if (image != null) {
+      map["image"] = await MultipartFile.fromFile(
+        image!.path,
+        filename: image!.path.split("/").last,
+      );
+    }
+    return FormData.fromMap(map);
   }
 
   factory AdsModel.fromJson(Map<String, dynamic> json) {
@@ -76,11 +91,11 @@ class AdsModel {
       about: json["about"] ?? "",
       basePrice: json["basePrice"] ?? 0,
       category: json["category"] ?? "",
-      image: json["image"] ?? "",
+      imageFrmServer: json["image"] ?? "",
       isActive: json["isActive"] ?? false,
       country: json["country"] ?? "",
       state: json["state"] ?? "",
-      availableTime: json["workerAvailableInfo"] != null
+      availableSchedule: json["workerAvailableInfo"] != null
           ? (json["workerAvailableInfo"] as List)
                 .map((e) => WorkerAvailableInfoModel.fromJson(e))
                 .toList()
@@ -102,6 +117,20 @@ class WorkerAvailableInfoModel {
     required this.workerAvailableTimes,
   });
 
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+
+    if (workerAvailableDates.isNotEmpty) {
+      data["workerAvailableDates"] = workerAvailableDates;
+    }
+
+    if (workerAvailableTimes.isNotEmpty) {
+      data["workerAvailableTimes"] = workerAvailableTimes;
+    }
+
+    return data;
+  }
+
   factory WorkerAvailableInfoModel.fromJson(Map<String, dynamic> json) {
     return WorkerAvailableInfoModel(
       workerAvailableDates: json["workerAvailableDates"] ?? "",
@@ -118,7 +147,15 @@ class WorkerAvailableTime {
   final String time;
   final bool isBooked;
 
-  WorkerAvailableTime({required this.time, required this.isBooked});
+  WorkerAvailableTime({required this.time, this.isBooked = false});
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    if (time.isNotEmpty) {
+      data["time"] = time;
+    }
+    return data;
+  }
 
   factory WorkerAvailableTime.fromJson(Map<String, dynamic> json) {
     return WorkerAvailableTime(time: json["time"], isBooked: json["isBooked"]);

@@ -101,7 +101,7 @@ class AddressHolderTemplate extends StatelessWidget {
                               'Are you sure you want to set this address as default',
                           textButtonTextLeft: 'Cancel',
                           textButtonTextRight: 'Yes',
-                          function: () {
+                          functionRight: () {
                             addAddressHolderController.setDefaultAddress(
                               context,
                               ref,
@@ -149,7 +149,7 @@ class AddressHolderTemplate extends StatelessWidget {
                             'Are you sure you want to delete this Address',
                         textButtonTextLeft: 'Cancel',
                         textButtonTextRight: 'Delete',
-                        function: () async {
+                        functionRight: () async {
                           addAddressHolderController.deleteAddress(
                             context,
                             ref,

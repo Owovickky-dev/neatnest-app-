@@ -69,9 +69,17 @@ class UserProfileScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       primaryText(text: userData?.name ?? "User"),
-                      secondaryText(text: userData?.username ?? "Username"),
-                      ?userData?.role == "Worker"
-                          ? (userData!.isVerfied!
+                      Row(
+                        children: [
+                          secondaryText(text: userData?.username ?? "Username"),
+                          15.wt,
+                          secondaryText(text: "||"),
+                          15.wt,
+                          secondaryText(text: userData!.role),
+                        ],
+                      ),
+                      ?userData.role == "worker"
+                          ? (userData.isVerified!
                                 ? primaryText(
                                     text: "Verified",
                                     color: AppColors.primaryColor,
@@ -79,7 +87,7 @@ class UserProfileScreen extends ConsumerWidget {
                                   )
                                 : primaryText(
                                     text: "Unverified",
-                                    color: Colors.red,
+                                    color: Colors.orangeAccent,
                                     fontSize: 14.sp,
                                   ))
                           : null,
@@ -101,14 +109,14 @@ class UserProfileScreen extends ConsumerWidget {
               ),
               20.ht,
               RowDataHolder(
-                text: userData?.role == "Worker"
+                text: userData.role == "worker"
                     ? "Verification"
                     : 'Payment Methods',
-                icons: userData?.role == "Worker"
+                icons: userData.role == "worker"
                     ? FontAwesomeIcons.addressCard
                     : FontAwesomeIcons.creditCard,
                 function: () {
-                  if (userData?.role == "Worker") {
+                  if (userData.role == "worker") {
                     AppNavigatorHelper.push(
                       context,
                       AppRoute.workerVerificationScreen,
@@ -120,13 +128,13 @@ class UserProfileScreen extends ConsumerWidget {
               ),
               20.ht,
               RowDataHolder(
-                text: userData?.role == "Worker"
+                text: userData.role == "worker"
                     ? "My Account Summary"
                     : 'My booking',
                 icons: FontAwesomeIcons.calendarDays,
                 function: () {},
               ),
-              ?userData?.role == "Worker"
+              ?userData.role == "worker"
                   ? Column(
                       children: [
                         20.ht,

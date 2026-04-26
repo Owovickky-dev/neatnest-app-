@@ -77,27 +77,23 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
     final generalAds = ref.watch(adsStateControllerProvider);
     final ads = widget.isPopularAds ? popularAds : generalAds;
     final adsInfo = ads[widget.index];
-    final myAvailable = adsInfo.availableTime ?? [];
+    final myAvailable = adsInfo.availableSchedule ?? [];
     final dates = myAvailable.map((date) {
       final formattedDate = DateTime.parse(date.workerAvailableDates).toLocal();
-      final dates = DateFormat('dd/MM/yy').format(formattedDate);
+      final dates = DateFormat('dd/MM/yyyy').format(formattedDate);
       return dates;
     }).toList();
 
     if (selectedDate != null) {
       final selected = myAvailable.firstWhere((item) {
         final formatted = DateFormat(
-          'dd/MM/yy',
+          'dd/MM/yyyy',
         ).format(DateTime.parse(item.workerAvailableDates).toLocal());
         return formatted == selectedDate;
       });
       workerTimes = selected.workerAvailableTimes.map((e) => e.time).toList();
-    } else {
-      setState(() {
-        workerTimes = [];
-      });
     }
-
+    _bookingFormController.serviceId = adsInfo.id;
     return Container(
       color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -107,7 +103,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
           backgroundColor: Colors.white,
           title: primaryText(text: "Booking Form"),
           leading: AppBarIcon(
-            icons: Icons.arrow_back_ios,
+            icons: Icons.arrow_back,
             function: () {
               Navigator.pop(context);
             },
@@ -245,6 +241,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                   onChanged: (value) {
                     setState(() {
                       selectedDate = value;
+                      _bookingFormController.preferredDate = value;
                       selectedTime = null;
                     });
                   },
@@ -278,6 +275,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                   onChanged: (value) {
                     setState(() {
                       selectedTime = value;
+                      _bookingFormController.preferredTime = value;
                     });
                   },
                 ),

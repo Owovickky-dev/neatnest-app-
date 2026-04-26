@@ -233,7 +233,7 @@ class _ViewAdsTemplateState extends ConsumerState<ViewAdsTemplate> {
                       state: widget.userState,
                       about: widget.about,
                       isActive: widget.isActive,
-                      image: widget.image,
+                      imageFrmServer: widget.image,
                     );
 
                     AppNavigatorHelper.push(

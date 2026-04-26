@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/controller/favourite_controller.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
+import 'package:neat_nest/widget/app_confirmation_button.dart';
 import 'package:neat_nest/widget/app_text.dart';
 
 import '../../../utilities/constant/colors.dart';
@@ -73,7 +74,18 @@ class FavouriteDataTemplate extends ConsumerWidget {
             children: [
               GestureDetector(
                 onTap: () {
-                  favouriteController.removeFavourite(context, favId, ref);
+                  appConfirmationButton(
+                    context: context,
+                    title: "Delete Favourite",
+                    subTitle: "Are you Sure you want to remove from favourite ",
+                    textButtonTextLeft: "Cancel",
+                    textButtonTextRight: "Yes",
+                    functionRight: () => favouriteController.removeFavourite(
+                      context,
+                      favId,
+                      ref,
+                    ),
+                  );
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),

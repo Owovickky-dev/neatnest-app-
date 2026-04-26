@@ -102,7 +102,7 @@ class _ViewAdsScreenState extends ConsumerState<ViewAdsScreen> {
                                         aOrders: 4,
                                         userCountry: activeAd.country!,
                                         userState: activeAd.state!,
-                                        image: activeAd.image!,
+                                        image: activeAd.imageFrmServer!,
                                         isActive: activeAd.isActive!,
                                         about: activeAd.about!,
                                       );
@@ -122,7 +122,7 @@ class _ViewAdsScreenState extends ConsumerState<ViewAdsScreen> {
                                         aOrders: 4,
                                         userCountry: allAds.country!,
                                         userState: allAds.state!,
-                                        image: allAds.image!,
+                                        image: allAds.imageFrmServer!,
                                         isActive: allAds.isActive!,
                                         about: allAds.about!,
                                       );

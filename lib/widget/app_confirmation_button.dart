@@ -9,7 +9,7 @@ Future<void> appConfirmationButton({
   required String subTitle,
   required String textButtonTextLeft,
   required String textButtonTextRight,
-  required VoidCallback function,
+  required VoidCallback functionRight,
   VoidCallback? functionLeft,
 }) {
   return showDialog(
@@ -24,15 +24,15 @@ Future<void> appConfirmationButton({
         ),
         actions: [
           TextButton(
-            onPressed: functionLeft ?? () => dialogContext.pop(),
-            child: secondaryText(text: textButtonTextLeft),
-          ),
-          TextButton(
             onPressed: () {
               dialogContext.pop();
-              function();
+              functionRight();
             },
             child: secondaryText(text: textButtonTextRight),
+          ),
+          TextButton(
+            onPressed: functionLeft ?? () => dialogContext.pop(),
+            child: secondaryText(text: textButtonTextLeft),
           ),
         ],
       );

@@ -27,10 +27,7 @@ class AdsScreen extends ConsumerWidget {
               30.ht,
               Row(
                 children: [
-                  Icon(
-                    FontAwesomeIcons.bookOpenReader as IconData?,
-                    color: Colors.grey,
-                  ),
+                  Icon(Icons.ads_click_rounded, color: Colors.grey),
                   10.wt,
                   secondaryText(text: "Ads Activity"),
                 ],
@@ -44,7 +41,7 @@ class AdsScreen extends ConsumerWidget {
               30.ht,
               RowDataHolder(
                 text: "Post Ads",
-                icons: FontAwesomeIcons.lock,
+                icons: FontAwesomeIcons.adversal,
                 function: () {
                   AppNavigatorHelper.push(context, AppRoute.postAdsScreen);
                 },
@@ -52,7 +49,7 @@ class AdsScreen extends ConsumerWidget {
               30.ht,
               RowDataHolder(
                 text: "View Ads",
-                icons: FontAwesomeIcons.lock,
+                icons: FontAwesomeIcons.folderOpen,
                 function: () {
                   AppNavigatorHelper.push(context, AppRoute.viewAdsScreen);
                 },
@@ -60,19 +57,19 @@ class AdsScreen extends ConsumerWidget {
               30.ht,
               RowDataHolder(
                 text: "Completed Orders",
-                icons: FontAwesomeIcons.lock,
+                icons: FontAwesomeIcons.checkDouble,
                 function: () {},
               ),
               30.ht,
               RowDataHolder(
                 text: "Pending Orders",
-                icons: FontAwesomeIcons.lock,
+                icons: FontAwesomeIcons.spinner,
                 function: () {},
               ),
               30.ht,
               RowDataHolder(
                 text: "Cancelled Orders",
-                icons: FontAwesomeIcons.lock,
+                icons: FontAwesomeIcons.circleXmark,
                 function: () {},
               ),
             ],

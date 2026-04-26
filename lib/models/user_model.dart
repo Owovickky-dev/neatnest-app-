@@ -13,7 +13,7 @@ class UserModel {
   final String phoneNumber;
   final List<UserLocationModel> locations;
   final WorkerStatisticsModel? workerStatistics;
-  final bool? isVerfied;
+  final bool? isVerified;
   final double? ratingAverage;
   final double? ratingQuantity;
   final String? joinedAt;
@@ -31,7 +31,7 @@ class UserModel {
     this.joinedAt,
     List<UserLocationModel>? locations,
     this.workerStatistics,
-    this.isVerfied,
+    this.isVerified,
     this.ratingAverage,
     this.ratingQuantity,
   }) : locations = locations ?? [];
@@ -73,7 +73,7 @@ class UserModel {
         ratingAverage: (json["ratingAverage"] as num?)?.toDouble() ?? 0.0,
         ratingQuantity: (json["ratingQuantity"] as num?)?.toDouble() ?? 0.0,
         username: json["username"]?.toString() ?? "",
-        isVerfied: json["isVerfied"] ?? false,
+        isVerified: json["isVerfied"] ?? false,
         locations: _parseLocations(json["locations"]),
         workerStatistics: json["workerStatistics"] != null
             ? WorkerStatisticsModel.fromJson(json["workerStatistics"])
@@ -94,7 +94,7 @@ class UserModel {
       "gender": gender,
       "role": role,
       "joinedAt": joinedAt,
-      "isVerfied": isVerfied,
+      "isVerfied": isVerified,
       "ratingAverage": ratingAverage,
       "ratingQuantity": ratingQuantity,
       "locations": locations.map((loc) => loc.toJson()).toList(),
