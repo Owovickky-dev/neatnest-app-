@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:neat_nest/models/ads_model.dart';
 import 'package:neat_nest/models/booking_navigation_args.dart';
+import 'package:neat_nest/screens/booking/ads_details_screen.dart';
 import 'package:neat_nest/screens/booking/widgets/booking_form_screen.dart';
 import 'package:neat_nest/screens/home/filter/filter_screen.dart';
 import 'package:neat_nest/screens/home/filter/widget/filter_result_screen.dart';
@@ -113,6 +114,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
+        path: AppRoute.adsDetailsScreen.path,
+        name: AppRoute.adsDetailsScreen.name,
+        builder: (context, state) {
+          final args = state.extra as RoutingAdsModel;
+          return AdsDetailsScreen(
+            index: args.index,
+            isFavourite: args.isFavourite,
+            isPopularAds: args.isPopular,
+          );
+        },
+      ),
+      GoRoute(
         path: AppRoute.userProfile.path,
         name: AppRoute.userProfile.name,
         builder: (context, state) => UserProfileScreen(),
@@ -145,11 +158,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoute.userScreenLog.path,
         name: AppRoute.userScreenLog.name,
-        builder: (context, state) {
-          final extraData = state.extra as Map<String, dynamic>?;
-          final isDataAvailable = extraData?['isDataAvailable'] ?? false;
-          return UserScreen(isDataAvailable: isDataAvailable);
-        },
+        builder: (context, state) => UserScreen(),
       ),
       GoRoute(
         path: AppRoute.workerPaymentMethod.path,

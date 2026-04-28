@@ -13,7 +13,8 @@ part of 'message_state_controller.dart';
 const messageStateControllerProvider = MessageStateControllerProvider._();
 
 final class MessageStateControllerProvider
-    extends $AsyncNotifierProvider<MessageStateController, List<MessageModel>> {
+    extends
+        $AsyncNotifierProvider<MessageStateController, MessagePaginationState> {
   const MessageStateControllerProvider._()
     : super(
         from: null,
@@ -34,22 +35,26 @@ final class MessageStateControllerProvider
 }
 
 String _$messageStateControllerHash() =>
-    r'963160f4dedb828ef8905ebd20914dc8891f5bb7';
+    r'a61b4d7467823ea6c77982145c587d343dda7d1b';
 
 abstract class _$MessageStateController
-    extends $AsyncNotifier<List<MessageModel>> {
-  FutureOr<List<MessageModel>> build();
+    extends $AsyncNotifier<MessagePaginationState> {
+  FutureOr<MessagePaginationState> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
     final ref =
-        this.ref as $Ref<AsyncValue<List<MessageModel>>, List<MessageModel>>;
+        this.ref
+            as $Ref<AsyncValue<MessagePaginationState>, MessagePaginationState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<MessageModel>>, List<MessageModel>>,
-              AsyncValue<List<MessageModel>>,
+              AnyNotifier<
+                AsyncValue<MessagePaginationState>,
+                MessagePaginationState
+              >,
+              AsyncValue<MessagePaginationState>,
               Object?,
               Object?
             >;

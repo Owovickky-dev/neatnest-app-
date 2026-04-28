@@ -39,7 +39,7 @@ class _BottomNavigationScreenState
       HistoryScreen(),
       FavoriteScreen(),
       ChatListScreen(),
-      UserScreen(isDataAvailable: isLoggedIn),
+      UserScreen(),
     ];
   }
 

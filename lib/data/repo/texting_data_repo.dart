@@ -29,8 +29,10 @@ class TextingDataRepo {
     return response;
   }
 
-  Future<Response> getMessages(String chatId) async {
-    final response = await _dio.get("${ConstantData.MESSAGEURL}/$chatId");
+  Future<Response> getMessages(String chatId, {int page = 1}) async {
+    final response = await _dio.get(
+      "${ConstantData.MESSAGEURL}/$chatId?page=$page",
+    );
     return response;
   }
 }

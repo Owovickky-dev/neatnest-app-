@@ -66,7 +66,9 @@ class AdsModel {
     }
 
     if (availableSchedule != null && availableSchedule!.isNotEmpty) {
-      data["availableSchedule"] = availableSchedule;
+      data["availableSchedule"] = availableSchedule!
+          .map((e) => e.toJson())
+          .toList();
     }
 
     return data;
@@ -118,17 +120,12 @@ class WorkerAvailableInfoModel {
   });
 
   Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-
-    if (workerAvailableDates.isNotEmpty) {
-      data["workerAvailableDates"] = workerAvailableDates;
-    }
-
-    if (workerAvailableTimes.isNotEmpty) {
-      data["workerAvailableTimes"] = workerAvailableTimes;
-    }
-
-    return data;
+    return {
+      "workerAvailableDates": workerAvailableDates,
+      "workerAvailableTimes": workerAvailableTimes
+          .map((e) => e.toJson())
+          .toList(),
+    };
   }
 
   factory WorkerAvailableInfoModel.fromJson(Map<String, dynamic> json) {
@@ -150,14 +147,25 @@ class WorkerAvailableTime {
   WorkerAvailableTime({required this.time, this.isBooked = false});
 
   Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    if (time.isNotEmpty) {
-      data["time"] = time;
-    }
-    return data;
+    return {"time": time, "isBooked": isBooked};
   }
 
   factory WorkerAvailableTime.fromJson(Map<String, dynamic> json) {
-    return WorkerAvailableTime(time: json["time"], isBooked: json["isBooked"]);
+    return WorkerAvailableTime(
+      time: json["time"] ?? "",
+      isBooked: json["isBooked"] ?? false,
+    );
   }
+}
+
+class RoutingAdsModel {
+  final int index;
+  final bool isPopular;
+  final bool isFavourite;
+
+  RoutingAdsModel({
+    required this.index,
+    required this.isPopular,
+    required this.isFavourite,
+  });
 }

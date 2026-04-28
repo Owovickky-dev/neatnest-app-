@@ -8,6 +8,8 @@ class MessageModel {
   final String? type;
   final String? sendAt;
   final String? messageId;
+  final bool? hasMore;
+  final int? page;
   final bool? isMe;
   final MessageStatus? sentStatus;
 
@@ -21,6 +23,8 @@ class MessageModel {
     this.messageId,
     this.isMe,
     this.sentStatus,
+    this.hasMore,
+    this.page,
   });
 
   Map<String, dynamic> toJson() {
@@ -86,4 +90,46 @@ class ChattingScreenPreData {
     required this.senderUserName,
     required this.recipientId,
   });
+}
+
+class MessagePaginationState {
+  final List<MessageModel> messages;
+  final int page;
+  final bool hasMore;
+  final bool isLoading;
+  final bool isLoadingMore;
+
+  MessagePaginationState({
+    required this.messages,
+    required this.page,
+    required this.hasMore,
+    required this.isLoading,
+    required this.isLoadingMore,
+  });
+
+  factory MessagePaginationState.initial() {
+    return MessagePaginationState(
+      messages: [],
+      page: 1,
+      hasMore: true,
+      isLoading: false,
+      isLoadingMore: false,
+    );
+  }
+
+  MessagePaginationState copyWith({
+    List<MessageModel>? messages,
+    int? page,
+    bool? hasMore,
+    bool? isLoading,
+    bool? isLoadingMore,
+  }) {
+    return MessagePaginationState(
+      messages: messages ?? this.messages,
+      page: page ?? this.page,
+      hasMore: hasMore ?? this.hasMore,
+      isLoading: isLoading ?? this.isLoading,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+    );
+  }
 }

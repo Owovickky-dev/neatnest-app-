@@ -15,7 +15,7 @@ class AllDataScreen extends StatelessWidget {
               crossAxisCount: 2,
               crossAxisSpacing: 10,
               mainAxisSpacing: 20,
-              childAspectRatio: 0.6,
+              mainAxisExtent: 250,
             ),
             itemBuilder: (context, index) {
               return FavouriteDataHolder(index: index);

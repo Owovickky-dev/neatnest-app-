@@ -32,6 +32,7 @@ enum AppRoute {
   setAboutMe,
   viewAboutMeScreen,
   chattingScreen,
+  adsDetailsScreen,
 }
 
 extension AppRouteNamesExtension on AppRoute {
@@ -103,6 +104,8 @@ extension AppRouteNamesExtension on AppRoute {
         return "/viewAboutMeScreen";
       case AppRoute.chattingScreen:
         return "/chattingScreen";
+      case AppRoute.adsDetailsScreen:
+        return "/adsDetailsScreen";
     }
   }
 }

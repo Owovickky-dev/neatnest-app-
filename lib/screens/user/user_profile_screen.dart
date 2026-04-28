@@ -75,11 +75,11 @@ class UserProfileScreen extends ConsumerWidget {
                           15.wt,
                           secondaryText(text: "||"),
                           15.wt,
-                          secondaryText(text: userData!.role),
+                          secondaryText(text: userData?.role ?? ""),
                         ],
                       ),
-                      ?userData.role == "worker"
-                          ? (userData.isVerified!
+                      ?userData?.role == "worker"
+                          ? (userData!.isVerified!
                                 ? primaryText(
                                     text: "Verified",
                                     color: AppColors.primaryColor,
@@ -109,14 +109,14 @@ class UserProfileScreen extends ConsumerWidget {
               ),
               20.ht,
               RowDataHolder(
-                text: userData.role == "worker"
+                text: userData?.role == "worker"
                     ? "Verification"
                     : 'Payment Methods',
-                icons: userData.role == "worker"
+                icons: userData?.role == "worker"
                     ? FontAwesomeIcons.addressCard
                     : FontAwesomeIcons.creditCard,
                 function: () {
-                  if (userData.role == "worker") {
+                  if (userData?.role == "worker") {
                     AppNavigatorHelper.push(
                       context,
                       AppRoute.workerVerificationScreen,
@@ -128,13 +128,13 @@ class UserProfileScreen extends ConsumerWidget {
               ),
               20.ht,
               RowDataHolder(
-                text: userData.role == "worker"
+                text: userData?.role == "worker"
                     ? "My Account Summary"
                     : 'My booking',
                 icons: FontAwesomeIcons.calendarDays,
                 function: () {},
               ),
-              ?userData.role == "worker"
+              ?userData?.role == "worker"
                   ? Column(
                       children: [
                         20.ht,

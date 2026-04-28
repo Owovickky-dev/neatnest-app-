@@ -4,6 +4,7 @@ import 'package:flutter/material.dart' hide State;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:neat_nest/controller/ads_controller.dart';
 import 'package:neat_nest/models/ads_model.dart';
 import 'package:neat_nest/utilities/app_button.dart';
@@ -29,6 +30,7 @@ class PostAdsScreen extends ConsumerStatefulWidget {
 class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
   late AdsController _adsController;
   final _formKey = GlobalKey<FormState>();
+  Map<DateTime, List<String>> selectedDateTimes = {};
   List<String> categories = [
     "Cleaning",
     "Plumbing",
@@ -68,7 +70,7 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
     "12:00PM",
   ];
   final List<String> status = ["True", "False"];
-  final List<DateTime?> _date = [];
+  late List<DateTime?> _date = [];
   List<Country> countries = [];
   List<State> states = [];
   final List<String> selectedTimes = [];
@@ -143,6 +145,111 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
         }
       }
     });
+  }
+
+  Future<List<String>?> _showTimePickerDialog(DateTime date) async {
+    List<String> tempSelectedTimes = List.from(selectedDateTimes[date] ?? []);
+
+    return showDialog<List<String>>(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return AlertDialog(
+              title: Text(
+                "Select time for ${date.day}/${date.month}/${date.year}",
+              ),
+
+              content: SizedBox(
+                width: double.maxFinite,
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  itemCount: timeSlots.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 5,
+                    childAspectRatio: 2.5,
+                  ),
+                  itemBuilder: (context, index) {
+                    final time = timeSlots[index];
+                    final isSelected = tempSelectedTimes.contains(time);
+                    return GestureDetector(
+                      onTap: () {
+                        setStateDialog(() {
+                          if (isSelected) {
+                            tempSelectedTimes.remove(time);
+                          } else {
+                            tempSelectedTimes.add(time);
+                          }
+                        });
+                      },
+
+                      child: Container(
+                        margin: const EdgeInsets.all(4),
+
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? Colors.green
+                              : Colors.grey.shade200,
+
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+
+                        child: Center(
+                          child: Text(
+                            time,
+
+                            style: TextStyle(
+                              fontSize: 10,
+
+                              color: isSelected ? Colors.white : Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+
+                  child: const Text("Cancel"),
+                ),
+
+                ElevatedButton(
+                  onPressed: tempSelectedTimes.isEmpty
+                      ? null
+                      : () => Navigator.pop(context, tempSelectedTimes),
+
+                  child: const Text("Done"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void buildSchedule() {
+    final sortedEntries = selectedDateTimes.entries.toList()
+      ..sort((a, b) => a.key.compareTo(b.key));
+
+    workerAvailableTime = sortedEntries.map((entry) {
+      final date = entry.key.toLocal();
+      final times = entry.value;
+
+      return WorkerAvailableInfoModel(
+        workerAvailableDates: DateFormat('dd/MM/yyyy').format(date),
+        workerAvailableTimes: times
+            .map((t) => WorkerAvailableTime(time: t))
+            .toList(),
+      );
+    }).toList();
+
+    _adsController.timeAvailable = workerAvailableTime;
   }
 
   @override
@@ -291,7 +398,7 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                       primaryText(text: "Available Date", fontSize: 18.sp),
                       5.ht,
                       GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           setState(() => isOpen = !isOpen);
                         },
                         child: Container(
@@ -307,14 +414,13 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                             children: [
                               Expanded(
                                 child: secondaryText(
-                                  text: _date.isEmpty
+                                  text: selectedDateTimes.isEmpty
                                       ? "Select Available Dates"
-                                      : _date
-                                            .whereType<DateTime>()
-                                            .map(
-                                              (date) =>
-                                                  "${date.day}/${date.month}/${date.year}",
-                                            )
+                                      : selectedDateTimes.entries
+                                            .map((entry) {
+                                              final date = entry.key;
+                                              return "${date.day}/${date.month}/${date.year}";
+                                            })
                                             .join(", "),
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -329,8 +435,13 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                         ),
                       ),
 
-                      if (isOpen)
-                        Container(
+                      ///  CALENDAR (ONLY SHOW WHEN OPEN)
+                      AnimatedCrossFade(
+                        duration: Duration(milliseconds: 250),
+                        crossFadeState: isOpen
+                            ? CrossFadeState.showFirst
+                            : CrossFadeState.showSecond,
+                        firstChild: Container(
                           margin: EdgeInsets.only(top: 5.h),
                           padding: EdgeInsets.all(10),
                           decoration: BoxDecoration(
@@ -341,13 +452,149 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                           child: CalendarDatePicker2(
                             config: CalendarDatePicker2Config(
                               calendarType: CalendarDatePicker2Type.multi,
-                              disableModePicker: false,
                               firstDate: DateTime.now(),
                             ),
+
                             value: _date,
-                            onValueChanged: (dates) {},
+
+                            onValueChanged: (dates) async {
+                              setState(() {
+                                _date = dates;
+                              });
+
+                              ///  IMMEDIATE TIME PICK AFTER DATE
+                              for (var d in dates.whereType<DateTime>()) {
+                                if (!selectedDateTimes.containsKey(d)) {
+                                  final times = await _showTimePickerDialog(d);
+                                  if (times != null && times.isNotEmpty) {
+                                    setState(() {
+                                      selectedDateTimes[d] = times;
+                                    });
+                                  }
+                                }
+                              }
+                              buildSchedule();
+
+                              setState(() {
+                                isOpen = false;
+                              });
+                            },
                           ),
                         ),
+
+                        secondChild: SizedBox(),
+                      ),
+
+                      10.ht,
+
+                      ///  SELECTED DATE + TIME (IMMEDIATE DISPLAY)
+                      Column(
+                        children: selectedDateTimes.entries.map((entry) {
+                          final date = entry.key;
+                          final times = entry.value;
+
+                          return Container(
+                            margin: EdgeInsets.only(top: 12.h),
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey.shade300),
+                              borderRadius: BorderRadius.circular(12),
+                              color: Colors.white,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                /// HEADER
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "${date.day}/${date.month}/${date.year}",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+
+                                    Row(
+                                      children: [
+                                        /// EDIT
+                                        GestureDetector(
+                                          onTap: () async {
+                                            final updated =
+                                                await _showTimePickerDialog(
+                                                  date,
+                                                );
+
+                                            if (updated != null) {
+                                              setState(() {
+                                                selectedDateTimes[date] =
+                                                    updated;
+                                              });
+                                              buildSchedule();
+                                            }
+                                          },
+                                          child: Icon(
+                                            Icons.edit,
+                                            size: 18,
+                                            color: Colors.blue,
+                                          ),
+                                        ),
+
+                                        SizedBox(width: 10),
+
+                                        /// DELETE
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              selectedDateTimes.remove(date);
+                                              _date.remove(date);
+                                            });
+                                            buildSchedule();
+                                          },
+                                          child: Icon(
+                                            Icons.delete,
+                                            size: 18,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+
+                                SizedBox(height: 10),
+
+                                /// TIMES
+                                Wrap(
+                                  spacing: 8,
+                                  runSpacing: 8,
+                                  children: times.map((t) {
+                                    return Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 6,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.green.shade50,
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(color: Colors.green),
+                                      ),
+                                      child: Text(
+                                        t,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.green.shade800,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     ],
                   ),
                   20.ht,

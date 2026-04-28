@@ -50,14 +50,13 @@ class AdsController {
   }
 
   Future<void> postAds(BuildContext context, WidgetRef ref) async {
-    print("the selected image details is $imageSelected");
+    print("the selected date  details is $timeAvailable");
     final String title;
     final String price;
     final String aboutAds;
 
     title = adsTitleController.text.trim();
     price = adsPriceController.text.trim();
-
     aboutAds = adsAboutController.text.trim();
     if (category == null || category!.isEmpty || status == null) {
       return showErrorNotification(message: "All field must be filed");
