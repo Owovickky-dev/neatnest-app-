@@ -465,8 +465,10 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:neat_nest/controller/state%20controller%20/message/chat_state_controller.dart';
 import 'package:neat_nest/controller/state%20controller%20/message/message_state_controller.dart';
 import 'package:neat_nest/data/storage/secure_storage_helper.dart';
+import 'package:neat_nest/models/chat_room_model.dart';
 import 'package:neat_nest/models/message_model.dart';
 import 'package:neat_nest/screens/booking/widgets/booking_text_field.dart';
 import 'package:neat_nest/screens/history/utilities/app_bar_icon.dart';
@@ -511,6 +513,9 @@ class _ChattingScreenState extends ConsumerState<ChattingScreen> {
     super.initState();
 
     _scrollController.addListener(_onScroll);
+    _controller.addListener(() {
+      setState(() {});
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       connect();
@@ -533,6 +538,7 @@ class _ChattingScreenState extends ConsumerState<ChattingScreen> {
     socket?.disconnect();
     socket?.dispose();
     _scrollController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -575,14 +581,28 @@ class _ChattingScreenState extends ConsumerState<ChattingScreen> {
         sendStopTyping(widget.chatId);
 
         final userId = user?.id;
+        final senderId = data["sender"]?["id"] ?? data["senderId"] ?? "";
 
         final MessageModel newText = MessageModel.fromJson(data);
 
-        // safer check (backend sends senderId not nested sender)
-        if (data["senderId"] != userId) {
+        if (senderId != userId) {
           ref
               .read(messageStateControllerProvider.notifier)
               .addNewMessage(newText);
+
+          ref
+              .read(chatStateControllerProvider.notifier)
+              .updateLastMessage(
+                chatId: widget.chatId,
+                newMessage: LastMessage(
+                  content: data["content"] ?? "",
+                  senderId: senderId,
+                  senderRole: data["sender"]?["name"] ?? "",
+                  sentAt: data["sentAt"] ?? "",
+                  messageType: data["type"] ?? "text",
+                  isMe: false,
+                ),
+              );
         }
       });
     });
@@ -593,7 +613,6 @@ class _ChattingScreenState extends ConsumerState<ChattingScreen> {
 
   void sendTyping(String status) => socket!.emit("typing", status);
   void sendStopTyping(String status) => socket!.emit("stop typing", status);
-
   void sendNewMessage(MessageModel newMessage) {
     socket!.emit("new message", newMessage.toJson());
     sendStopTyping(widget.chatId);
@@ -779,7 +798,7 @@ class _ChattingScreenState extends ConsumerState<ChattingScreen> {
                   },
                 ),
               ),
-              20.ht,
+              10.ht,
 
               /// TYPING
               if (typing)
@@ -805,6 +824,7 @@ class _ChattingScreenState extends ConsumerState<ChattingScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Expanded(
                       child: BookingTextField(
@@ -822,36 +842,67 @@ class _ChattingScreenState extends ConsumerState<ChattingScreen> {
                     10.wt,
                     AppBarIcon(
                       icons: Icons.send,
-                      function: () async {
-                        if (_isSending || _controller.text.trim().isEmpty) {
-                          return;
-                        }
+                      height: 60,
+                      iconSize: 40,
+                      width: 60,
+                      iconColor: _controller.text.trim().isEmpty
+                          ? AppColors.blackTextColor
+                          : AppColors.primaryColor,
+                      function: _controller.text.isEmpty
+                          ? null
+                          : () async {
+                              if (_isSending ||
+                                  _controller.text.trim().isEmpty) {
+                                return;
+                              }
 
-                        setState(() => _isSending = true);
+                              setState(() => _isSending = true);
 
-                        final messageContent = _controller.text.trim();
-                        _controller.clear();
+                              final messageContent = _controller.text.trim();
+                              _controller.clear();
 
-                        try {
-                          final message = MessageModel(
-                            content: messageContent,
-                            chatId: widget.chatId,
-                            recipientId: widget.recipientId,
-                          );
+                              try {
+                                final message = MessageModel(
+                                  content: messageContent,
+                                  chatId: widget.chatId,
+                                  recipientId: widget.recipientId,
+                                );
 
-                          final sentMessage = await ref
-                              .read(messageStateControllerProvider.notifier)
-                              .sendMessage(message);
+                                final sentMessage = await ref
+                                    .read(
+                                      messageStateControllerProvider.notifier,
+                                    )
+                                    .sendMessage(message);
 
-                          if (sentMessage != null) {
-                            sendNewMessage(sentMessage);
-                          }
-                        } finally {
-                          if (mounted) {
-                            setState(() => _isSending = false);
-                          }
-                        }
-                      },
+                                if (sentMessage != null) {
+                                  sendNewMessage(sentMessage);
+                                  ref
+                                      .read(
+                                        chatStateControllerProvider.notifier,
+                                      )
+                                      .updateLastMessage(
+                                        chatId: widget.chatId,
+                                        newMessage: LastMessage(
+                                          content: sentMessage.content,
+                                          senderId:
+                                              sentMessage.sender?.senderId ??
+                                              "",
+                                          senderRole:
+                                              sentMessage.sender?.name ?? "",
+                                          sentAt:
+                                              sentMessage.sendAt ??
+                                              DateTime.now().toIso8601String(),
+                                          messageType: "text",
+                                          isMe: true,
+                                        ),
+                                      );
+                                }
+                              } finally {
+                                if (mounted) {
+                                  setState(() => _isSending = false);
+                                }
+                              }
+                            },
                     ),
                   ],
                 ),

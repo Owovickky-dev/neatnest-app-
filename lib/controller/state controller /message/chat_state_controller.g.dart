@@ -34,7 +34,7 @@ final class ChatStateControllerProvider
 }
 
 String _$chatStateControllerHash() =>
-    r'f5d25ea04f6e16898beb07d3bdbf8a56a48db06b';
+    r'b94d279fa01daa2c141bad8a52b5d230a70124bf';
 
 abstract class _$ChatStateController
     extends $AsyncNotifier<List<ChatRoomModel>> {

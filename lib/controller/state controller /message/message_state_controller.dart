@@ -165,7 +165,7 @@ import '../../../data/repo/texting_data_repo.dart';
 
 part 'message_state_controller.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class MessageStateController extends _$MessageStateController {
   late TextingDataRepo _textingDataRepo;
 
@@ -192,7 +192,6 @@ class MessageStateController extends _$MessageStateController {
 
     try {
       final response = await _textingDataRepo.sendMessage(messageData);
-
       if (response.statusCode == 201) {
         final data = response.data["data"];
 
@@ -216,7 +215,7 @@ class MessageStateController extends _$MessageStateController {
       }
     } catch (e) {
       _markMessageFailed(sentTempId);
-      rethrow;
+      return null;
     }
   }
 

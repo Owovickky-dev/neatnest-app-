@@ -102,7 +102,9 @@ class AdsModel {
                 .map((e) => WorkerAvailableInfoModel.fromJson(e))
                 .toList()
           : [],
-      jobPoster: JobPosterModel.fromJson(json["jobPoster"] ?? {}),
+      jobPoster: json["jobPoster"] != null
+          ? JobPosterModel.fromJson(json["jobPoster"])
+          : null,
       createdAt: json["createdAt"] != null
           ? DateTime.parse(json["createdAt"])
           : null,
@@ -121,10 +123,8 @@ class WorkerAvailableInfoModel {
 
   Map<String, dynamic> toJson() {
     return {
-      "workerAvailableDates": workerAvailableDates,
-      "workerAvailableTimes": workerAvailableTimes
-          .map((e) => e.toJson())
-          .toList(),
+      "availableDate": workerAvailableDates,
+      "availableTime": workerAvailableTimes.map((e) => e.time).toList(),
     };
   }
 

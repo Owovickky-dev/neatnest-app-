@@ -27,7 +27,7 @@ class FavouriteDataHolder extends ConsumerWidget {
 
     final favourites = ref.watch(favouriteStateControllerProvider);
 
-    final fav = favourites.where((f) => f.adsId == ads.id).toList();
+    final fav = favourites.where((f) => f.adsModel?.id == ads.id).toList();
 
     final isFav = fav.isNotEmpty;
     final favId = isFav ? fav.first.favouriteId : null;
@@ -140,7 +140,6 @@ class FavouriteDataHolder extends ConsumerWidget {
                           secondaryText(text: '/hour', fontSize: 12.sp),
                         ],
                       ),
-
                       GestureDetector(
                         onTap: () async {
                           if (isFav) {

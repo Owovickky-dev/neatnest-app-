@@ -13,6 +13,7 @@ class AppBarIcon extends StatelessWidget {
     this.bckColor,
     this.iconColor,
     this.radius,
+    this.iconSize,
   });
 
   final IconData icons;
@@ -22,6 +23,7 @@ class AppBarIcon extends StatelessWidget {
   final Color? bckColor;
   final Color? iconColor;
   final double? radius;
+  final double? iconSize;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,11 @@ class AppBarIcon extends StatelessWidget {
           color: bckColor ?? AppColors.containerLightBackground,
         ),
         child: Center(
-          child: Icon(icons, color: iconColor ?? AppColors.blackTextColor),
+          child: Icon(
+            icons,
+            color: iconColor ?? AppColors.blackTextColor,
+            size: iconSize,
+          ),
         ),
       ),
     );

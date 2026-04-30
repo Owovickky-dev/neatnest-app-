@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -50,7 +51,6 @@ class AdsController {
   }
 
   Future<void> postAds(BuildContext context, WidgetRef ref) async {
-    print("the selected date  details is $timeAvailable");
     final String title;
     final String price;
     final String aboutAds;
@@ -67,10 +67,11 @@ class AdsController {
       );
     }
 
+    print("The image file is $imageSelected");
     final newAds = AdsModel(
       title: title,
       about: aboutAds,
-      basePrice: int.parse(price),
+      basePrice: int.tryParse(price),
       category: category!.toLowerCase(),
       country: country,
       state: state,
@@ -78,7 +79,7 @@ class AdsController {
       isActive: status!,
       availableSchedule: timeAvailable,
     );
-
+    print(newAds);
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -91,7 +92,9 @@ class AdsController {
         );
       },
     );
-    print(timeAvailable);
+
+    print("the time is ${newAds.availableSchedule.toString()}");
+
     try {
       final response = await ref
           .read(adsStateControllerProvider.notifier)
@@ -104,13 +107,16 @@ class AdsController {
         final errorMessage = response.data["message"];
         if (!context.mounted) return;
         context.pop();
+        print(errorMessage);
         showErrorNotification(message: errorMessage);
       }
     } catch (e) {
       if (!context.mounted) return;
-      AppNavigatorHelper.go(context, AppRoute.bottomNavigation);
+      context.pop();
       if (e is DioException) {
-        print(e.error);
+        if (kDebugMode) {
+          print(e.error);
+        }
         showErrorNotification(message: e.error.toString());
       }
     }
@@ -216,9 +222,6 @@ class AdsController {
     WidgetRef ref,
     String adsId,
   ) async {
-    print("The new ads Status is $active");
-    print("The ID of the ads is $adsId");
-
     try {
       final response = await ref
           .read(userAdsStateControllerProvider.notifier)

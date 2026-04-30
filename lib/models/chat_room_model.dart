@@ -63,6 +63,32 @@ class ChatRoomModel {
           : null,
     );
   }
+
+  ChatRoomModel copyWith({
+    String? chatId,
+    String? chatName,
+    String? chatType,
+    List<Participant>? participants,
+    bool? isDispute,
+    String? status,
+    LastMessage? lastMessage,
+    String? bookingId,
+    String? recipientId,
+    String? partnerUsername,
+  }) {
+    return ChatRoomModel(
+      chatId: chatId ?? this.chatId,
+      chatName: chatName ?? this.chatName,
+      chatType: chatType ?? this.chatType,
+      participants: participants ?? this.participants,
+      isDispute: isDispute ?? this.isDispute,
+      status: status ?? this.status,
+      lastMessage: lastMessage ?? this.lastMessage,
+      bookingId: bookingId ?? this.bookingId,
+      recipientId: recipientId ?? this.recipientId,
+      partnerUsername: partnerUsername ?? this.partnerUsername,
+    );
+  }
 }
 
 class LastMessage {
@@ -89,7 +115,25 @@ class LastMessage {
       senderRole: json["senderRole"] ?? "",
       sentAt: json["sentAt"] ?? "",
       messageType: json["messageType"] ?? "",
-      isMe: json["isMe"],
+      isMe: json["isMe"] ?? false,
+    );
+  }
+
+  LastMessage copyWith({
+    String? content,
+    String? senderId,
+    String? senderRole,
+    String? sentAt,
+    String? messageType,
+    bool? isMe,
+  }) {
+    return LastMessage(
+      content: content ?? this.content,
+      senderId: senderId ?? this.senderId,
+      senderRole: senderRole ?? this.senderRole,
+      sentAt: sentAt ?? this.sentAt,
+      messageType: messageType ?? this.messageType,
+      isMe: isMe ?? this.isMe,
     );
   }
 }

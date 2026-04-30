@@ -185,7 +185,6 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
 
                       child: Container(
                         margin: const EdgeInsets.all(4),
-
                         decoration: BoxDecoration(
                           color: isSelected
                               ? Colors.green
@@ -193,14 +192,11 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
 
                           borderRadius: BorderRadius.circular(8),
                         ),
-
                         child: Center(
                           child: Text(
                             time,
-
                             style: TextStyle(
                               fontSize: 10,
-
                               color: isSelected ? Colors.white : Colors.black,
                             ),
                           ),

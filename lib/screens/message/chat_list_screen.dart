@@ -50,7 +50,6 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
 
     if (userDataExist) {
       await ref.read(chatStateControllerProvider.notifier).getChatRooms();
-
       if (!mounted) return;
       setState(() {
         isLoading = false;
