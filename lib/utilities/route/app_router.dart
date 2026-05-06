@@ -21,10 +21,13 @@ import 'package:neat_nest/screens/user/auth/security/widget/update_password_scre
 import 'package:neat_nest/screens/user/auth/signin/sign_in_screen.dart';
 import 'package:neat_nest/screens/user/auth/signin/utilities/forget_password_screen.dart';
 import 'package:neat_nest/screens/user/auth/signup/sign_up_screen.dart';
+import 'package:neat_nest/screens/user/model/booking_data_model.dart';
 import 'package:neat_nest/screens/user/model/user_location_model.dart';
 import 'package:neat_nest/screens/user/user_profile_screen.dart';
 import 'package:neat_nest/screens/user/user_screen.dart';
 import 'package:neat_nest/screens/user/utilities/add_address_holder.dart';
+import 'package:neat_nest/screens/user/widgets/booking/my_bookings_screen.dart';
+import 'package:neat_nest/screens/user/widgets/booking/utilities/booking_data_builder.dart';
 import 'package:neat_nest/screens/user/widgets/edit_profile/edit_profile_screen.dart';
 import 'package:neat_nest/screens/user/widgets/edit_profile/widget/about.dart';
 import 'package:neat_nest/screens/user/widgets/edit_profile/widget/personal_info_edit.dart';
@@ -50,6 +53,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     navigatorKey: AppRouterKey.navigatorKey,
     routes: [
       GoRoute(
+        path: AppRoute.bookingDataBuilder.path,
+        name: AppRoute.bookingDataBuilder.name,
+        builder: (context, state) {
+          final data = state.extra as BookingDataModel;
+          return BookingDataBuilder(
+            leftText: data.leftText,
+            rightText: data.rightText,
+            topText: data.topText,
+            title: data.title,
+            status: data.status,
+          );
+        },
+      ),
+      GoRoute(
         path: AppRoute.splash.path,
         name: AppRoute.splash.name,
         builder: (context, state) => SplashScreen(),
@@ -64,6 +81,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: AppRoute.bottomNavigation.name,
         builder: (context, state) {
           return BottomNavigationScreen();
+        },
+      ),
+      GoRoute(
+        path: AppRoute.myBookingScreen.path,
+        name: AppRoute.myBookingScreen.name,
+        builder: (context, state) {
+          return MyBookingsScreen();
         },
       ),
       GoRoute(

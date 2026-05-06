@@ -15,4 +15,9 @@ class BookingRepo {
 
     return response;
   }
+
+  Future<Response> getUserBookings() async {
+    final response = _dio.get(ConstantData.BOOKINGURL);
+    return response;
+  }
 }

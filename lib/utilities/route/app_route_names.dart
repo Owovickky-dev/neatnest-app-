@@ -33,6 +33,8 @@ enum AppRoute {
   viewAboutMeScreen,
   chattingScreen,
   adsDetailsScreen,
+  myBookingScreen,
+  bookingDataBuilder,
 }
 
 extension AppRouteNamesExtension on AppRoute {
@@ -106,6 +108,10 @@ extension AppRouteNamesExtension on AppRoute {
         return "/chattingScreen";
       case AppRoute.adsDetailsScreen:
         return "/adsDetailsScreen";
+      case AppRoute.myBookingScreen:
+        return "/myBookingScreen";
+      case AppRoute.bookingDataBuilder:
+        return "/bookingDataBuilder";
     }
   }
 }

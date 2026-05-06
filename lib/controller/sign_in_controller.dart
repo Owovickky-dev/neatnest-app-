@@ -5,6 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
 import 'package:neat_nest/data/repo/auth_repo.dart';
+import 'package:neat_nest/data/repo/user_data_repo.dart';
+import 'package:neat_nest/data/storage/secure_storage_helper.dart';
+import 'package:neat_nest/models/user_model.dart';
 import 'package:neat_nest/providers/is_logged_in_state.dart';
 import 'package:neat_nest/widget/loading_screen.dart';
 import 'package:neat_nest/widget/notificaiton_content.dart';
@@ -15,6 +18,7 @@ import '../utilities/route/app_route_names.dart';
 class SignInController {
   SignInController();
   AuthRepo authRepo = AuthRepo();
+  UserDataRepo userDataRepo = UserDataRepo();
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -77,6 +81,22 @@ class SignInController {
       if (!context.mounted) return;
       context.pop();
       showErrorNotification(message: "Logout failed");
+    }
+  }
+
+  Future<UserModel?> uploadProfilePic(String picPath) async {
+    try {
+      final response = await userDataRepo.uploadProfilePics(picPath);
+
+      if (response.statusCode == 200) {
+        final updatedUser = UserModel.fromJson(response.data["data"]);
+        await SecureStorageHelper.saveUserData(updatedUser);
+        return updatedUser;
+      } else {
+        throw Exception(response.data["message"]);
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 }

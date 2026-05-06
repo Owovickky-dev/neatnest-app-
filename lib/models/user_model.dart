@@ -10,6 +10,7 @@ class UserModel {
   final String username;
   final String gender;
   final String role;
+  final String? profilePic;
   final String phoneNumber;
   final List<UserLocationModel> locations;
   final WorkerStatisticsModel? workerStatistics;
@@ -17,6 +18,7 @@ class UserModel {
   final double? ratingAverage;
   final double? ratingQuantity;
   final String? joinedAt;
+  final String? profilePicPublicId;
 
   UserModel({
     this.id,
@@ -34,19 +36,37 @@ class UserModel {
     this.isVerified,
     this.ratingAverage,
     this.ratingQuantity,
+    this.profilePic,
+    this.profilePicPublicId,
   }) : locations = locations ?? [];
 
   Map<String, dynamic> toJson() {
-    return {
-      "name": name,
-      "email": email,
-      "password": password,
-      "passwordConfirm": passwordConfirm,
-      "username": username,
-      "gender": gender,
-      "role": role,
-      "phoneNumber": phoneNumber,
-    };
+    final data = <String, dynamic>{};
+    if (name.isNotEmpty) {
+      data["name"] = name;
+    }
+    if (username.isNotEmpty) {
+      data["username"] = username;
+    }
+    if (email.isNotEmpty) {
+      data["email"] = email;
+    }
+    if (password != null && password!.isNotEmpty) {
+      data["password"] = password;
+    }
+    if (passwordConfirm != null && passwordConfirm!.isNotEmpty) {
+      data["passwordConfirm"] = passwordConfirm;
+    }
+    if (gender.isNotEmpty) {
+      data["username"] = gender;
+    }
+    if (role.isNotEmpty) {
+      data["role"] = role;
+    }
+    if (phoneNumber.isNotEmpty) {
+      data["phoneNumber"] = phoneNumber;
+    }
+    return data;
   }
 
   static List<UserLocationModel> _parseLocations(dynamic locationsData) {
@@ -70,6 +90,8 @@ class UserModel {
         gender: json["gender"]?.toString() ?? "",
         role: json["role"]?.toString() ?? "",
         phoneNumber: json["phoneNumber"]?.toString() ?? "",
+        profilePic: json["profilePic"]?.toString() ?? "",
+        profilePicPublicId: json["profilePicPublicId"]?.toString() ?? "",
         ratingAverage: (json["ratingAverage"] as num?)?.toDouble() ?? 0.0,
         ratingQuantity: (json["ratingQuantity"] as num?)?.toDouble() ?? 0.0,
         username: json["username"]?.toString() ?? "",
@@ -100,6 +122,8 @@ class UserModel {
       "locations": locations.map((loc) => loc.toJson()).toList(),
       "workerStatistics": workerStatistics?.toJson(),
       "phoneNumber": phoneNumber,
+      "profilePic": profilePic,
+      "profilePicPublicId": profilePicPublicId,
     };
   }
 }

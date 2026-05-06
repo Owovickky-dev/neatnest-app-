@@ -9,6 +9,13 @@ class BookingModel {
   final String? preferredTime;
   final String? bookingId;
   final String? status;
+  final String? role;
+  final String? title;
+  final String? providerUserName;
+  final String? imageUrl;
+  final double? price;
+  final String? createdAt;
+  final String? bookerUserName;
 
   BookingModel({
     this.serviceId,
@@ -20,7 +27,14 @@ class BookingModel {
     this.preferredDate,
     this.preferredTime,
     this.bookingId,
+    this.imageUrl,
     this.status,
+    this.role,
+    this.title,
+    this.providerUserName,
+    this.price,
+    this.createdAt,
+    this.bookerUserName,
   });
 
   Map<String, dynamic> toJson() {
@@ -57,15 +71,54 @@ class BookingModel {
 
   factory BookingModel.fromJson(Map<String, dynamic> json) {
     return BookingModel(
-      bookingId: json["_id"] ?? "",
-      customerName: json["customerName"] ?? "",
-      customerAddress: json["customerAddress"] ?? "",
-      customerEmail: json["customerEmail"] ?? "",
-      customerPhoneNumber: json["customerPhoneNumber"] ?? "",
-      customerNote: json["customerNote"] ?? "",
+      bookingId: json["id"] ?? json["_id"] ?? "",
+      customerName: json["customer"]?["name"] ?? "",
+      customerAddress: json["customer"]?["address"] ?? "",
+      customerEmail: json["customer"]?["email"] ?? "",
+      customerPhoneNumber: json["customer"]?["phoneNumber"] ?? "",
+      customerNote: json["customer"]?["note"] ?? "",
       preferredDate: json["bookingDate"] ?? "",
       preferredTime: json["bookingTime"] ?? "",
+      serviceId: json["service"]?["id"] ?? "",
       status: json["status"] ?? "",
+      role: json["role"] ?? "",
+      title: json["service"]?["title"] ?? "",
+      providerUserName: json["provider"]?["username"] ?? "",
+      imageUrl: json["service"]?["image"] ?? "",
+      price: (json["service"]?["basePrice"] as num?)?.toDouble() ?? 0.0,
+      createdAt: json["createdAt"] ?? "",
+      bookerUserName: json["customer"]?["bookerUserName"] ?? "",
+    );
+  }
+}
+
+class GroupedBookings {
+  final List<BookingModel> awaitingConfirmation;
+  final List<BookingModel> completed;
+  final List<BookingModel> ongoing;
+  final List<BookingModel> cancelled;
+
+  GroupedBookings({
+    required this.awaitingConfirmation,
+    required this.completed,
+    required this.ongoing,
+    required this.cancelled,
+  });
+
+  factory GroupedBookings.fromJson(Map<String, dynamic> json) {
+    return GroupedBookings(
+      awaitingConfirmation: (json["awaiting_Confirmation"] as List)
+          .map((e) => BookingModel.fromJson(e))
+          .toList(),
+      completed: (json["completed"] as List)
+          .map((e) => BookingModel.fromJson(e))
+          .toList(),
+      ongoing: (json["ongoing"] as List)
+          .map((e) => BookingModel.fromJson(e))
+          .toList(),
+      cancelled: (json["cancelled"] as List)
+          .map((e) => BookingModel.fromJson(e))
+          .toList(),
     );
   }
 }

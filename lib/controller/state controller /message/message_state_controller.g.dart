@@ -21,7 +21,7 @@ final class MessageStateControllerProvider
         argument: null,
         retry: null,
         name: r'messageStateControllerProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -35,7 +35,7 @@ final class MessageStateControllerProvider
 }
 
 String _$messageStateControllerHash() =>
-    r'2ebe4b53a3adfc5144b17949bb38d7dfe8a843f8';
+    r'a6822b64a91148785751f1da9a154fe96613842e';
 
 abstract class _$MessageStateController
     extends $AsyncNotifier<MessagePaginationState> {

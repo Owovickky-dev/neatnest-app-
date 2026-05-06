@@ -13,7 +13,7 @@ part of 'booking_state_controller.dart';
 const bookingStateControllerProvider = BookingStateControllerProvider._();
 
 final class BookingStateControllerProvider
-    extends $AsyncNotifierProvider<BookingStateController, List<BookingModel>> {
+    extends $AsyncNotifierProvider<BookingStateController, GroupedBookings> {
   const BookingStateControllerProvider._()
     : super(
         from: null,
@@ -34,22 +34,21 @@ final class BookingStateControllerProvider
 }
 
 String _$bookingStateControllerHash() =>
-    r'9a6a2bc03c988f6e66621934db57004570eeb3f2';
+    r'93f1efdd9205e1591a66a60736888c4a9ac8ca27';
 
 abstract class _$BookingStateController
-    extends $AsyncNotifier<List<BookingModel>> {
-  FutureOr<List<BookingModel>> build();
+    extends $AsyncNotifier<GroupedBookings> {
+  FutureOr<GroupedBookings> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref =
-        this.ref as $Ref<AsyncValue<List<BookingModel>>, List<BookingModel>>;
+    final ref = this.ref as $Ref<AsyncValue<GroupedBookings>, GroupedBookings>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<BookingModel>>, List<BookingModel>>,
-              AsyncValue<List<BookingModel>>,
+              AnyNotifier<AsyncValue<GroupedBookings>, GroupedBookings>,
+              AsyncValue<GroupedBookings>,
               Object?,
               Object?
             >;

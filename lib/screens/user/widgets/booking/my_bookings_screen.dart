@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:neat_nest/utilities/constant/extension.dart';
+import 'package:neat_nest/screens/user/model/booking_data_model.dart';
+import 'package:neat_nest/screens/user/widgets/row_data_holder.dart';
+import 'package:neat_nest/widget/app_bar_holder.dart';
 
-import '../../../utilities/route/app_naviation_helper.dart';
-import '../../../utilities/route/app_route_names.dart';
-import '../../../widget/app_bar_holder.dart';
-import '../../../widget/app_text.dart';
-import '../model/booking_data_model.dart';
-import '../widgets/row_data_holder.dart';
+import '../../../../utilities/constant/extension.dart';
+import '../../../../utilities/route/app_naviation_helper.dart';
+import '../../../../utilities/route/app_route_names.dart';
+import '../../../../widget/app_text.dart';
 
-class AdsScreen extends ConsumerWidget {
-  const AdsScreen({super.key});
+class MyBookingsScreen extends StatelessWidget {
+  const MyBookingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBarHolder(title: 'Advertisement'),
+      appBar: AppBarHolder(title: "My Bookings"),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -28,32 +27,10 @@ class AdsScreen extends ConsumerWidget {
               30.ht,
               Row(
                 children: [
-                  Icon(Icons.ads_click_rounded, color: Colors.grey),
+                  Icon(Icons.reorder, color: Colors.grey, size: 30.sp),
                   10.wt,
-                  secondaryText(text: "Ads Activity"),
+                  secondaryText(text: "All about booking", fontSize: 18.sp),
                 ],
-              ),
-              30.ht,
-              secondaryText(
-                text:
-                    "All action on Ads can be perform here, please kindly strictly adhere to  the platform rules to avoid your ads been suspended and account ",
-                color: Colors.red.withValues(alpha: 0.8),
-              ),
-              30.ht,
-              RowDataHolder(
-                text: "Post Ads",
-                icons: FontAwesomeIcons.adversal,
-                function: () {
-                  AppNavigatorHelper.push(context, AppRoute.postAdsScreen);
-                },
-              ),
-              30.ht,
-              RowDataHolder(
-                text: "View Ads",
-                icons: FontAwesomeIcons.folderOpen,
-                function: () {
-                  AppNavigatorHelper.push(context, AppRoute.viewAdsScreen);
-                },
               ),
               30.ht,
               RowDataHolder(

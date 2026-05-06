@@ -81,21 +81,28 @@ class _HistoryScreenState extends State<HistoryScreen>
                 Text(
                   'Ongoing',
                   style: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: 13.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   'Completed',
                   style: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Confirmation',
+                  style: TextStyle(
+                    fontSize: 13.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   'Cancelled',
                   style: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: 13.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

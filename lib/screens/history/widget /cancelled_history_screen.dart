@@ -32,6 +32,7 @@ class CancelledHistoryScreen extends StatelessWidget {
                 "Are you sure you want to re-book for this ${AppData.serviceName[index]}",
               );
             },
+            preferredDate: '',
           );
         },
       ),

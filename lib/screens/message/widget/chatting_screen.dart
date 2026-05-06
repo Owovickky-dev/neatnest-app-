@@ -475,6 +475,7 @@ import 'package:neat_nest/screens/history/utilities/app_bar_icon.dart';
 import 'package:neat_nest/screens/message/widget/chatting_screen_data.dart';
 import 'package:neat_nest/utilities/constant/constant_data.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
+import 'package:neat_nest/widget/app_confirmation_button.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../../utilities/app_data.dart';
@@ -621,74 +622,106 @@ class _ChattingScreenState extends ConsumerState<ChattingScreen> {
   @override
   Widget build(BuildContext context) {
     final messages = ref.watch(messageStateControllerProvider);
-
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: AppBarIcon(
+          icons: Icons.arrow_back,
+          function: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Row(
+          children: [
+            CircleAvatar(
+              radius: 20.r,
+              child: ClipOval(
+                child: CachedNetworkImage(
+                  height: 40,
+                  width: 40,
+                  fit: BoxFit.cover,
+                  imageUrl: AppData.imagePathway[1],
+                ),
+              ),
+            ),
+            7.wt,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                primaryText(text: widget.senderUserName, fontSize: 15.sp),
+                secondaryText(
+                  text: typing
+                      ? 'typing...'
+                      : onlineUsers.contains(widget.recipientId)
+                      ? 'Online'
+                      : 'Offline',
+                  fontSize: 13.sp,
+                  color: typing || onlineUsers.contains(widget.recipientId)
+                      ? Colors.green
+                      : Colors.grey,
+                ),
+              ],
+            ),
+          ],
+        ),
+        actions: [
+          PopupMenuButton(
+            color: Colors.white,
+            icon: AppBarIcon(icons: Icons.more_vert),
+            onSelected: (value) {
+              if (value == "Accept Offer") {
+                appConfirmationButton(
+                  context: context,
+                  title: "Order Status",
+                  subTitle: "Are you sure you want to accept the offer",
+                  textButtonTextLeft: "Cancel",
+                  textButtonTextRight: "Yes",
+                  functionRight: () {
+                    print("This is Yes");
+                  },
+                );
+                print("Accept");
+              }
+              if (value == "Reject Offer") {
+                appConfirmationButton(
+                  context: context,
+                  title: "Order Status",
+                  subTitle: "Are you sure you want to reject the offer",
+                  textButtonTextLeft: "Cancel",
+                  textButtonTextRight: "Yes",
+                  functionRight: () {
+                    print("This is Yes");
+                  },
+                );
+                print("Reject");
+              }
+            },
+            itemBuilder: (BuildContext context) => [
+              PopupMenuItem(
+                value: "Accept Offer",
+                child: secondaryText(
+                  text: "Accept Offer",
+                  color: AppColors.blackTextColor,
+                ),
+              ),
+              PopupMenuItem(
+                value: "Reject Offer",
+                child: secondaryText(
+                  text: "Reject Offer",
+                  color: AppColors.blackTextColor,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
           child: Column(
             children: [
               /// HEADER
-              Row(
-                children: [
-                  AppBarIcon(
-                    icons: Icons.arrow_back,
-                    function: () => Navigator.pop(context),
-                  ),
-                  10.wt,
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 20.r,
-                              child: ClipOval(
-                                child: CachedNetworkImage(
-                                  height: 40,
-                                  width: 40,
-                                  fit: BoxFit.cover,
-                                  imageUrl: AppData.imagePathway[1],
-                                ),
-                              ),
-                            ),
-                            7.wt,
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                primaryText(
-                                  text: widget.senderUserName,
-                                  fontSize: 15.sp,
-                                ),
-                                secondaryText(
-                                  text: typing
-                                      ? 'typing...'
-                                      : onlineUsers.contains(widget.recipientId)
-                                      ? 'Online'
-                                      : 'Offline',
-                                  fontSize: 13.sp,
-                                  color:
-                                      typing ||
-                                          onlineUsers.contains(
-                                            widget.recipientId,
-                                          )
-                                      ? Colors.green
-                                      : Colors.grey,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        AppBarIcon(icons: Icons.more_vert, function: () {}),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-
-              20.ht,
               DottedLine(
                 dashColor: AppColors.secondaryTextColor.withValues(alpha: 0.5),
               ),

@@ -13,7 +13,7 @@ class OngoingHistory extends StatefulWidget {
 }
 
 class _OngoingHistoryState extends State<OngoingHistory> {
-  @override
+  // @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 150.h,
@@ -28,6 +28,7 @@ class _OngoingHistoryState extends State<OngoingHistory> {
             serviceProvider: AppData.serviceProviderName[index],
             imagePath: AppData.imagePathway[index],
             price: AppData.price[index],
+            preferredDate: "",
             function1: () {
               debugPrint('The Cancel text is clicked of index: $index');
             },

@@ -22,6 +22,7 @@ import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/app_text.dart';
 import 'package:neat_nest/widget/app_text_field.dart';
+import 'package:neat_nest/widget/small_reusable_loader.dart';
 
 import '../../controller/state controller /address/address_state_controller.dart';
 import '../../utilities/constant/colors.dart';
@@ -124,14 +125,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 child: CachedNetworkImage(
                                   height: 40.h,
                                   width: 40.w,
-                                  placeholder: (context, url) => Container(
-                                    height: 40.h,
-                                    width: 40.w,
-                                    color: Colors.grey.shade200,
-                                    child: CircularProgressIndicator.adaptive(
-                                      backgroundColor: AppColors.primaryColor,
-                                    ),
-                                  ),
+                                  placeholder: (context, url) => SmallLoader(),
                                   errorWidget: (context, url, error) =>
                                       Container(
                                         color: Colors.grey.shade200,
@@ -144,8 +138,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   fit: BoxFit.cover,
                                   fadeInDuration: Duration(milliseconds: 500),
                                   fadeOutDuration: Duration(milliseconds: 300),
-                                  imageUrl:
-                                      'https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL3BsYXlcLzBiN2Y0ZTliLWY1OWMtNDAyNC05ZjA2LWIzZGMxMjg1MGFiNy0xOTIwLTEwODAuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo4Mjh9fX0=',
+                                  imageUrl: userData.profilePic!,
                                 ),
                               ),
                               10.wt,

@@ -19,6 +19,8 @@ class DataScreen extends StatelessWidget {
     required this.price,
     required this.function1,
     required this.function2,
+    required this.preferredDate,
+    this.sender,
   });
 
   final String text1;
@@ -29,11 +31,12 @@ class DataScreen extends StatelessWidget {
   final double price;
   final VoidCallback function1;
   final VoidCallback function2;
+  final String preferredDate;
+  final String? sender;
 
-  String date() {
-    DateTime now = DateTime.now();
-    String format = DateFormat(' EEEE,dd MMM,yyyy').format(now);
-    return format;
+  String formatDate(String date) {
+    final parsedDate = DateTime.parse(date).toLocal();
+    return DateFormat('EEEE, dd, MMM, yyyy').format(parsedDate);
   }
 
   @override
@@ -72,9 +75,29 @@ class DataScreen extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        primaryText(text: serviceName),
+                        Row(
+                          children: [
+                            primaryText(text: "Title: ", fontSize: 16.sp),
+                            10.wt,
+                            secondaryText(text: serviceName),
+                          ],
+                        ),
                         5.ht,
-                        secondaryText(text: serviceProvider),
+                        Row(
+                          children: [
+                            primaryText(text: "Provider: ", fontSize: 16.sp),
+                            10.wt,
+                            secondaryText(text: serviceProvider),
+                          ],
+                        ),
+                        5.ht,
+                        Row(
+                          children: [
+                            primaryText(text: "Sender: ", fontSize: 16.sp),
+                            10.wt,
+                            secondaryText(text: sender ?? ""),
+                          ],
+                        ),
                       ],
                     ),
                   ],
@@ -87,7 +110,7 @@ class DataScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         primaryText(
-                          text: date(),
+                          text: formatDate(preferredDate),
                           fontSize: 10.sp,
                           color: AppColors.blackTextColor.withValues(
                             alpha: 0.75,

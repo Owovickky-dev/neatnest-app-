@@ -16,11 +16,12 @@ class ConstantData {
   static const ADDRESS = "/user-address";
   static const GETCOUNTRIES = "/address/countries";
   static const GETSTATE = "/address/states";
-  static const UPDATEPASSWORD = "/auth/updatepassword";
-  static const UPDATEMAIL = "/auth/updateemail";
-  static const UPDATEPPHONE = "/auth/updatephonenumber";
-  static const UPDATEPERSONALINFO = "/auth/updatepersonalinfo";
+  static const UPDATEPASSWORD = "/user/updatepassword";
+  static const UPDATEMAIL = "/user/updateemail";
+  static const UPDATEPPHONE = "/user/updatephonenumber";
+  static const UPDATEPERSONALINFO = "/user/updatepersonalinfo";
   static const CHATURL = "/chats/";
   static const MESSAGEURL = "/messages/";
   static const BOOKINGURL = "/booking";
+  static const PROFILEPICS = "/user/profilepic";
 }

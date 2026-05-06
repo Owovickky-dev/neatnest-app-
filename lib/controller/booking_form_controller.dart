@@ -3,15 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:neat_nest/controller/state controller /booking/booking_state_controller.dart';
-import 'package:neat_nest/controller/state controller /message/chat_state_controller.dart';
 import 'package:neat_nest/models/booking_model.dart';
-import 'package:neat_nest/models/message_model.dart';
-import 'package:neat_nest/utilities/bottom_nav/widget/bottom_nav_notifiers.dart';
-import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
-import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/notificaiton_content.dart';
 
 import '../data/repo/texting_data_repo.dart';
+import '../utilities/route/app_naviation_helper.dart';
+import '../utilities/route/app_route_names.dart';
 import '../widget/loading_screen.dart';
 
 class BookingFormController {
@@ -91,119 +88,42 @@ class BookingFormController {
     );
 
     try {
-      /// ================= CREATE BOOKING =================
+      /// ================= CREATE BOOKING ONLY =================
       final serverResponse = await ref
           .read(bookingStateControllerProvider.notifier)
           .createBooking(userBooking);
 
       if (!context.mounted) return;
 
+      _closeLoader(context);
+
       print("Server response: ${serverResponse.data}");
 
+      /// ================= ERROR =================
       if (serverResponse.statusCode != 201) {
-        _closeLoader(context);
         showErrorNotification(
           message: serverResponse.data["message"] ?? "Booking failed",
         );
         return;
       }
 
-      final bookingData = serverResponse.data["data"]?["bookedOrder"];
+      /// ================= SUCCESS =================
+      final bookingData = serverResponse.data["data"];
 
       if (bookingData == null) {
-        _closeLoader(context);
         showErrorNotification(message: "Invalid booking response");
         return;
       }
-
-      final String? bookingId = bookingData["_id"];
-      final String? recipientId = bookingData["service"]?["jobPoster"]?["_id"];
-
-      if (bookingId == null || bookingId.isEmpty) {
-        _closeLoader(context);
-        showErrorNotification(message: "Failed to get booking ID");
+      final bookingId = bookingData["id"];
+      if (bookingId == null) {
+        showErrorNotification(message: "Booking ID missing");
         return;
       }
-
-      if (recipientId == null || recipientId.isEmpty) {
-        _closeLoader(context);
-        showErrorNotification(message: "Failed to get recipient ID");
-        return;
-      }
-
-      /// ================= CREATE CHAT =================
-      final createChatRoom = await ref
-          .read(chatStateControllerProvider.notifier)
-          .createChatRoom(bookingId: bookingId, recipientId: recipientId);
-
-      if (!context.mounted) return;
-
-      if (createChatRoom.data["status"] != "success") {
-        _closeLoader(context);
-        showErrorNotification(
-          message: createChatRoom.data["message"] ?? "Failed to create chat",
-        );
-        return;
-      }
-
-      final chatData = createChatRoom.data["data"]["chat"];
-      final String? chatId = chatData?["_id"];
-
-      if (chatId == null || chatId.isEmpty) {
-        _closeLoader(context);
-        showErrorNotification(message: "Chat ID missing");
-        return;
-      }
-
-      /// ================= SEND MESSAGE =================
-
-      final systemMessage = MessageModel(
-        content:
-            """
-          New Booking Request
-
-    Service: ${bookingData["service"]["title"]}
-    Date: $preferredDate
-    Time: $preferredTime
-    Customer: $name
-    Phone: $phoneNumber
-    Address: $address
-    'Price: \$${bookingData["service"]["basePrice"]}'
-   """,
-        recipientId: recipientId,
-        chatId: chatId,
+      ref.invalidate(bookingStateControllerProvider);
+      AppNavigatorHelper.pushReplacement(context, AppRoute.myBookingScreen);
+      showSuccessNotification(
+        message: "Booking sent. Waiting for provider response",
       );
-
-      final systemResponse = await textingRepo.sendMessage(systemMessage);
-
-      if (systemResponse.statusCode != 201) {
-        if (!context.mounted) return;
-        _closeLoader(context);
-        showErrorNotification(message: "Failed to send system message");
-        return;
-      }
-
-      final userResponse = await textingRepo.sendMessage(
-        MessageModel(content: note, recipientId: recipientId, chatId: chatId),
-      );
-
-      if (!context.mounted) return;
-
-      if (userResponse.statusCode != 201) {
-        _closeLoader(context);
-        showErrorNotification(message: "Failed to send user message");
-        return;
-      }
-
-      /// ================= SUCCESS =================
-      _closeLoader(context);
-
-      if (!context.mounted) return;
-
-      ref.read(bottomNavNotifiersProvider.notifier).indexUpdate(3);
-
-      AppNavigatorHelper.go(context, AppRoute.bottomNavigation);
-      showSuccessNotification(message: "Booking created successfully");
     } catch (e) {
       print("Unexpected error: $e");
       _closeLoader(context);

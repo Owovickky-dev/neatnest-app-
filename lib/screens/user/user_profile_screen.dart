@@ -14,8 +14,9 @@ import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/app_bar_holder.dart';
+import 'package:neat_nest/widget/loading_screen.dart';
+import 'package:neat_nest/widget/small_reusable_loader.dart';
 
-import '../../utilities/app_data.dart';
 import '../../widget/app_text.dart';
 import '../home/notifier/home_display_data_state.dart';
 
@@ -27,6 +28,9 @@ class UserProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userData = ref.watch(userControllerStateProvider);
+    if (userData == null) {
+      return const Scaffold(body: Center(child: LoadingScreen()));
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBarHolder(
@@ -53,12 +57,8 @@ class UserProfileScreen extends ConsumerWidget {
                         height: 60.r,
                         width: 60.r,
                         fit: BoxFit.cover,
-                        imageUrl: AppData.imagePathway[1],
-                        placeholder: (context, url) => Center(
-                          child: CircularProgressIndicator.adaptive(
-                            backgroundColor: AppColors.primaryColor,
-                          ),
-                        ),
+                        imageUrl: userData.profilePic!,
+                        placeholder: (context, url) => SmallLoader(),
                         errorWidget: (context, url, error) =>
                             Icon(Icons.person, color: Colors.white, size: 50.r),
                       ),
@@ -68,18 +68,18 @@ class UserProfileScreen extends ConsumerWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      primaryText(text: userData?.name ?? "User"),
+                      primaryText(text: userData.name),
                       Row(
                         children: [
-                          secondaryText(text: userData?.username ?? "Username"),
+                          secondaryText(text: userData.username),
                           15.wt,
                           secondaryText(text: "||"),
                           15.wt,
-                          secondaryText(text: userData?.role ?? ""),
+                          secondaryText(text: userData.role),
                         ],
                       ),
-                      ?userData?.role == "worker"
-                          ? (userData!.isVerified!
+                      ?userData.role == "worker"
+                          ? (userData.isVerified!
                                 ? primaryText(
                                     text: "Verified",
                                     color: AppColors.primaryColor,
@@ -109,14 +109,14 @@ class UserProfileScreen extends ConsumerWidget {
               ),
               20.ht,
               RowDataHolder(
-                text: userData?.role == "worker"
+                text: userData.role == "worker"
                     ? "Verification"
                     : 'Payment Methods',
-                icons: userData?.role == "worker"
+                icons: userData.role == "worker"
                     ? FontAwesomeIcons.addressCard
                     : FontAwesomeIcons.creditCard,
                 function: () {
-                  if (userData?.role == "worker") {
+                  if (userData.role == "worker") {
                     AppNavigatorHelper.push(
                       context,
                       AppRoute.workerVerificationScreen,
@@ -127,16 +127,14 @@ class UserProfileScreen extends ConsumerWidget {
                 },
               ),
               20.ht,
-              RowDataHolder(
-                text: userData?.role == "worker"
-                    ? "My Account Summary"
-                    : 'My booking',
-                icons: FontAwesomeIcons.calendarDays,
-                function: () {},
-              ),
-              ?userData?.role == "worker"
+              userData.role == "worker"
                   ? Column(
                       children: [
+                        RowDataHolder(
+                          text: "My Account Summary",
+                          icons: FontAwesomeIcons.calendarDays,
+                          function: () {},
+                        ),
                         20.ht,
                         RowDataHolder(
                           text: 'Ads',
@@ -148,10 +146,24 @@ class UserProfileScreen extends ConsumerWidget {
                             );
                           },
                         ),
+                        20.ht,
                       ],
                     )
-                  : null,
-              20.ht,
+                  : Column(
+                      children: [
+                        RowDataHolder(
+                          text: 'My Bookings',
+                          icons: FontAwesomeIcons.book,
+                          function: () {
+                            AppNavigatorHelper.push(
+                              context,
+                              AppRoute.myBookingScreen,
+                            );
+                          },
+                        ),
+                        20.ht,
+                      ],
+                    ),
               RowDataHolder(
                 text: 'Security',
                 icons: FontAwesomeIcons.shieldHalved,
