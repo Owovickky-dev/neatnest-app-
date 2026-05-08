@@ -93,13 +93,13 @@ class BookingModel {
 }
 
 class GroupedBookings {
-  final List<BookingModel> awaitingConfirmation;
+  final List<BookingModel> awaitingAction;
   final List<BookingModel> completed;
   final List<BookingModel> ongoing;
   final List<BookingModel> cancelled;
 
   GroupedBookings({
-    required this.awaitingConfirmation,
+    required this.awaitingAction,
     required this.completed,
     required this.ongoing,
     required this.cancelled,
@@ -107,7 +107,7 @@ class GroupedBookings {
 
   factory GroupedBookings.fromJson(Map<String, dynamic> json) {
     return GroupedBookings(
-      awaitingConfirmation: (json["awaiting_Confirmation"] as List)
+      awaitingAction: (json["awaitingAction"] as List)
           .map((e) => BookingModel.fromJson(e))
           .toList(),
       completed: (json["completed"] as List)

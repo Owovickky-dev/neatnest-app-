@@ -17,8 +17,8 @@ class DataScreen extends StatelessWidget {
     required this.serviceProvider,
     required this.imagePath,
     required this.price,
-    required this.function1,
-    required this.function2,
+    required this.functionLeft,
+    required this.functionRight,
     required this.preferredDate,
     this.sender,
   });
@@ -29,8 +29,8 @@ class DataScreen extends StatelessWidget {
   final String serviceProvider;
   final String imagePath;
   final double price;
-  final VoidCallback function1;
-  final VoidCallback function2;
+  final VoidCallback functionLeft;
+  final VoidCallback functionRight;
   final String preferredDate;
   final String? sender;
 
@@ -139,13 +139,13 @@ class DataScreen extends StatelessWidget {
                       text: text1,
                       bckColor: AppColors.primaryColor.withValues(alpha: .1),
                       textColor: AppColors.blackTextColor,
-                      function: function1,
+                      function: functionLeft,
                     ),
                     AppButton(
                       text: text2,
                       bckColor: AppColors.primaryColor,
                       textColor: Colors.white,
-                      function: function2,
+                      function: functionRight,
                     ),
                   ],
                 ),

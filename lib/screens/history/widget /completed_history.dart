@@ -24,7 +24,7 @@ class CompletedHistory extends StatelessWidget {
             serviceProvider: AppData.serviceProviderName[index],
             imagePath: AppData.imagePathway[index],
             price: AppData.price[index],
-            function1: () {
+            functionLeft: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -32,7 +32,7 @@ class CompletedHistory extends StatelessWidget {
                 ),
               );
             },
-            function2: () {
+            functionRight: () {
               debugPrint(
                 "Are you sure you want to re-book for this ${AppData.serviceName[index]}",
               );

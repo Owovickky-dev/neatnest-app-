@@ -29,10 +29,10 @@ class _OngoingHistoryState extends State<OngoingHistory> {
             imagePath: AppData.imagePathway[index],
             price: AppData.price[index],
             preferredDate: "",
-            function1: () {
+            functionLeft: () {
               debugPrint('The Cancel text is clicked of index: $index');
             },
-            function2: () {
+            functionRight: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(

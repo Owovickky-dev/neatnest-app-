@@ -20,4 +20,16 @@ class BookingRepo {
     final response = _dio.get(ConstantData.BOOKINGURL);
     return response;
   }
+
+  Future<Response> updateBooking({
+    required BookingModel bookingData,
+    required String bookingId,
+  }) {
+    final response = _dio.patch(
+      "${ConstantData.BOOKINGURL}/$bookingId",
+      data: bookingData.toJson(),
+    );
+
+    return response;
+  }
 }

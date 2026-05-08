@@ -22,12 +22,12 @@ class CancelledHistoryScreen extends StatelessWidget {
             serviceProvider: AppData.serviceProviderName[index],
             imagePath: AppData.imagePathway[index],
             price: AppData.price[index],
-            function1: () {
+            functionLeft: () {
               debugPrint(
                 "Are you sure you want to Delete for this ${AppData.serviceName[index]}",
               );
             },
-            function2: () {
+            functionRight: () {
               debugPrint(
                 "Are you sure you want to re-book for this ${AppData.serviceName[index]}",
               );

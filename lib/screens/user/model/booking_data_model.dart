@@ -4,6 +4,8 @@ class BookingDataModel {
   final String topText;
   final String title;
   final BookingStatus status;
+  final Function(String bookingId) functionLeft;
+  final Function(String bookingId) functionRight;
 
   BookingDataModel({
     required this.leftText,
@@ -11,7 +13,9 @@ class BookingDataModel {
     required this.topText,
     required this.title,
     required this.status,
+    required this.functionLeft,
+    required this.functionRight,
   });
 }
 
-enum BookingStatus { awaitingConfirmation, cancelled, completed, ongoing }
+enum BookingStatus { awaitingAction, cancelled, completed, ongoing }

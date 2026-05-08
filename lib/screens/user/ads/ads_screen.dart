@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:neat_nest/controller/booking_form_controller.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 
 import '../../../utilities/route/app_naviation_helper.dart';
@@ -12,7 +13,8 @@ import '../model/booking_data_model.dart';
 import '../widgets/row_data_holder.dart';
 
 class AdsScreen extends ConsumerWidget {
-  const AdsScreen({super.key});
+  AdsScreen({super.key});
+  final BookingFormController bookingFormController = BookingFormController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -69,6 +71,16 @@ class AdsScreen extends ConsumerWidget {
                       topText: "Completed Orders",
                       title: "Completed Booking",
                       status: BookingStatus.completed,
+                      functionLeft: (bookingId) {
+                        print(
+                          "The Booking ID of this left clicked is $bookingId",
+                        );
+                      },
+                      functionRight: (bookingId) {
+                        print(
+                          "The Booking ID of this right clicked is $bookingId",
+                        );
+                      },
                     ),
                   );
                 },
@@ -87,13 +99,29 @@ class AdsScreen extends ConsumerWidget {
                       topText: "Ongoing Order",
                       title: "Ongoing Order",
                       status: BookingStatus.ongoing,
+                      functionLeft: (bookingId) async {
+                        bookingFormController.bookingStatus = "completed";
+                        await bookingFormController.updateBooking(
+                          ref,
+                          bookingId,
+                          context,
+                        );
+                        print(
+                          "The Booking ID of this left clicked is $bookingId",
+                        );
+                      },
+                      functionRight: (bookingId) {
+                        print(
+                          "The Booking ID of this right clicked is $bookingId",
+                        );
+                      },
                     ),
                   );
                 },
               ),
               30.ht,
               RowDataHolder(
-                text: "Awaiting_Confirmation",
+                text: "Awaiting Action",
                 icons: FontAwesomeIcons.spinner,
                 function: () {
                   AppNavigatorHelper.push(
@@ -103,8 +131,24 @@ class AdsScreen extends ConsumerWidget {
                       leftText: "Accept",
                       rightText: "Reject",
                       topText: "Awaiting your  Confirmation",
-                      title: "Confirmed Order",
-                      status: BookingStatus.awaitingConfirmation,
+                      title: "Awaiting Action",
+                      status: BookingStatus.awaitingAction,
+                      functionLeft: (bookingId) async {
+                        bookingFormController.bookingStatus = "negotiation";
+                        await bookingFormController.updateBooking(
+                          ref,
+                          bookingId,
+                          context,
+                        );
+                        print(
+                          "The Booking ID of this left clicked is $bookingId",
+                        );
+                      },
+                      functionRight: (bookingId) {
+                        print(
+                          "The Booking ID of this right clicked is $bookingId",
+                        );
+                      },
                     ),
                   );
                 },
@@ -123,6 +167,16 @@ class AdsScreen extends ConsumerWidget {
                       topText: "Cancelled Orders",
                       title: "Cancelled Booking",
                       status: BookingStatus.cancelled,
+                      functionLeft: (bookingId) {
+                        print(
+                          "The Booking ID of this left clicked is $bookingId",
+                        );
+                      },
+                      functionRight: (bookingId) {
+                        print(
+                          "The Booking ID of this right clicked is $bookingId",
+                        );
+                      },
                     ),
                   );
                 },

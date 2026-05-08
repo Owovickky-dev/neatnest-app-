@@ -54,4 +54,19 @@ class BookingStateController extends _$BookingStateController {
       state = AsyncError(e, stackTrace);
     }
   }
+
+  Future<Response> updateBooking({
+    required BookingModel updateData,
+    required String bookingId,
+  }) async {
+    try {
+      final response = await _bookingRepo.updateBooking(
+        bookingData: updateData,
+        bookingId: bookingId,
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

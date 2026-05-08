@@ -46,6 +46,16 @@ class MyBookingsScreen extends StatelessWidget {
                       topText: "Completed Orders",
                       title: "Completed Booking",
                       status: BookingStatus.completed,
+                      functionLeft: (bookingId) {
+                        print(
+                          "The Booking ID of this left clicked is $bookingId",
+                        );
+                      },
+                      functionRight: (bookingId) {
+                        print(
+                          "The Booking ID of this right clicked is $bookingId",
+                        );
+                      },
                     ),
                   );
                 },
@@ -64,6 +74,16 @@ class MyBookingsScreen extends StatelessWidget {
                       topText: "Ongoing Order",
                       title: "Ongoing Order",
                       status: BookingStatus.ongoing,
+                      functionLeft: (bookingId) {
+                        print(
+                          "The Booking ID of this left clicked is $bookingId",
+                        );
+                      },
+                      functionRight: (bookingId) {
+                        print(
+                          "The Booking ID of this right clicked is $bookingId",
+                        );
+                      },
                     ),
                   );
                 },
@@ -81,7 +101,17 @@ class MyBookingsScreen extends StatelessWidget {
                       rightText: "Reject",
                       topText: "Awaiting your  Confirmation",
                       title: "Confirmed Order",
-                      status: BookingStatus.awaitingConfirmation,
+                      status: BookingStatus.awaitingAction,
+                      functionLeft: (bookingId) {
+                        print(
+                          "The Booking ID of this left clicked is $bookingId",
+                        );
+                      },
+                      functionRight: (bookingId) {
+                        print(
+                          "The Booking ID of this right clicked is $bookingId",
+                        );
+                      },
                     ),
                   );
                 },
@@ -100,6 +130,16 @@ class MyBookingsScreen extends StatelessWidget {
                       topText: "Cancelled Orders",
                       title: "Cancelled Booking",
                       status: BookingStatus.cancelled,
+                      functionLeft: (bookingId) {
+                        print(
+                          "The Booking ID of this left clicked is $bookingId",
+                        );
+                      },
+                      functionRight: (bookingId) {
+                        print(
+                          "The Booking ID of this right clicked is $bookingId",
+                        );
+                      },
                     ),
                   );
                 },

@@ -63,6 +63,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             topText: data.topText,
             title: data.title,
             status: data.status,
+            functionLeft: data.functionLeft,
+            functionRight: data.functionRight,
           );
         },
       ),

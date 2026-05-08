@@ -25,6 +25,7 @@ class BookingFormController {
   String? serviceId;
   String? preferredDate;
   String? preferredTime;
+  String? bookingStatus;
 
   void onSubmit(WidgetRef ref, BuildContext context) async {
     final name = bookingNameController.text.trim();
@@ -97,8 +98,6 @@ class BookingFormController {
 
       _closeLoader(context);
 
-      print("Server response: ${serverResponse.data}");
-
       /// ================= ERROR =================
       if (serverResponse.statusCode != 201) {
         showErrorNotification(
@@ -127,6 +126,55 @@ class BookingFormController {
     } catch (e) {
       print("Unexpected error: $e");
       _closeLoader(context);
+      showErrorNotification(message: "Something went wrong");
+    }
+  }
+
+  Future<void> updateBooking(
+    WidgetRef ref,
+    String bookingId,
+    BuildContext context,
+  ) async {
+    final name = bookingNameController.text.trim();
+    final email = bookingEmailController.text.trim();
+    final address = bookingUserAddress.text.trim();
+    final phoneNumber = bookingUserNos.text.trim();
+    final note = bookingNoteController.text.trim();
+
+    print(bookingStatus);
+    final updateBookingData = BookingModel(
+      customerName: name,
+      customerPhoneNumber: phoneNumber,
+      customerAddress: address,
+      customerEmail: email,
+      customerNote: note,
+      preferredDate: preferredDate,
+      preferredTime: preferredTime,
+      status: bookingStatus,
+    );
+
+    try {
+      final response = await ref
+          .read(bookingStateControllerProvider.notifier)
+          .updateBooking(updateData: updateBookingData, bookingId: bookingId);
+
+      if (response.statusCode != 200) {
+        if (!context.mounted) return;
+        _closeLoader(context);
+        showErrorNotification(message: response.data["message"]);
+      } else {
+        if (!context.mounted) return;
+        _closeLoader(context);
+        await ref
+            .read(bookingStateControllerProvider.notifier)
+            .getUserBookings();
+
+        showSuccessNotification(message: "Successfully done");
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      _closeLoader(context);
+      print(e.toString());
       showErrorNotification(message: "Something went wrong");
     }
   }
