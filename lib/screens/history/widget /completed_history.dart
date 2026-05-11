@@ -17,9 +17,11 @@ class CompletedHistory extends StatelessWidget {
         shrinkWrap: true,
         itemBuilder: (context, index) {
           return DataScreen(
+            event: "",
+            bookingStatus: "",
             preferredDate: "",
-            text1: 'Leave Review',
-            text2: 'Re-Book',
+            leftButtonText: 'Leave Review',
+            rightButtonText: 'Re-Book',
             serviceName: AppData.serviceName[index],
             serviceProvider: AppData.serviceProviderName[index],
             imagePath: AppData.imagePathway[index],

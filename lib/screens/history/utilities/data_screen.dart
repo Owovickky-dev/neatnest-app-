@@ -11,8 +11,8 @@ import 'package:neat_nest/widget/app_text.dart';
 class DataScreen extends StatelessWidget {
   const DataScreen({
     super.key,
-    required this.text1,
-    required this.text2,
+    required this.leftButtonText,
+    this.rightButtonText,
     required this.serviceName,
     required this.serviceProvider,
     required this.imagePath,
@@ -21,10 +21,12 @@ class DataScreen extends StatelessWidget {
     required this.functionRight,
     required this.preferredDate,
     this.sender,
+    required this.bookingStatus,
+    required this.event,
   });
 
-  final String text1;
-  final String text2;
+  final String leftButtonText;
+  final String? rightButtonText;
   final String serviceName;
   final String serviceProvider;
   final String imagePath;
@@ -33,6 +35,8 @@ class DataScreen extends StatelessWidget {
   final VoidCallback functionRight;
   final String preferredDate;
   final String? sender;
+  final String bookingStatus;
+  final String event;
 
   String formatDate(String date) {
     final parsedDate = DateTime.parse(date).toLocal();
@@ -116,7 +120,7 @@ class DataScreen extends StatelessWidget {
                             alpha: 0.75,
                           ),
                         ),
-                        secondaryText(text: 'Date'),
+                        primaryText(text: 'Date', fontSize: 16.sp),
                       ],
                     ),
                     Row(
@@ -131,24 +135,57 @@ class DataScreen extends StatelessWidget {
                 DottedLine(
                   dashColor: AppColors.secondaryTextColor.withValues(alpha: .5),
                 ),
-                25.ht,
+                20.ht,
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    AppButton(
-                      text: text1,
-                      bckColor: AppColors.primaryColor.withValues(alpha: .1),
-                      textColor: AppColors.blackTextColor,
-                      function: functionLeft,
-                    ),
-                    AppButton(
-                      text: text2,
-                      bckColor: AppColors.primaryColor,
-                      textColor: Colors.white,
-                      function: functionRight,
-                    ),
+                    primaryText(text: "Status:", fontSize: 16.sp),
+                    10.wt,
+                    secondaryText(text: bookingStatus),
                   ],
                 ),
+                20.ht,
+                Row(
+                  children: [
+                    primaryText(text: "Reason:", fontSize: 16.sp),
+                    10.wt,
+                    Expanded(child: secondaryText(text: event, maxLines: null)),
+                  ],
+                ),
+                20.ht,
+                DottedLine(
+                  dashColor: AppColors.secondaryTextColor.withValues(alpha: .5),
+                ),
+                25.ht,
+                rightButtonText == null
+                    ? Center(
+                        child: AppButton(
+                          text: leftButtonText,
+                          bckColor: AppColors.primaryColor,
+                          textColor: Colors.white,
+                          function: functionLeft,
+                          fontSize: 20.sp,
+                          width: 150.w,
+                        ),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AppButton(
+                            text: leftButtonText,
+                            bckColor: AppColors.primaryColor.withValues(
+                              alpha: .1,
+                            ),
+                            textColor: AppColors.blackTextColor,
+                            function: functionLeft,
+                          ),
+                          AppButton(
+                            text: rightButtonText!,
+                            bckColor: AppColors.primaryColor,
+                            textColor: Colors.white,
+                            function: functionRight,
+                          ),
+                        ],
+                      ),
               ],
             ),
           ),

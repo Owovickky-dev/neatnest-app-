@@ -141,7 +141,6 @@ class BookingFormController {
     final phoneNumber = bookingUserNos.text.trim();
     final note = bookingNoteController.text.trim();
 
-    print(bookingStatus);
     final updateBookingData = BookingModel(
       customerName: name,
       customerPhoneNumber: phoneNumber,
@@ -151,6 +150,15 @@ class BookingFormController {
       preferredDate: preferredDate,
       preferredTime: preferredTime,
       status: bookingStatus,
+    );
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Dialog(
+        backgroundColor: Colors.transparent,
+        child: LoadingScreen(),
+      ),
     );
 
     try {

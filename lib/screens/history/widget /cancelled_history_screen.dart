@@ -16,8 +16,10 @@ class CancelledHistoryScreen extends StatelessWidget {
         shrinkWrap: true,
         itemBuilder: (context, index) {
           return DataScreen(
-            text1: 'Delete',
-            text2: 'Re-Book',
+            event: "",
+            leftButtonText: 'Delete',
+            bookingStatus: "",
+            rightButtonText: 'Re-Book',
             serviceName: AppData.serviceName[index],
             serviceProvider: AppData.serviceProviderName[index],
             imagePath: AppData.imagePathway[index],

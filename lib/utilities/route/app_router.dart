@@ -58,8 +58,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final data = state.extra as BookingDataModel;
           return BookingDataBuilder(
-            leftText: data.leftText,
-            rightText: data.rightText,
             topText: data.topText,
             title: data.title,
             status: data.status,

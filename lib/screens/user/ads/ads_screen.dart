@@ -2,19 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:neat_nest/controller/booking_form_controller.dart';
+import 'package:neat_nest/screens/booking/widgets/group_booking_data.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 
 import '../../../utilities/route/app_naviation_helper.dart';
 import '../../../utilities/route/app_route_names.dart';
 import '../../../widget/app_bar_holder.dart';
 import '../../../widget/app_text.dart';
-import '../model/booking_data_model.dart';
 import '../widgets/row_data_holder.dart';
 
 class AdsScreen extends ConsumerWidget {
-  AdsScreen({super.key});
-  final BookingFormController bookingFormController = BookingFormController();
+  const AdsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,164 +22,44 @@ class AdsScreen extends ConsumerWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 10.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              30.ht,
-              Row(
-                children: [
-                  Icon(Icons.ads_click_rounded, color: Colors.grey),
-                  10.wt,
-                  secondaryText(text: "Ads Activity"),
-                ],
-              ),
-              30.ht,
-              secondaryText(
-                text:
-                    "All action on Ads can be perform here, please kindly strictly adhere to  the platform rules to avoid your ads been suspended and account ",
-                color: Colors.red.withValues(alpha: 0.8),
-              ),
-              30.ht,
-              RowDataHolder(
-                text: "Post Ads",
-                icons: FontAwesomeIcons.adversal,
-                function: () {
-                  AppNavigatorHelper.push(context, AppRoute.postAdsScreen);
-                },
-              ),
-              30.ht,
-              RowDataHolder(
-                text: "View Ads",
-                icons: FontAwesomeIcons.folderOpen,
-                function: () {
-                  AppNavigatorHelper.push(context, AppRoute.viewAdsScreen);
-                },
-              ),
-              30.ht,
-              RowDataHolder(
-                text: "Completed",
-                icons: FontAwesomeIcons.checkDouble,
-                function: () {
-                  AppNavigatorHelper.push(
-                    context,
-                    AppRoute.bookingDataBuilder,
-                    extra: BookingDataModel(
-                      leftText: "Leave Review",
-                      rightText: "E-Receipt",
-                      topText: "Completed Orders",
-                      title: "Completed Booking",
-                      status: BookingStatus.completed,
-                      functionLeft: (bookingId) {
-                        print(
-                          "The Booking ID of this left clicked is $bookingId",
-                        );
-                      },
-                      functionRight: (bookingId) {
-                        print(
-                          "The Booking ID of this right clicked is $bookingId",
-                        );
-                      },
-                    ),
-                  );
-                },
-              ),
-              30.ht,
-              RowDataHolder(
-                text: "Ongoing Order",
-                icons: FontAwesomeIcons.hourglassHalf,
-                function: () {
-                  AppNavigatorHelper.push(
-                    context,
-                    AppRoute.bookingDataBuilder,
-                    extra: BookingDataModel(
-                      leftText: "Terminate",
-                      rightText: "E-Receipt",
-                      topText: "Ongoing Order",
-                      title: "Ongoing Order",
-                      status: BookingStatus.ongoing,
-                      functionLeft: (bookingId) async {
-                        bookingFormController.bookingStatus = "completed";
-                        await bookingFormController.updateBooking(
-                          ref,
-                          bookingId,
-                          context,
-                        );
-                        print(
-                          "The Booking ID of this left clicked is $bookingId",
-                        );
-                      },
-                      functionRight: (bookingId) {
-                        print(
-                          "The Booking ID of this right clicked is $bookingId",
-                        );
-                      },
-                    ),
-                  );
-                },
-              ),
-              30.ht,
-              RowDataHolder(
-                text: "Awaiting Action",
-                icons: FontAwesomeIcons.spinner,
-                function: () {
-                  AppNavigatorHelper.push(
-                    context,
-                    AppRoute.bookingDataBuilder,
-                    extra: BookingDataModel(
-                      leftText: "Accept",
-                      rightText: "Reject",
-                      topText: "Awaiting your  Confirmation",
-                      title: "Awaiting Action",
-                      status: BookingStatus.awaitingAction,
-                      functionLeft: (bookingId) async {
-                        bookingFormController.bookingStatus = "negotiation";
-                        await bookingFormController.updateBooking(
-                          ref,
-                          bookingId,
-                          context,
-                        );
-                        print(
-                          "The Booking ID of this left clicked is $bookingId",
-                        );
-                      },
-                      functionRight: (bookingId) {
-                        print(
-                          "The Booking ID of this right clicked is $bookingId",
-                        );
-                      },
-                    ),
-                  );
-                },
-              ),
-              30.ht,
-              RowDataHolder(
-                text: "Cancel",
-                icons: FontAwesomeIcons.circleMinus,
-                function: () {
-                  AppNavigatorHelper.push(
-                    context,
-                    AppRoute.bookingDataBuilder,
-                    extra: BookingDataModel(
-                      leftText: "Cancel",
-                      rightText: "E-Receipt",
-                      topText: "Cancelled Orders",
-                      title: "Cancelled Booking",
-                      status: BookingStatus.cancelled,
-                      functionLeft: (bookingId) {
-                        print(
-                          "The Booking ID of this left clicked is $bookingId",
-                        );
-                      },
-                      functionRight: (bookingId) {
-                        print(
-                          "The Booking ID of this right clicked is $bookingId",
-                        );
-                      },
-                    ),
-                  );
-                },
-              ),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                30.ht,
+                Row(
+                  children: [
+                    Icon(Icons.ads_click_rounded, color: Colors.grey),
+                    10.wt,
+                    secondaryText(text: "Ads Activity"),
+                  ],
+                ),
+                30.ht,
+                secondaryText(
+                  text:
+                      "All action on Ads can be perform here, please kindly strictly adhere to  the platform rules to avoid your ads been suspended and account ",
+                  color: Colors.red.withValues(alpha: 0.8),
+                ),
+                30.ht,
+                RowDataHolder(
+                  text: "Post Ads",
+                  icons: FontAwesomeIcons.adversal,
+                  function: () {
+                    AppNavigatorHelper.push(context, AppRoute.postAdsScreen);
+                  },
+                ),
+                30.ht,
+                RowDataHolder(
+                  text: "View Ads",
+                  icons: FontAwesomeIcons.folderOpen,
+                  function: () {
+                    AppNavigatorHelper.push(context, AppRoute.viewAdsScreen);
+                  },
+                ),
+                30.ht,
+                GroupBookingData(),
+              ],
+            ),
           ),
         ),
       ),

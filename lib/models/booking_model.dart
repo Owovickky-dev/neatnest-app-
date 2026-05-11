@@ -16,6 +16,7 @@ class BookingModel {
   final double? price;
   final String? createdAt;
   final String? bookerUserName;
+  final String? event;
 
   BookingModel({
     this.serviceId,
@@ -35,6 +36,7 @@ class BookingModel {
     this.price,
     this.createdAt,
     this.bookerUserName,
+    this.event,
   });
 
   Map<String, dynamic> toJson() {
@@ -88,6 +90,7 @@ class BookingModel {
       price: (json["service"]?["basePrice"] as num?)?.toDouble() ?? 0.0,
       createdAt: json["createdAt"] ?? "",
       bookerUserName: json["customer"]?["bookerUserName"] ?? "",
+      event: json["event"] ?? "",
     );
   }
 }
@@ -95,14 +98,16 @@ class BookingModel {
 class GroupedBookings {
   final List<BookingModel> awaitingAction;
   final List<BookingModel> completed;
-  final List<BookingModel> ongoing;
-  final List<BookingModel> cancelled;
+  final List<BookingModel> active;
+  final List<BookingModel> closed;
+  final List<BookingModel> disputed;
 
   GroupedBookings({
     required this.awaitingAction,
     required this.completed,
-    required this.ongoing,
-    required this.cancelled,
+    required this.active,
+    required this.closed,
+    required this.disputed,
   });
 
   factory GroupedBookings.fromJson(Map<String, dynamic> json) {
@@ -113,10 +118,13 @@ class GroupedBookings {
       completed: (json["completed"] as List)
           .map((e) => BookingModel.fromJson(e))
           .toList(),
-      ongoing: (json["ongoing"] as List)
+      active: (json["active"] as List)
           .map((e) => BookingModel.fromJson(e))
           .toList(),
-      cancelled: (json["cancelled"] as List)
+      closed: (json["closed"] as List)
+          .map((e) => BookingModel.fromJson(e))
+          .toList(),
+      disputed: (json["disputed"] as List)
           .map((e) => BookingModel.fromJson(e))
           .toList(),
     );

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neat_nest/controller/state%20controller%20/booking/booking_state_controller.dart';
+import 'package:neat_nest/screens/booking/widgets/group_booking_data.dart';
 import 'package:neat_nest/widget/app_bar_holder.dart';
 import 'package:neat_nest/widget/app_confirmation_button.dart';
 import 'package:neat_nest/widget/app_text.dart';
@@ -17,8 +18,6 @@ import '../../../model/booking_data_model.dart';
 class BookingDataBuilder extends ConsumerStatefulWidget {
   const BookingDataBuilder({
     super.key,
-    required this.leftText,
-    required this.rightText,
     required this.topText,
     required this.title,
     required this.status,
@@ -26,14 +25,12 @@ class BookingDataBuilder extends ConsumerStatefulWidget {
     required this.functionRight,
   });
 
-  final String leftText;
-  final String rightText;
   final String topText;
   final String title;
   final BookingStatus status;
 
-  final void Function(String bookingId) functionLeft;
-  final void Function(String bookingId) functionRight;
+  final void Function(String bookingId, String bookingStatus) functionLeft;
+  final void Function(String bookingId, String bookingStatus) functionRight;
 
   @override
   ConsumerState<BookingDataBuilder> createState() => _BookingDataBuilderState();
@@ -55,11 +52,14 @@ class _BookingDataBuilderState extends ConsumerState<BookingDataBuilder> {
         case BookingStatus.completed:
           return booking.completed;
 
-        case BookingStatus.ongoing:
-          return booking.ongoing;
+        case BookingStatus.active:
+          return booking.active;
 
-        case BookingStatus.cancelled:
-          return booking.cancelled;
+        case BookingStatus.closed:
+          return booking.closed;
+
+        case BookingStatus.disputed:
+          return booking.disputed;
       }
     }
 
@@ -92,19 +92,31 @@ class _BookingDataBuilderState extends ConsumerState<BookingDataBuilder> {
                 data: (booking) {
                   final userBookings = getBookingList(booking, widget.status);
                   return userBookings.isEmpty
-                      ? Center(child: primaryText(text: "No Any Booking found"))
+                      ? Center(
+                          child: primaryText(
+                            text: "No Any Booking match this category found",
+                            textAlign: TextAlign.center,
+                            fontSize: 25.sp,
+                          ),
+                        )
                       : ListView.builder(
                           itemCount: userBookings.length,
                           itemBuilder: (context, index) {
                             final userBooking = userBookings[index];
+                            final buttonConfig = userBooking
+                                .status!
+                                .toBookingStatus
+                                .buttonConfig;
                             return DataScreen(
-                              text1: widget.leftText,
+                              event: userBooking.event!,
+                              leftButtonText: buttonConfig.leftText,
                               preferredDate: userBooking.preferredDate!,
-                              text2: widget.rightText,
+                              rightButtonText: buttonConfig.rightText,
                               serviceName: userBooking.title!,
                               serviceProvider: userBooking.providerUserName!,
                               imagePath: userBooking.imageUrl!,
                               price: userBooking.price!,
+                              bookingStatus: userBooking.status!,
                               sender: userBooking.bookerUserName,
                               functionLeft: () => appConfirmationButton(
                                 context: context,
@@ -113,8 +125,10 @@ class _BookingDataBuilderState extends ConsumerState<BookingDataBuilder> {
                                     "Are you sure you want to perform this action",
                                 textButtonTextLeft: "No",
                                 textButtonTextRight: "Yes",
-                                functionRight: () =>
-                                    widget.functionLeft(userBooking.bookingId!),
+                                functionRight: () => widget.functionLeft(
+                                  userBooking.bookingId!,
+                                  userBooking.status!,
+                                ),
                               ),
                               functionRight: () => appConfirmationButton(
                                 context: context,
@@ -125,6 +139,7 @@ class _BookingDataBuilderState extends ConsumerState<BookingDataBuilder> {
                                 textButtonTextRight: "Yes",
                                 functionRight: () => widget.functionRight(
                                   userBooking.bookingId!,
+                                  userBooking.status!,
                                 ),
                               ),
                             );

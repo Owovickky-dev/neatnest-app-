@@ -22,8 +22,10 @@ class _OngoingHistoryState extends State<OngoingHistory> {
         shrinkWrap: true,
         itemBuilder: (context, index) {
           return DataScreen(
-            text1: 'Cancel',
-            text2: 'E-Receipt',
+            event: "",
+            bookingStatus: "",
+            leftButtonText: 'Cancel',
+            rightButtonText: 'E-Receipt',
             serviceName: AppData.serviceName[index],
             serviceProvider: AppData.serviceProviderName[index],
             imagePath: AppData.imagePathway[index],
