@@ -69,7 +69,7 @@ class ChatListDataHolder extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      primaryText(text: senderUsername, fontSize: 15.sp),
+                      primaryText(text: senderUsername, fontSize: 14.sp),
                       secondaryText(
                         text: lastMessageContent,
                         fontSize: 13.sp,

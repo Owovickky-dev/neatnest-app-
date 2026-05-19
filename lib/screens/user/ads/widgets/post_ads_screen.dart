@@ -1,20 +1,23 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
-import 'package:country_state_city/country_state_city.dart';
 import 'package:flutter/material.dart' hide State;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:neat_nest/controller/ads_controller.dart';
+import 'package:neat_nest/controller/state%20controller%20/address/address_state_controller.dart';
 import 'package:neat_nest/models/ads_model.dart';
+import 'package:neat_nest/screens/user/model/user_location_model.dart';
 import 'package:neat_nest/utilities/app_button.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/widget/app_text.dart';
 import 'package:neat_nest/widget/image_upload_helper.dart';
-import 'package:neat_nest/widget/select_image_helper.dart';
+import 'package:neat_nest/widget/multiple_select_image.dart';
 
+import '../../../../controller/state controller /user/user_controller_state.dart';
 import '../../../../widget/app_bar_holder.dart';
+import '../../../../widget/notificaiton_content.dart';
 import '../../../history/utilities/text_filed_holder.dart';
 import '../../utilities/auth_text_filed.dart';
 
@@ -29,20 +32,12 @@ class PostAdsScreen extends ConsumerStatefulWidget {
 
 class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
   late AdsController _adsController;
+  UserLocationModel? userLocationModel;
+
   final _formKey = GlobalKey<FormState>();
+
   Map<DateTime, List<String>> selectedDateTimes = {};
-  List<String> categories = [
-    "Cleaning",
-    "Plumbing",
-    "Electrical",
-    "Carpentry",
-    "Painting",
-    "Gardening",
-    "Moving",
-    "Assembly",
-    "Repair",
-    "Other",
-  ];
+  List<String> categories = [];
   List<String> timeSlots = [
     "1:00AM",
     "1:00PM",
@@ -69,31 +64,28 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
     "12:00AM",
     "12:00PM",
   ];
+
   final List<String> status = ["True", "False"];
   late List<DateTime?> _date = [];
-  List<Country> countries = [];
-  List<State> states = [];
   final List<String> selectedTimes = [];
+
   bool isOpen = false;
   int _currentTitleTextLength = 0;
-  List<WorkerAvailableInfoModel> workerAvailableTime = [];
 
+  List<WorkerAvailableInfoModel> workerAvailableTime = [];
   String? categorySelected;
   String? statusSelected;
-  String? countrySelected;
-  String? stateSelected;
+  UserLocationModel? selectedAddress;
 
   @override
   void initState() {
     super.initState();
     _adsController = AdsController();
 
-    _loadCountries().then((_) {
-      if (widget.adsData != null && mounted) {
-        _adsController.id = widget.adsData?.id;
-        prefilledData();
-      }
-    });
+    if (widget.adsData != null && mounted) {
+      _adsController.id = widget.adsData?.id;
+      prefilledData();
+    }
   }
 
   void prefilledData() {
@@ -108,42 +100,6 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
     setState(() {
       categorySelected = category;
       statusSelected = status;
-      countrySelected = myAds.country!;
-    });
-    _loadStates(myAds.country!, myAds.state!);
-  }
-
-  Future<void> _loadCountries() async {
-    List<Country> countryList = await getAllCountries();
-    setState(() {
-      countries = countryList;
-    });
-  }
-
-  Future<void> _loadStates(String countryName, String? stateName) async {
-    Country? userPickedCountry;
-    try {
-      userPickedCountry = countries.firstWhere(
-        (country) => country.name == countryName,
-      );
-    } catch (e) {
-      return;
-    }
-    List<State> stateList = await getStatesOfCountry(userPickedCountry.isoCode);
-
-    setState(() {
-      states = stateList;
-
-      if (stateName != null && stateName.isNotEmpty) {
-        try {
-          final matchedState = states.firstWhere(
-            (state) => state.name == stateName,
-          );
-          stateSelected = matchedState.name;
-        } catch (e) {
-          stateSelected = null;
-        }
-      }
     });
   }
 
@@ -248,8 +204,157 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
     _adsController.timeAvailable = workerAvailableTime;
   }
 
+  void _showAddressBottomSheet(List<UserLocationModel> userAddresses) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.6,
+          padding: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25.r)),
+          ),
+
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 50.w,
+                  height: 5.h,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade400,
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                ),
+              ),
+              20.ht,
+              primaryText(text: "Select Address", fontSize: 20.sp),
+              15.ht,
+              Expanded(
+                child: ListView.builder(
+                  itemCount: userAddresses.length,
+                  itemBuilder: (context, index) {
+                    final address = userAddresses[index];
+                    final isSelected =
+                        selectedAddress?.addressId == address.addressId;
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedAddress = address;
+                        });
+                        _adsController.addressId = address.addressId;
+                        Navigator.pop(context);
+                      },
+
+                      child: AnimatedContainer(
+                        duration: Duration(milliseconds: 250),
+                        margin: EdgeInsets.only(bottom: 12.h),
+                        padding: EdgeInsets.all(14.w),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? AppColors.primaryColor.withValues(alpha: 0.08)
+                              : Colors.white,
+                          borderRadius: BorderRadius.circular(18.r),
+                          border: Border.all(
+                            color: isSelected
+                                ? AppColors.primaryColor
+                                : Colors.grey.shade300,
+                            width: 1.2,
+                          ),
+
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 5,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(10.w),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryColor.withValues(
+                                  alpha: 0.1,
+                                ),
+                                shape: BoxShape.circle,
+                              ),
+
+                              child: Icon(
+                                Icons.location_on,
+                                color: AppColors.primaryColor,
+                                size: 22.sp,
+                              ),
+                            ),
+                            12.wt,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  primaryText(
+                                    text:
+                                        "${address.country}, ${address.state}, ${address.city}",
+                                    fontSize: 15.sp,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  4.ht,
+                                  secondaryText(
+                                    text: "${address.address}",
+                                    fontSize: 13.sp,
+                                    color: Colors.grey.shade700,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+
+                                  if (address.postalCode != null &&
+                                      address.postalCode!.isNotEmpty)
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 5.h),
+                                      child: secondaryText(
+                                        text:
+                                            "Postal Code: ${address.postalCode}",
+                                        fontSize: 12.sp,
+                                        color: Colors.grey.shade600,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+
+                            if (isSelected)
+                              Icon(
+                                Icons.check_circle,
+                                color: AppColors.primaryColor,
+                              ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final userAddress = ref.watch(addressStateControllerProvider);
+    final user = ref.watch(userControllerStateProvider);
+
+    if (user != null && user.userSkills != null) {
+      categories = user.userSkills!.map((skill) => skill.skill).toList();
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBarHolder(
@@ -357,7 +462,7 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                   20.ht,
                   AuthTextFiled(
                     titleText: "Ad Base Price",
-                    hintText: "enter base price",
+                    hintText: "Enter base price",
                     textEditingController: _adsController.adsPriceController,
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
@@ -377,12 +482,18 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      primaryText(text: "Upload Pic", fontSize: 18.sp),
+                      primaryText(text: "Upload Pictures", fontSize: 18.sp),
                       5.ht,
-                      ImageSelectWidget(
-                        type: ImageType.ads,
-                        onImageSelected: (file) {
-                          _adsController.imageSelected = file;
+                      // ImageSelectWidget(
+                      //   type: ImageType.ads,
+                      //   onImageSelected: (file) {
+                      //     _adsController.imageSelected = file;
+                      //   },
+                      // ),
+                      MultiImageSelectWidget(
+                        imageType: ImageType.ads,
+                        onImagesSelected: (files) {
+                          _adsController.imageSelected = files;
                         },
                       ),
                     ],
@@ -634,79 +745,85 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      primaryText(text: "Ads Country", fontSize: 18.sp),
+                      primaryText(text: "Select Address", fontSize: 18.sp),
                       5.ht,
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 5.h,
-                          horizontal: 10.w,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                        child: DropdownButton<String>(
-                          hint: secondaryText(text: "Select Country"),
-                          icon: Icon(Icons.keyboard_arrow_down_outlined),
-                          isExpanded: true,
-                          value: countrySelected,
-                          underline: SizedBox(),
-                          items: countries.map((country) {
-                            return DropdownMenuItem<String>(
-                              value: country.name,
-                              child: secondaryText(text: country.name),
+                      GestureDetector(
+                        onTap: () {
+                          if (userAddress.isEmpty) {
+                            showErrorNotification(
+                              message:
+                                  "No address found. Kindly add address first.",
                             );
-                          }).toList(),
-                          onChanged: (value) {
-                            if (value != null) {
-                              _adsController.country = value;
-                              setState(() {
-                                countrySelected = value;
-                                stateSelected = null;
-                                states = [];
-                              });
-                              _loadStates(value, null);
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  20.ht,
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      primaryText(text: "Ads State", fontSize: 18.sp),
-                      5.ht,
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 5.h,
-                          horizontal: 10.w,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                        child: DropdownButton<String>(
-                          hint: secondaryText(text: "Select State"),
-                          icon: Icon(Icons.keyboard_arrow_down_outlined),
-                          isExpanded: true,
-                          value: stateSelected,
-                          underline: SizedBox(),
-                          items: states.map((state) {
-                            return DropdownMenuItem<String>(
-                              value: state.name,
-                              child: secondaryText(text: state.name),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            if (value != null) {
-                              _adsController.state = value;
-                              setState(() {
-                                stateSelected = value;
-                              });
-                            }
-                          },
+                            return;
+                          }
+                          _showAddressBottomSheet(userAddress);
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(
+                            vertical: 14.h,
+                            horizontal: 12.w,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(14.r),
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.location_on_outlined,
+                                color: AppColors.primaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              10.wt,
+                              Expanded(
+                                child: selectedAddress == null
+                                    ? secondaryText(
+                                        text: "Tap to select address",
+                                        color: Colors.grey.shade700,
+                                      )
+                                    : Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          primaryText(
+                                            text:
+                                                "${selectedAddress!.country}, ${selectedAddress!.state}, ${selectedAddress!.city}",
+                                            fontSize: 14.sp,
+                                          ),
+                                          3.ht,
+                                          secondaryText(
+                                            text: "${selectedAddress!.address}",
+                                            fontSize: 12.sp,
+                                          ),
+
+                                          if (selectedAddress!
+                                                  .postalCode
+                                                  ?.isNotEmpty ??
+                                              false)
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                top: 3.h,
+                                              ),
+
+                                              child: secondaryText(
+                                                text:
+                                                    "Postal Code: ${selectedAddress!.postalCode}",
+                                                fontSize: 11.sp,
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                              ),
+
+                              Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                color: Colors.grey.shade700,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -738,6 +855,12 @@ class _PostAdsScreenState extends ConsumerState<PostAdsScreen> {
                     bckColor: AppColors.primaryColor,
                     textColor: Colors.white,
                     function: () {
+                      if (selectedAddress == null) {
+                        showErrorNotification(
+                          message: "Please select an address",
+                        );
+                        return;
+                      }
                       if (widget.adsData == null) {
                         if (_formKey.currentState!.validate()) {
                           _adsController.postAds(context, ref);

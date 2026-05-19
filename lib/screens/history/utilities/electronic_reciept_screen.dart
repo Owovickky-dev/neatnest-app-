@@ -10,7 +10,7 @@ import 'package:neat_nest/utilities/constant/extension.dart';
 
 import '../../../utilities/app_data.dart';
 import '../../../widget/app_text.dart';
-import '../utilities/app_bar_icon.dart';
+import 'app_bar_icon.dart';
 
 class ElectronicReceiptScreen extends StatelessWidget {
   const ElectronicReceiptScreen({super.key, required this.index});

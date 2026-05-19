@@ -1,3 +1,4 @@
+import 'package:neat_nest/models/user_skills_model.dart';
 import 'package:neat_nest/screens/user/model/user_location_model.dart';
 import 'package:neat_nest/screens/user/model/worker_statistics_model.dart';
 
@@ -19,6 +20,7 @@ class UserModel {
   final double? ratingQuantity;
   final String? joinedAt;
   final String? profilePicPublicId;
+  final List<UserSkillModel>? userSkills;
 
   UserModel({
     this.id,
@@ -38,6 +40,7 @@ class UserModel {
     this.ratingQuantity,
     this.profilePic,
     this.profilePicPublicId,
+    this.userSkills,
   }) : locations = locations ?? [];
 
   Map<String, dynamic> toJson() {
@@ -63,6 +66,9 @@ class UserModel {
     if (role.isNotEmpty) {
       data["role"] = role;
     }
+    if (userSkills != null && userSkills!.isNotEmpty) {
+      data["skills"] = userSkills;
+    }
     if (phoneNumber.isNotEmpty) {
       data["phoneNumber"] = phoneNumber;
     }
@@ -81,29 +87,30 @@ class UserModel {
   }
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    try {
-      return UserModel(
-        id: json["_id"] ?? json["id"],
-        joinedAt: json["joinedAt"]?.toString() ?? "",
-        name: json["name"]?.toString() ?? "",
-        email: json["email"]?.toString() ?? "",
-        gender: json["gender"]?.toString() ?? "",
-        role: json["role"]?.toString() ?? "",
-        phoneNumber: json["phoneNumber"]?.toString() ?? "",
-        profilePic: json["profilePic"]?.toString() ?? "",
-        profilePicPublicId: json["profilePicPublicId"]?.toString() ?? "",
-        ratingAverage: (json["ratingAverage"] as num?)?.toDouble() ?? 0.0,
-        ratingQuantity: (json["ratingQuantity"] as num?)?.toDouble() ?? 0.0,
-        username: json["username"]?.toString() ?? "",
-        isVerified: json["isVerfied"] ?? false,
-        locations: _parseLocations(json["locations"]),
-        workerStatistics: json["workerStatistics"] != null
-            ? WorkerStatisticsModel.fromJson(json["workerStatistics"])
-            : null,
-      );
-    } catch (e) {
-      rethrow;
-    }
+    return UserModel(
+      id: json["_id"] ?? json["id"],
+      joinedAt: json["joinedAt"]?.toString() ?? "",
+      name: json["name"]?.toString() ?? "",
+      email: json["email"]?.toString() ?? "",
+      gender: json["gender"]?.toString() ?? "",
+      role: json["role"]?.toString() ?? "",
+      phoneNumber: json["phoneNumber"]?.toString() ?? "",
+      profilePic: json["profilePic"]?.toString() ?? "",
+      profilePicPublicId: json["profilePicPublicId"]?.toString() ?? "",
+      ratingAverage: (json["ratingAverage"] as num?)?.toDouble() ?? 0.0,
+      ratingQuantity: (json["ratingQuantity"] as num?)?.toDouble() ?? 0.0,
+      username: json["username"]?.toString() ?? "",
+      isVerified: json["isVerified"] == true,
+      userSkills: json["userSkills"] != null
+          ? (json["userSkills"] as List)
+                .map((userSkill) => UserSkillModel.fromJson(userSkill))
+                .toList()
+          : [],
+      locations: _parseLocations(json["locations"]),
+      workerStatistics: json["workerStatistics"] != null
+          ? WorkerStatisticsModel.fromJson(json["workerStatistics"])
+          : null,
+    );
   }
 
   Map<String, dynamic> toFullJson() {
@@ -116,7 +123,7 @@ class UserModel {
       "gender": gender,
       "role": role,
       "joinedAt": joinedAt,
-      "isVerfied": isVerified,
+      "isVerified": isVerified,
       "ratingAverage": ratingAverage,
       "ratingQuantity": ratingQuantity,
       "locations": locations.map((loc) => loc.toJson()).toList(),
@@ -124,6 +131,7 @@ class UserModel {
       "phoneNumber": phoneNumber,
       "profilePic": profilePic,
       "profilePicPublicId": profilePicPublicId,
+      "userSkills": userSkills,
     };
   }
 }

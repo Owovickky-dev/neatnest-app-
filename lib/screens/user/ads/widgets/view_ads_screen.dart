@@ -56,7 +56,7 @@ class _ViewAdsScreenState extends ConsumerState<ViewAdsScreen> {
           : SafeArea(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15.w),
-                child: totalAds!.isNotEmpty
+                child: totalAds != null
                     ? Column(
                         children: [
                           20.ht,

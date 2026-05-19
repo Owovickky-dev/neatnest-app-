@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -49,16 +48,14 @@ class SignInController {
       if (!context.mounted) return;
       ref.read(isLoggedInStateProvider.notifier).yesLogged(true);
       context.pop();
-      if (!context.mounted) return;
       showSuccessNotification(message: "Login Successful");
-      if (!context.mounted) return;
       AppNavigatorHelper.pushReplacement(context, AppRoute.bottomNavigation);
     } catch (e) {
       if (!context.mounted) return;
       context.pop();
-      if (e is DioException) {
-        showErrorNotification(message: e.error.toString());
-      }
+      showErrorNotification(
+        message: e.toString().replaceFirst("Exception: ", ""),
+      );
     }
   }
 

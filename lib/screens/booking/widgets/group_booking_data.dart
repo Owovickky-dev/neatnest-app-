@@ -267,21 +267,17 @@ class _GroupBookingDataState extends ConsumerState<GroupBookingData> {
                 topText: "Completed Orders",
                 title: "Completed Booking",
                 status: BookingStatus.completed,
-                functionLeft: (bookingId, bookingStatus) {
+                functionLeft: (bookingId, bookingStatus, userRole) {
                   /// bookingStatus coming from backend
                   final buttonConfig =
                       bookingStatus.toBookingStatus.buttonConfig;
 
-                  print("Left button text: ${buttonConfig.leftText}");
-
                   print("Leaving review for Booking number $bookingId");
                 },
 
-                functionRight: (bookingId, bookingStatus) {
+                functionRight: (bookingId, bookingStatus, userRole) {
                   final buttonConfig =
                       bookingStatus.toBookingStatus.buttonConfig;
-
-                  print("Right button text: ${buttonConfig.rightText}");
 
                   print("Printing Ticket for $bookingId");
                 },
@@ -301,31 +297,67 @@ class _GroupBookingDataState extends ConsumerState<GroupBookingData> {
                 topText: "Active Order",
                 title: "Active Order",
                 status: BookingStatus.active,
-                functionLeft: (bookingId, bookingStatus) async {
+                functionLeft: (bookingId, bookingStatus, userRole) async {
                   final currentStatus = bookingStatus.toBookingStatus;
-
-                  if (currentStatus == AllBookingStaus.ongoing) {
-                    bookingFormController.bookingStatus = "completed";
+                  final provider = userRole == "provider";
+                  final customer = userRole == "customer";
+                  Future<void> execute() async {
+                    await bookingFormController.updateBooking(
+                      ref,
+                      bookingId,
+                      context,
+                    );
                   }
 
-                  await bookingFormController.updateBooking(
-                    ref,
-                    bookingId,
-                    context,
-                  );
-
-                  print("The Booking ID of this left clicked is $bookingId");
-
-                  print("The booking status is $bookingStatus");
+                  if (currentStatus == AllBookingStaus.ongoing &&
+                      provider == true) {
+                    setState(() {
+                      bookingFormController.bookingStatus =
+                          "awaiting_user_completion";
+                    });
+                    await execute();
+                    return;
+                  }
+                  if (currentStatus ==
+                          AllBookingStaus.awaiting_user_completion &&
+                      customer == true) {
+                    setState(() {
+                      bookingFormController.bookingStatus = "completed";
+                    });
+                    await execute();
+                    return;
+                  }
                 },
 
-                functionRight: (bookingId, bookingStatus) {
-                  final buttonConfig =
-                      bookingStatus.toBookingStatus.buttonConfig;
+                functionRight: (bookingId, bookingStatus, userRole) async {
+                  final currentStatus = bookingStatus.toBookingStatus;
+                  final provider = userRole == "provider";
+                  final customer = userRole == "customer";
+                  Future<void> execute() async {
+                    await bookingFormController.updateBooking(
+                      ref,
+                      bookingId,
+                      context,
+                    );
+                  }
 
-                  print("Right button text: ${buttonConfig.rightText}");
-
-                  print("The Booking ID of this right clicked is $bookingId");
+                  if (currentStatus == AllBookingStaus.ongoing &&
+                      provider == true) {
+                    setState(() {
+                      bookingFormController.bookingStatus = "disputed";
+                    });
+                    await execute();
+                    return;
+                  }
+                  if (currentStatus ==
+                          AllBookingStaus.awaiting_user_completion &&
+                      customer == true) {
+                    setState(() {
+                      bookingFormController.bookingStatus = "disputed";
+                    });
+                    await execute();
+                    return;
+                  }
                 },
               ),
             );
@@ -342,10 +374,8 @@ class _GroupBookingDataState extends ConsumerState<GroupBookingData> {
               extra: BookingDataModel(
                 topText: "Awaiting your Confirmation",
                 title: "Awaiting Action",
-
                 status: BookingStatus.awaitingAction,
-
-                functionLeft: (bookingId, bookingStatus) async {
+                functionLeft: (bookingId, bookingStatus, userRole) async {
                   final currentStatus = bookingStatus.toBookingStatus;
                   if (currentStatus ==
                       AllBookingStaus.awaiting_provider_confirmation) {
@@ -372,10 +402,9 @@ class _GroupBookingDataState extends ConsumerState<GroupBookingData> {
                     bookingId,
                     context,
                   );
-                  print("The Booking ID of this left clicked is $bookingId");
                 },
 
-                functionRight: (bookingId, bookingStatus) async {
+                functionRight: (bookingId, bookingStatus, userRole) async {
                   final currentStatus = bookingStatus.toBookingStatus;
 
                   if (currentStatus == AllBookingStaus.awaiting_user_payment) {
@@ -388,8 +417,6 @@ class _GroupBookingDataState extends ConsumerState<GroupBookingData> {
                     bookingId,
                     context,
                   );
-
-                  print("The Booking ID of this right clicked is $bookingId");
                 },
               ),
             );
@@ -411,22 +438,9 @@ class _GroupBookingDataState extends ConsumerState<GroupBookingData> {
 
                 status: BookingStatus.closed,
 
-                functionLeft: (bookingId, bookingStatus) {
-                  final buttonConfig =
-                      bookingStatus.toBookingStatus.buttonConfig;
-
-                  print("Left button text: ${buttonConfig.leftText}");
-
+                functionLeft: (bookingId, bookingStatus, userRole) {
+                  print("The user role in this booking is $userRole");
                   print("The Booking ID of this left clicked is $bookingId");
-                },
-
-                functionRight: (bookingId, bookingStatus) {
-                  final buttonConfig =
-                      bookingStatus.toBookingStatus.buttonConfig;
-
-                  print("Right button text: ${buttonConfig.rightText}");
-
-                  print("The Booking ID of this right clicked is $bookingId");
                 },
               ),
             );
@@ -446,10 +460,10 @@ class _GroupBookingDataState extends ConsumerState<GroupBookingData> {
                 topText: "Disputed Orders",
                 title: "Disputed Booking",
                 status: BookingStatus.disputed,
-                functionLeft: (bookingId, bookingStatus) {
+                functionLeft: (bookingId, bookingStatus, userRole) {
                   print("The Booking ID of this left clicked is $bookingId");
                 },
-                functionRight: (bookingId, bookingStatus) {
+                functionRight: (bookingId, bookingStatus, userRole) {
                   print("The Booking ID of this right clicked is $bookingId");
                 },
               ),
@@ -492,7 +506,6 @@ extension BookingStatusStringExtension on String {
   AllBookingStaus get toBookingStatus {
     return AllBookingStaus.values.firstWhere(
       (element) => element.name == this,
-
       orElse: () => AllBookingStaus.awaiting_provider_confirmation,
     );
   }
@@ -501,47 +514,95 @@ extension BookingStatusStringExtension on String {
 /// ENUM -> BUTTON CONFIG
 
 extension BookingStatusButtonExtension on AllBookingStaus {
-  BookingButtonConfig get buttonConfig {
+  BookingButtonConfig buttonConfig(String role) {
     switch (this) {
       case AllBookingStaus.awaiting_provider_confirmation:
-        return BookingButtonConfig(
-          leftText: "Accept Order",
-          rightText: "Reject Order",
-        );
+        if (role == "provider") {
+          return BookingButtonConfig(
+            leftText: "Accept Offer",
+            rightText: "Reject Offer",
+          );
+        } else {
+          return BookingButtonConfig(
+            leftText: "Remind Provider",
+            rightText: "Cancel",
+          );
+        }
 
       case AllBookingStaus.negotiation:
-        return BookingButtonConfig(
-          leftText: "Accept Offer",
-          rightText: "Reject Offer",
-        );
+        if (role == "provider") {
+          return BookingButtonConfig(
+            leftText: "Send Counter",
+            rightText: "Reject",
+          );
+        } else {
+          return BookingButtonConfig(
+            leftText: "Accept Offer",
+            rightText: "Reject Offer",
+          );
+        }
 
       case AllBookingStaus.awaiting_user_payment:
-        return BookingButtonConfig(leftText: "Pay", rightText: "Cancel");
+        if (role == "customer") {
+          return BookingButtonConfig(leftText: "Pay Now", rightText: "Cancel");
+        } else {
+          return BookingButtonConfig(leftText: "Remind Payment");
+        }
 
       case AllBookingStaus.payment_confirmed:
-        return BookingButtonConfig(leftText: "Start Job", rightText: "Dispute");
+        if (role == "provider") {
+          return BookingButtonConfig(
+            leftText: "Start Job",
+            rightText: "Dispute",
+          );
+        } else {
+          return BookingButtonConfig(
+            leftText: "Remind Worker",
+            rightText: "Dispute",
+          );
+        }
 
       case AllBookingStaus.ongoing:
-        return BookingButtonConfig(leftText: "Mark Done", rightText: "Dispute");
+        if (role == "provider") {
+          return BookingButtonConfig(
+            leftText: "Mark Done",
+            rightText: "Dispute",
+          );
+        } else {
+          return BookingButtonConfig(
+            leftText: "Track Job",
+            rightText: "Dispute",
+          );
+        }
 
       case AllBookingStaus.awaiting_user_completion:
-        return BookingButtonConfig(
-          leftText: "Remind User",
-          rightText: "Dispute",
-        );
+        if (role == "customer") {
+          return BookingButtonConfig(
+            leftText: "Confirm Completion",
+            rightText: "Dispute",
+          );
+        } else {
+          return BookingButtonConfig(
+            leftText: "Remind User",
+            rightText: "Dispute",
+          );
+        }
 
       case AllBookingStaus.completed:
-        return BookingButtonConfig(
-          leftText: "Leave Review",
-          rightText: "E-Receipt",
-        );
+        if (role == "customer") {
+          return BookingButtonConfig(
+            leftText: "Leave Review",
+            rightText: "E-Receipt",
+          );
+        } else {
+          return BookingButtonConfig(
+            leftText: "View Review",
+            rightText: "E-Receipt",
+          );
+        }
 
       case AllBookingStaus.cancelled:
-        return BookingButtonConfig(leftText: "View Details");
-
       case AllBookingStaus.rejected:
-        return BookingButtonConfig(leftText: "View Details");
-
       case AllBookingStaus.expired:
         return BookingButtonConfig(leftText: "View Details");
 
@@ -553,3 +614,5 @@ extension BookingStatusButtonExtension on AllBookingStaus {
     }
   }
 }
+
+enum Role { customer, provider }

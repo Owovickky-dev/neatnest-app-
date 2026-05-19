@@ -579,10 +579,9 @@ class _ChattingScreenState extends ConsumerState<ChattingScreen> {
       });
 
       socket!.on("message received", (data) {
-        sendStopTyping(widget.chatId);
-
         final userId = user?.id;
         final senderId = data["sender"]?["id"] ?? data["senderId"] ?? "";
+        print("The Socket message is ${data.toString()}");
 
         final MessageModel newText = MessageModel.fromJson(data);
 
@@ -727,7 +726,6 @@ class _ChattingScreenState extends ConsumerState<ChattingScreen> {
               ),
               20.ht,
 
-              /// CHAT LIST
               Expanded(
                 child: messages.when(
                   loading: () => const LoadingScreen(),
@@ -890,6 +888,7 @@ class _ChattingScreenState extends ConsumerState<ChattingScreen> {
                               }
 
                               setState(() => _isSending = true);
+                              sendStopTyping(widget.chatId);
 
                               final messageContent = _controller.text.trim();
                               _controller.clear();

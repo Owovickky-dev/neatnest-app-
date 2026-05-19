@@ -23,6 +23,8 @@ class DataScreen extends StatelessWidget {
     this.sender,
     required this.bookingStatus,
     required this.event,
+    required this.userRole,
+    this.chatName,
   });
 
   final String leftButtonText;
@@ -37,6 +39,8 @@ class DataScreen extends StatelessWidget {
   final String? sender;
   final String bookingStatus;
   final String event;
+  final String userRole;
+  final String? chatName;
 
   String formatDate(String date) {
     final parsedDate = DateTime.parse(date).toLocal();
@@ -62,8 +66,8 @@ class DataScreen extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      height: 70.h,
-                      width: 70.w,
+                      height: 80.h,
+                      width: 80.w,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.r),
                       ),
@@ -102,6 +106,14 @@ class DataScreen extends StatelessWidget {
                             secondaryText(text: sender ?? ""),
                           ],
                         ),
+                        5.ht,
+                        Row(
+                          children: [
+                            primaryText(text: "Chat Name: ", fontSize: 16.sp),
+                            10.wt,
+                            secondaryText(text: chatName ?? ""),
+                          ],
+                        ),
                       ],
                     ),
                   ],
@@ -116,17 +128,26 @@ class DataScreen extends StatelessWidget {
                         primaryText(
                           text: formatDate(preferredDate),
                           fontSize: 10.sp,
-                          color: AppColors.blackTextColor.withValues(
-                            alpha: 0.75,
-                          ),
+                          color: AppColors.primaryColor,
                         ),
-                        primaryText(text: 'Date', fontSize: 16.sp),
+                        primaryText(text: 'Agreed Date', fontSize: 16.sp),
                       ],
                     ),
-                    Row(
+                    Column(
                       children: [
-                        primaryText(text: '\$${price.toString()}'),
-                        secondaryText(text: '/hour'),
+                        Row(
+                          children: [
+                            secondaryText(
+                              text: '\$${price.toString()}',
+                              color: AppColors.primaryColor,
+                            ),
+                            secondaryText(
+                              text: '/hour',
+                              color: AppColors.primaryColor,
+                            ),
+                          ],
+                        ),
+                        primaryText(text: 'Agreed Price', fontSize: 16.sp),
                       ],
                     ),
                   ],
@@ -141,6 +162,14 @@ class DataScreen extends StatelessWidget {
                     primaryText(text: "Status:", fontSize: 16.sp),
                     10.wt,
                     secondaryText(text: bookingStatus),
+                  ],
+                ),
+                20.ht,
+                Row(
+                  children: [
+                    primaryText(text: "Role:", fontSize: 16.sp),
+                    10.wt,
+                    secondaryText(text: userRole),
                   ],
                 ),
                 20.ht,

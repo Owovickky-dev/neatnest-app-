@@ -109,8 +109,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
                                       );
                                     },
                                     child: ChatListDataHolder(
-                                      senderUsername:
-                                          chatData.partnerUsername ?? "",
+                                      senderUsername: chatData.chatName ?? "",
                                       timeSent:
                                           chatData.lastMessage?.sentAt ?? "",
                                       lastMessageContent:

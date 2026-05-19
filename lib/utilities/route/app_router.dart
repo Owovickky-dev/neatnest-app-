@@ -207,7 +207,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoute.adsScreen.path,
         name: AppRoute.adsScreen.name,
-        builder: (context, state) => AdsScreen(),
+        builder: (context, state) {
+          final userState = state.extra as bool;
+          return AdsScreen(isVerified: userState);
+        },
       ),
       GoRoute(
         path: AppRoute.securityScreen.path,

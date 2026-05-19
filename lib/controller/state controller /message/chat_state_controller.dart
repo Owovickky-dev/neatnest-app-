@@ -40,6 +40,7 @@ class ChatStateController extends _$ChatStateController {
       if (response.data is! Map<String, dynamic>) {
         throw Exception("Invalid response format: ${response.data}");
       }
+      print(response.data["data"]);
       final List data = response.data["data"] ?? [];
       final chats = data.map((e) => ChatRoomModel.fromJson(e)).toList();
 

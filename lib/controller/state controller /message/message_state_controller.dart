@@ -195,26 +195,24 @@ class MessageStateController extends _$MessageStateController {
       if (response.statusCode == 201) {
         final data = response.data["data"];
 
-        final confirmedSentMessage = MessageModel(
-          messageId: data["id"],
-          content: data["content"],
-          chatId: data["chatId"],
-          sendAt: data["sentAt"],
-          type: data["messageType"],
-          isMe: true,
-          recipientId: data["recipientId"],
-          sentStatus: MessageStatus.sent,
-        );
+        final confirmedSentMessage = MessageModel.fromJson({
+          ...data,
+          "isMe": true,
+          "sentStatus": "sent",
+        });
 
         _replaceMessage(sentTempId, confirmedSentMessage);
 
         return confirmedSentMessage;
       } else {
         _markMessageFailed(sentTempId);
+        print("why message not sent from server ${response.data["message"]}");
         return null;
       }
-    } catch (e) {
+    } catch (e, stack) {
       _markMessageFailed(sentTempId);
+      print("why message not sent inside app  ${e.toString()}");
+      print(stack);
       return null;
     }
   }
@@ -242,6 +240,7 @@ class MessageStateController extends _$MessageStateController {
         ),
       );
     } catch (e, st) {
+      print("The error stack is $st");
       state = AsyncError(e, st);
     }
   }

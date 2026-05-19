@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neat_nest/screens/booking/widgets/group_booking_data.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
+import 'package:neat_nest/widget/notificaiton_content.dart';
 
 import '../../../utilities/route/app_naviation_helper.dart';
 import '../../../utilities/route/app_route_names.dart';
@@ -12,7 +13,9 @@ import '../../../widget/app_text.dart';
 import '../widgets/row_data_holder.dart';
 
 class AdsScreen extends ConsumerWidget {
-  const AdsScreen({super.key});
+  const AdsScreen({super.key, required this.isVerified});
+
+  final bool isVerified;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -45,7 +48,14 @@ class AdsScreen extends ConsumerWidget {
                   text: "Post Ads",
                   icons: FontAwesomeIcons.adversal,
                   function: () {
-                    AppNavigatorHelper.push(context, AppRoute.postAdsScreen);
+                    isVerified
+                        ? AppNavigatorHelper.push(
+                            context,
+                            AppRoute.postAdsScreen,
+                          )
+                        : showErrorNotification(
+                            message: "Please verify your account first",
+                          );
                   },
                 ),
                 30.ht,

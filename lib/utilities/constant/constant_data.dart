@@ -24,4 +24,5 @@ class ConstantData {
   static const MESSAGEURL = "/messages/";
   static const BOOKINGURL = "/booking";
   static const PROFILEPICS = "/user/profilepic";
+  static const SERVICECATEGORIES = "/user/service-categories";
 }

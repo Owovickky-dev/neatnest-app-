@@ -9,7 +9,7 @@ class ApiErrorHandler {
       return "No internet connection. Please check your network.";
     }
 
-    // ⏳ Timeout errors
+    //  Timeout errors
     if (e.type == DioExceptionType.connectionTimeout ||
         e.type == DioExceptionType.receiveTimeout ||
         e.type == DioExceptionType.sendTimeout) {

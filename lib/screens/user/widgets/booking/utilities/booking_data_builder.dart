@@ -22,15 +22,17 @@ class BookingDataBuilder extends ConsumerStatefulWidget {
     required this.title,
     required this.status,
     required this.functionLeft,
-    required this.functionRight,
+    this.functionRight,
   });
 
   final String topText;
   final String title;
   final BookingStatus status;
 
-  final void Function(String bookingId, String bookingStatus) functionLeft;
-  final void Function(String bookingId, String bookingStatus) functionRight;
+  final void Function(String bookingId, String bookingStatus, String userRole)
+  functionLeft;
+  final void Function(String bookingId, String bookingStatus, String userRole)?
+  functionRight;
 
   @override
   ConsumerState<BookingDataBuilder> createState() => _BookingDataBuilderState();
@@ -106,7 +108,8 @@ class _BookingDataBuilderState extends ConsumerState<BookingDataBuilder> {
                             final buttonConfig = userBooking
                                 .status!
                                 .toBookingStatus
-                                .buttonConfig;
+                                .buttonConfig(userBooking.role!);
+
                             return DataScreen(
                               event: userBooking.event!,
                               leftButtonText: buttonConfig.leftText,
@@ -118,6 +121,7 @@ class _BookingDataBuilderState extends ConsumerState<BookingDataBuilder> {
                               price: userBooking.price!,
                               bookingStatus: userBooking.status!,
                               sender: userBooking.bookerUserName,
+                              userRole: userBooking.role!,
                               functionLeft: () => appConfirmationButton(
                                 context: context,
                                 title: widget.title,
@@ -128,6 +132,7 @@ class _BookingDataBuilderState extends ConsumerState<BookingDataBuilder> {
                                 functionRight: () => widget.functionLeft(
                                   userBooking.bookingId!,
                                   userBooking.status!,
+                                  userBooking.role!,
                                 ),
                               ),
                               functionRight: () => appConfirmationButton(
@@ -137,9 +142,10 @@ class _BookingDataBuilderState extends ConsumerState<BookingDataBuilder> {
                                     "Are you sure you want to perform this action",
                                 textButtonTextLeft: "No",
                                 textButtonTextRight: "Yes",
-                                functionRight: () => widget.functionRight(
+                                functionRight: () => widget.functionRight?.call(
                                   userBooking.bookingId!,
                                   userBooking.status!,
+                                  userBooking.role!,
                                 ),
                               ),
                             );

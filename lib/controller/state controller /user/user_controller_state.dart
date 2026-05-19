@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:neat_nest/data/repo/auth_repo.dart';
 import 'package:neat_nest/data/storage/secure_storage_helper.dart';
 import 'package:neat_nest/models/update_personal_profile_model.dart';
@@ -58,7 +59,6 @@ class UserControllerState extends _$UserControllerState {
     try {
       final response = await _authRepo.signIn(email: email, password: password);
       final responseData = response.data;
-
       if (response.statusCode == 200) {
         final token = responseData['data']['token'];
         final refreshToken = responseData["data"]["refreshToken"];
@@ -66,6 +66,7 @@ class UserControllerState extends _$UserControllerState {
           await SecureStorageHelper.saveToken(token);
           await SecureStorageHelper.saveRefreshToken(refreshToken);
           final user = UserModel.fromJson(responseData["data"]["loginUser"]);
+          print(responseData["data"]["loginUser"]);
           await SecureStorageHelper.saveUserData(user);
           if (ref.mounted) {
             state = user;
@@ -74,7 +75,25 @@ class UserControllerState extends _$UserControllerState {
         } else {
           throw Exception("No token received");
         }
+      } else {
+        throw Exception(responseData["message"] ?? "Login failed");
       }
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout ||
+          e.type == DioExceptionType.sendTimeout) {
+        throw Exception("Connection timeout. Try again.");
+      }
+
+      if (e.type == DioExceptionType.connectionError) {
+        throw Exception("No internet connection");
+      }
+
+      if (e.response != null) {
+        throw Exception(e.response?.data["message"] ?? "Login failed");
+      }
+
+      throw Exception("Something went wrong");
     } catch (e) {
       rethrow;
     }

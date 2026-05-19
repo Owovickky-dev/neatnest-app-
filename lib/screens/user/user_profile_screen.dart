@@ -28,9 +28,11 @@ class UserProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userData = ref.watch(userControllerStateProvider);
+
     if (userData == null) {
       return const Scaffold(body: Center(child: LoadingScreen()));
     }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBarHolder(
@@ -142,6 +144,7 @@ class UserProfileScreen extends ConsumerWidget {
                           function: () {
                             AppNavigatorHelper.push(
                               context,
+                              extra: userData.isVerified,
                               AppRoute.adsScreen,
                             );
                           },

@@ -152,6 +152,7 @@ class BookingFormController {
       status: bookingStatus,
     );
 
+    print("The booking status is $bookingStatus");
     showDialog(
       context: context,
       barrierDismissible: false,

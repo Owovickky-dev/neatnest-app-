@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/data/storage/secure_storage_helper.dart';
 import 'package:neat_nest/providers/is_logged_in_state.dart';
 import 'package:neat_nest/screens/favorite/favorite_screen.dart';
-import 'package:neat_nest/screens/history/history_screen.dart';
 import 'package:neat_nest/screens/home/home_screen.dart';
 import 'package:neat_nest/screens/user/user_screen.dart';
 import 'package:neat_nest/utilities/bottom_nav/widget/bottom_nav_notifiers.dart';
@@ -34,13 +33,7 @@ class _BottomNavigationScreenState
   }
 
   List<Widget> _buildScreens(bool isLoggedIn) {
-    return [
-      HomeScreen(),
-      HistoryScreen(),
-      FavoriteScreen(),
-      ChatListScreen(),
-      UserScreen(),
-    ];
+    return [HomeScreen(), FavoriteScreen(), ChatListScreen(), UserScreen()];
   }
 
   @override
@@ -63,10 +56,6 @@ class _BottomNavigationScreenState
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
             label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history_outlined),
-            label: 'History',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite_border_rounded),

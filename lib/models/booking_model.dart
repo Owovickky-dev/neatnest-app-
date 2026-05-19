@@ -17,6 +17,7 @@ class BookingModel {
   final String? createdAt;
   final String? bookerUserName;
   final String? event;
+  final String? chatName;
 
   BookingModel({
     this.serviceId,
@@ -37,6 +38,7 @@ class BookingModel {
     this.createdAt,
     this.bookerUserName,
     this.event,
+    this.chatName,
   });
 
   Map<String, dynamic> toJson() {
@@ -91,6 +93,7 @@ class BookingModel {
       createdAt: json["createdAt"] ?? "",
       bookerUserName: json["customer"]?["bookerUserName"] ?? "",
       event: json["event"] ?? "",
+      chatName: json["chatName"] ?? "",
     );
   }
 }

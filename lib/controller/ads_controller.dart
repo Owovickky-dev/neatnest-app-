@@ -26,8 +26,9 @@ class AdsController {
   bool? status;
   String? country;
   String? state;
-  File? imageSelected;
+  List<File>? imageSelected;
   String? id;
+  String? addressId;
   List<WorkerAvailableInfoModel>? timeAvailable;
 
   void updateStatus(String isActive) {
@@ -67,19 +68,17 @@ class AdsController {
       );
     }
 
-    print("The image file is $imageSelected");
     final newAds = AdsModel(
       title: title,
       about: aboutAds,
       basePrice: int.tryParse(price),
       category: category!.toLowerCase(),
-      country: country,
-      state: state,
+      addressId: addressId,
       image: imageSelected,
       isActive: status!,
       availableSchedule: timeAvailable,
     );
-    print(newAds);
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -93,12 +92,14 @@ class AdsController {
       },
     );
 
-    print("the time is ${newAds.availableSchedule.toString()}");
+    print("The address ID is $addressId");
 
     try {
+      print("about to  enter the post ads");
       final response = await ref
           .read(adsStateControllerProvider.notifier)
           .postAds(newAds);
+      print("I enter the post ads");
       if (response.statusCode == 201) {
         if (!context.mounted) return;
         AppNavigatorHelper.go(context, AppRoute.bottomNavigation);

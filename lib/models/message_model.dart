@@ -27,27 +27,48 @@ class MessageModel {
     this.page,
   });
 
+  // Map<String, dynamic> toJson() {
+  //   final data = <String, dynamic>{};
+  //
+  //   data["content"] = content;
+  //
+  //   if (chatId != null && chatId!.isNotEmpty) {
+  //     data["chatId"] = chatId;
+  //   }
+  //
+  //   if (recipientId != null && recipientId!.isNotEmpty) {
+  //     data["recipientId"] = recipientId;
+  //   }
+  //
+  //   if (sendAt != null && sendAt!.isNotEmpty) {
+  //     data["sentAt"] = sendAt;
+  //   }
+  //
+  //   if (type != null && type!.isNotEmpty) {
+  //     data["type"] = type;
+  //   }
+  //
+  //   return data;
+  // }
+
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
 
     data["content"] = content;
+    data["type"] = type ?? "text";
 
     if (chatId != null && chatId!.isNotEmpty) {
       data["chatId"] = chatId;
     }
-
     if (recipientId != null && recipientId!.isNotEmpty) {
       data["recipientId"] = recipientId;
     }
-
     if (sendAt != null && sendAt!.isNotEmpty) {
       data["sentAt"] = sendAt;
     }
-
-    if (type != null && type!.isNotEmpty) {
-      data["type"] = type;
+    if (messageId != null && messageId!.isNotEmpty) {
+      data["messageId"] = messageId;
     }
-
     return data;
   }
 
@@ -55,10 +76,15 @@ class MessageModel {
     return MessageModel(
       messageId: json["id"] ?? "",
       content: json["content"] ?? "",
+      chatId: json["chatId"] ?? "",
+      recipientId: json["recipientId"] ?? "",
       type: json["type"] ?? "",
       sendAt: json["sentAt"] ?? "",
       isMe: json["isMe"],
-      sender: json["sender"] != null ? Sender.fromJson(json["sender"]) : null,
+      sender: json["sender"] is Map<String, dynamic>
+          ? Sender.fromJson(json["sender"])
+          : null,
+
       sentStatus: json["isMe"] == true ? MessageStatus.sent : null,
     );
   }

@@ -10,7 +10,7 @@ class AdsModel {
   final String? about;
   final num? basePrice;
   final String? imageFrmServer;
-  final File? image;
+  final List<File>? image;
   final String? country;
   final String? state;
   final JobPosterModel? jobPoster;
@@ -18,6 +18,8 @@ class AdsModel {
   final bool? isActive;
   final String? workerId;
   final DateTime? createdAt;
+  final String? addressId;
+  final String? address;
   final List<WorkerAvailableInfoModel>? availableSchedule;
 
   AdsModel({
@@ -35,6 +37,8 @@ class AdsModel {
     this.state,
     this.availableSchedule,
     this.image,
+    this.address,
+    this.addressId,
   });
 
   Map<String, dynamic> toJson() {
@@ -55,11 +59,8 @@ class AdsModel {
     if (category != null && category!.isNotEmpty) {
       data["category"] = category;
     }
-    if (country != null && country!.isNotEmpty) {
-      data["country"] = country;
-    }
-    if (state != null && state!.isNotEmpty) {
-      data["state"] = state;
+    if (addressId != null && addressId!.isNotEmpty) {
+      data["addressId"] = addressId;
     }
     if (id != null && id!.isNotEmpty) {
       data["adsId"] = id;
@@ -77,10 +78,14 @@ class AdsModel {
   Future<FormData> toFormData() async {
     final map = toJson();
 
-    if (image != null) {
-      map["image"] = await MultipartFile.fromFile(
-        image!.path,
-        filename: image!.path.split("/").last,
+    if (image != null && image!.isNotEmpty) {
+      map["image"] = await Future.wait(
+        image!.map(
+          (img) async => MultipartFile.fromFile(
+            img.path,
+            filename: img.path.split("/").last,
+          ),
+        ),
       );
     }
     return FormData.fromMap(map);
@@ -153,7 +158,7 @@ class WorkerAvailableTime {
   factory WorkerAvailableTime.fromJson(Map<String, dynamic> json) {
     return WorkerAvailableTime(
       time: json["time"] ?? "",
-      isBooked: json["isBooked"] ?? false,
+      isBooked: json["isBooked"] == true,
     );
   }
 }
