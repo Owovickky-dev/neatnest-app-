@@ -53,4 +53,13 @@ class AuthRepo {
     );
     return response;
   }
+
+  Future<Response> reSendOtp({required String email, required String purpose}) {
+    final response = _dio.post(
+      ConstantData.RESENDMAILOTP,
+      data: {"email": email, "purpose": purpose},
+    );
+
+    return response;
+  }
 }

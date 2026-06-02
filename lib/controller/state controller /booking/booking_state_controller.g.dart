@@ -34,7 +34,7 @@ final class BookingStateControllerProvider
 }
 
 String _$bookingStateControllerHash() =>
-    r'93f1efdd9205e1591a66a60736888c4a9ac8ca27';
+    r'53fa823409b5c9c2b0f71e57f0440cefd546fe96';
 
 abstract class _$BookingStateController
     extends $AsyncNotifier<GroupedBookings> {

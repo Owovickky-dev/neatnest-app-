@@ -42,7 +42,7 @@ final class AdsStateControllerProvider
 }
 
 String _$adsStateControllerHash() =>
-    r'634db436a9b2fdb5bfc272f3316d85996884f504';
+    r'a75d29f58babb44444ff6f99021e78b7aeaf73ae';
 
 abstract class _$AdsStateController extends $Notifier<List<AdsModel>> {
   List<AdsModel> build();

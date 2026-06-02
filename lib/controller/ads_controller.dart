@@ -92,8 +92,6 @@ class AdsController {
       },
     );
 
-    print("The address ID is $addressId");
-
     try {
       print("about to  enter the post ads");
       final response = await ref
@@ -126,10 +124,17 @@ class AdsController {
   Future<void> deleteAds(WidgetRef ref, String adsId) async {
     try {
       await ref.read(userAdsStateControllerProvider.notifier).deleteAds(adsId);
+      await ref.read(userAdsStateControllerProvider.notifier).getUserAds();
       showSuccessNotification(message: "Ads successfully deleted");
     } catch (e) {
+      showErrorNotification(
+        message: e.toString().replaceFirst("Exception: ", ""),
+      );
+      print(e);
       if (e is DioException) {
-        showErrorNotification(message: e.error.toString());
+        showErrorNotification(
+          message: e.error.toString().replaceFirst("Exception: ", ""),
+        );
       }
     }
   }

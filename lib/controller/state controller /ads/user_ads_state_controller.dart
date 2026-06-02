@@ -47,8 +47,14 @@ class UserAdsStateController extends _$UserAdsStateController {
     try {
       final response = await _adsRepo.deleteAds(adsId);
       if (response.statusCode == 201) {
-        await getUserAds();
+        // await getUserAds();
+      } else {
+        throw Exception(response.data["message"] ?? "Failed to delete");
       }
+    } on DioException catch (e) {
+      throw Exception(
+        e.response?.data["message"] ?? e.message ?? "Something went wrong",
+      );
     } catch (e) {
       rethrow;
     }

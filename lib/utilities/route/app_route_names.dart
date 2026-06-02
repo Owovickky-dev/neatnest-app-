@@ -35,6 +35,7 @@ enum AppRoute {
   adsDetailsScreen,
   myBookingScreen,
   bookingDataBuilder,
+  accountVerification,
 }
 
 extension AppRouteNamesExtension on AppRoute {
@@ -112,6 +113,8 @@ extension AppRouteNamesExtension on AppRoute {
         return "/myBookingScreen";
       case AppRoute.bookingDataBuilder:
         return "/bookingDataBuilder";
+      case AppRoute.accountVerification:
+        return "/accountVerification";
     }
   }
 }

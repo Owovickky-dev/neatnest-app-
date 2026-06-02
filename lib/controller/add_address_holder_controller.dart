@@ -127,10 +127,14 @@ class AddAddressHolderController {
   void setDefaultAddress(BuildContext context, WidgetRef ref, String id) async {
     try {
       final isDefault = UserLocationModel(isPrimary: true, addressId: id);
-
+      if (!context.mounted) return;
       await ref
           .read(addressStateControllerProvider.notifier)
           .updateAddressData(context, isDefault);
+      if (!context.mounted) return;
+      await ref
+          .read(addressStateControllerProvider.notifier)
+          .getUserAddress(context);
 
       if (!context.mounted) return;
       showSuccessNotification(message: "Address successfully set to default");

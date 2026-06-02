@@ -1,26 +1,73 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:neat_nest/screens/user/auth/signin/utilities/new_password_screen.dart';
+import 'package:go_router/go_router.dart';
+import 'package:neat_nest/data/repo/otp_verification_repo.dart';
+import 'package:neat_nest/widget/notificaiton_content.dart';
 
 import '../utilities/bottom_nav/bottom_navigation_screen.dart';
+import '../utilities/route/app_naviation_helper.dart';
+import '../utilities/route/app_route_names.dart';
+import '../widget/loading_screen.dart';
 
 class AccountVerificationController {
   AccountVerificationController();
+
+  final OtpVerificationRepo _otpVerificationRepo = OtpVerificationRepo();
 
   TextEditingController otpController = TextEditingController();
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmNewPasswordController = TextEditingController();
 
-  void submitCode(BuildContext context) {
-    String code;
-    code = otpController.text;
-    if (code.isEmpty || code.length < 4) {
-      debugPrint("Please kindly enter the verification code");
+  String? otpCode;
+  String? userMail;
+
+  void submitCode(BuildContext context) async {
+    if (otpCode != null && otpCode!.length < 6) {
+      showErrorNotification(message: "Please fill all the 6 digits code");
     } else {
-      debugPrint("The OTP enter is $code");
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => NewPasswordScreen()),
-      );
+      if (otpCode != null && userMail != null) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => LoadingScreen(),
+        );
+        try {
+          final otp = await _otpVerificationRepo.otpMailVerification(
+            email: userMail!,
+            otpCode: otpCode!,
+          );
+
+          if (otp.statusCode == 200) {
+            if (!context.mounted) return;
+            context.pop();
+            showSuccessNotification(
+              message: "Verification Successful, Please kindly Login ",
+            );
+            AppNavigatorHelper.pushReplacement(context, AppRoute.signIn);
+          } else {
+            if (!context.mounted) return;
+            context.pop();
+            showErrorNotification(
+              message: otp.data["message"] ?? "Something went wrong",
+            );
+          }
+        } on DioException catch (e) {
+          if (!context.mounted) return;
+          context.pop();
+          showErrorNotification(
+            message:
+                e.response?.data["message"] ??
+                e.message ??
+                "Network error occurred",
+          );
+        } catch (e) {
+          if (!context.mounted) return;
+          context.pop();
+          showErrorNotification(
+            message: e.toString().replaceFirst("Exception: ", ""),
+          );
+        }
+      }
     }
   }
 
@@ -41,6 +88,47 @@ class AccountVerificationController {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => BottomNavigationScreen()),
+      );
+    }
+  }
+
+  Future<void> resendCode(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => LoadingScreen(),
+    );
+    try {
+      final response = await _otpVerificationRepo.resendOTP(
+        email: userMail!,
+        purpose: "signup",
+      );
+
+      if (response.statusCode == 200) {
+        if (!context.mounted) return;
+        context.pop();
+        showSuccessNotification(message: "OTP Successfully sent to mail");
+      } else {
+        if (!context.mounted) return;
+        context.pop();
+        showErrorNotification(
+          message: response.data["message"] ?? "Failed to send OTP",
+        );
+      }
+    } on DioException catch (e) {
+      if (!context.mounted) return;
+      context.pop();
+      showErrorNotification(
+        message:
+            e.response?.data["message"] ??
+            e.message ??
+            "Network error occurred",
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+      context.pop();
+      showErrorNotification(
+        message: e.toString().replaceFirst("Exception: ", ""),
       );
     }
   }

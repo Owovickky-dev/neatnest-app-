@@ -9,7 +9,7 @@ class AdsModel {
   final String? title;
   final String? about;
   final num? basePrice;
-  final String? imageFrmServer;
+  final List<ServerImageModel>? imageFrmServer;
   final List<File>? image;
   final String? country;
   final String? state;
@@ -79,7 +79,7 @@ class AdsModel {
     final map = toJson();
 
     if (image != null && image!.isNotEmpty) {
-      map["image"] = await Future.wait(
+      map["images"] = await Future.wait(
         image!.map(
           (img) async => MultipartFile.fromFile(
             img.path,
@@ -97,9 +97,13 @@ class AdsModel {
       title: json["title"] ?? "",
       about: json["about"] ?? "",
       basePrice: json["basePrice"] ?? 0,
-      category: json["category"] ?? "",
-      imageFrmServer: json["image"] ?? "",
-      isActive: json["isActive"] ?? false,
+      category: json["category"] ?? [],
+      imageFrmServer: json["images"] != null
+          ? (json["images"] as List)
+                .map((img) => ServerImageModel.fromJson(img))
+                .toList()
+          : [],
+      isActive: json["isActive"] == true,
       country: json["country"] ?? "",
       state: json["state"] ?? "",
       availableSchedule: json["workerAvailableInfo"] != null
@@ -173,4 +177,18 @@ class RoutingAdsModel {
     required this.isPopular,
     required this.isFavourite,
   });
+}
+
+class ServerImageModel {
+  final String imageUrl;
+  final String imageId;
+
+  ServerImageModel({required this.imageUrl, required this.imageId});
+
+  factory ServerImageModel.fromJson(Map<String, dynamic> json) {
+    return ServerImageModel(
+      imageUrl: json["imageUrl"] ?? "",
+      imageId: json["_id"] ?? json["id"] ?? "",
+    );
+  }
 }

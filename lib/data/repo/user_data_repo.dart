@@ -33,6 +33,11 @@ class UserDataRepo {
     return response;
   }
 
+  Future<Response> getSkillsAvailbale() async {
+    final response = await _dio.get(ConstantData.SERVICECATEGORIES);
+    return response;
+  }
+
   Future<Response> updatePaymentMethod(
     UserPaymentMethodModel updatePayment,
   ) async {

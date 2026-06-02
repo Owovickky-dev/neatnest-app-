@@ -422,9 +422,7 @@ class _GroupBookingDataState extends ConsumerState<GroupBookingData> {
             );
           },
         ),
-
         30.ht,
-
         RowDataHolder(
           text: "Closed",
           icons: FontAwesomeIcons.circleMinus,
@@ -446,9 +444,7 @@ class _GroupBookingDataState extends ConsumerState<GroupBookingData> {
             );
           },
         ),
-
         30.ht,
-
         RowDataHolder(
           text: "Disputed Booking",
           icons: FontAwesomeIcons.handshakeSlash,
@@ -475,8 +471,6 @@ class _GroupBookingDataState extends ConsumerState<GroupBookingData> {
   }
 }
 
-/// ENUM
-
 enum AllBookingStaus {
   awaiting_provider_confirmation,
   negotiation,
@@ -496,7 +490,6 @@ enum AllBookingStaus {
 class BookingButtonConfig {
   final String leftText;
   final String? rightText;
-
   BookingButtonConfig({required this.leftText, this.rightText});
 }
 

@@ -61,13 +61,13 @@ class UserModel {
       data["passwordConfirm"] = passwordConfirm;
     }
     if (gender.isNotEmpty) {
-      data["username"] = gender;
+      data["gender"] = gender;
     }
     if (role.isNotEmpty) {
       data["role"] = role;
     }
     if (userSkills != null && userSkills!.isNotEmpty) {
-      data["skills"] = userSkills;
+      data["skills"] = userSkills!.map((skill) => skill.toJson()).toList();
     }
     if (phoneNumber.isNotEmpty) {
       data["phoneNumber"] = phoneNumber;

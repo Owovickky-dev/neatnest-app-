@@ -63,7 +63,7 @@ class FavouriteDataHolder extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(8.r),
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
-                  imageUrl: ads.imageFrmServer ?? '',
+                  imageUrl: ads.imageFrmServer?.first.imageUrl ?? '',
                 ),
               ),
             ),

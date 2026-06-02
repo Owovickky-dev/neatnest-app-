@@ -1,15 +1,21 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/controller/account_verification_controller.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
+import 'package:neat_nest/widget/app_bar_holder.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 import '../../../../utilities/app_button.dart';
 import '../../../../widget/app_text.dart';
 
 class AccountVerificationScreen extends StatefulWidget {
-  const AccountVerificationScreen({super.key});
+  const AccountVerificationScreen({super.key, required this.userMail});
+
+  final String userMail;
 
   @override
   State<AccountVerificationScreen> createState() =>
@@ -19,6 +25,16 @@ class AccountVerificationScreen extends StatefulWidget {
 class _AccountVerificationScreenState extends State<AccountVerificationScreen> {
   late AccountVerificationController _accountVerificationController;
 
+  int secondLeft = 60;
+  Timer? timer;
+  bool canResend = false;
+
+  @override
+  void initState() {
+    super.initState();
+    startCountdown();
+  }
+
   @override
   void didChangeDependencies() {
     _accountVerificationController = AccountVerificationController();
@@ -26,57 +42,96 @@ class _AccountVerificationScreenState extends State<AccountVerificationScreen> {
   }
 
   @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  void startCountdown() {
+    setState(() {
+      secondLeft = 60;
+      canResend = false;
+    });
+
+    timer?.cancel();
+
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (secondLeft <= 1) {
+        setState(() {
+          secondLeft = 0;
+          canResend = true;
+        });
+        timer.cancel();
+      } else {
+        setState(() {
+          secondLeft--;
+        });
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    _accountVerificationController.userMail = widget.userMail;
     return Container(
       color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(Icons.arrow_back),
-          ),
-        ),
+        appBar: AppBarHolder(title: "Mail Verification"),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                5.ht,
-                Center(child: primaryText(text: 'Verify Account')),
+                10.ht,
+                primaryText(
+                  text:
+                      'Please kindly enter the 6 digits code sent to your mail to verify your email',
+                  fontSize: 14.sp,
+                ),
                 20.ht,
                 PinCodeTextField(
                   appContext: context,
                   keyboardType: TextInputType.number,
                   animationType: AnimationType.fade,
-                  length: 4,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  length: 6,
                   controller: _accountVerificationController.otpController,
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    _accountVerificationController.otpCode = value;
+                  },
                   pinTheme: PinTheme(
                     shape: PinCodeFieldShape.box,
-                    borderRadius: BorderRadius.circular(10.r),
-                    fieldHeight: 60.h,
-                    fieldWidth: 60.w,
+                    borderRadius: BorderRadius.circular(7.r),
+                    fieldHeight: 40.h,
+                    fieldWidth: 40.w,
                     activeFillColor: AppColors.containerLightBackground,
                   ),
                 ),
-                10.ht,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     primaryText(text: "Don't Receive Otp?", fontSize: 14.sp),
-                    primaryText(
-                      text: "Re-send Code",
-                      fontSize: 13.sp,
-                      color: AppColors.primaryColor,
+                    TextButton(
+                      onPressed: canResend
+                          ? () async {
+                              await _accountVerificationController.resendCode(
+                                context,
+                              );
+                              startCountdown();
+                            }
+                          : null,
+                      child: primaryText(
+                        text: canResend
+                            ? "Re-send Code"
+                            : "Resend code in $secondLeft",
+                        fontSize: 14.sp,
+                        color: canResend ? AppColors.primaryColor : Colors.grey,
+                      ),
                     ),
                   ],
                 ),
-                20.ht,
                 AppButton(
                   text: 'Verify',
                   bckColor: AppColors.primaryColor,

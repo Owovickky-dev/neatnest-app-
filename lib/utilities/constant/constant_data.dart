@@ -25,4 +25,6 @@ class ConstantData {
   static const BOOKINGURL = "/booking";
   static const PROFILEPICS = "/user/profilepic";
   static const SERVICECATEGORIES = "/user/service-categories";
+  static const OTPMAILVERIFICATION = "/auth/verifymail";
+  static const RESENDMAILOTP = "/auth/resendotp";
 }

@@ -20,6 +20,7 @@ import 'package:neat_nest/screens/user/auth/security/widget/change_phone_number_
 import 'package:neat_nest/screens/user/auth/security/widget/update_password_screen.dart';
 import 'package:neat_nest/screens/user/auth/signin/sign_in_screen.dart';
 import 'package:neat_nest/screens/user/auth/signin/utilities/forget_password_screen.dart';
+import 'package:neat_nest/screens/user/auth/signup/account_verification_screen.dart';
 import 'package:neat_nest/screens/user/auth/signup/sign_up_screen.dart';
 import 'package:neat_nest/screens/user/model/booking_data_model.dart';
 import 'package:neat_nest/screens/user/model/user_location_model.dart';
@@ -259,6 +260,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoute.viewAboutMeScreen.path,
         name: AppRoute.viewAboutMeScreen.name,
         builder: (context, state) => ViewAboutMe(),
+      ),
+      GoRoute(
+        path: AppRoute.accountVerification.path,
+        name: AppRoute.accountVerification.name,
+        builder: (context, state) {
+          final userMail = state.extra as String;
+          return AccountVerificationScreen(userMail: userMail);
+        },
       ),
       GoRoute(
         path: AppRoute.updatePhoneScreen.path,

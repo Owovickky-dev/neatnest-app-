@@ -8,6 +8,7 @@ import 'package:neat_nest/data/repo/user_data_repo.dart';
 import 'package:neat_nest/data/storage/secure_storage_helper.dart';
 import 'package:neat_nest/models/user_model.dart';
 import 'package:neat_nest/providers/is_logged_in_state.dart';
+import 'package:neat_nest/widget/app_confirmation_button.dart';
 import 'package:neat_nest/widget/loading_screen.dart';
 import 'package:neat_nest/widget/notificaiton_content.dart';
 
@@ -39,7 +40,7 @@ class SignInController {
 
     showDialog(
       context: context,
-      barrierDismissible: false, // Prevent user from dismissing
+      barrierDismissible: false,
       builder: (context) => LoadingScreen(),
     );
 
@@ -51,11 +52,45 @@ class SignInController {
       showSuccessNotification(message: "Login Successful");
       AppNavigatorHelper.pushReplacement(context, AppRoute.bottomNavigation);
     } catch (e) {
+      String verifyMessage = "Please kindly verify your account";
       if (!context.mounted) return;
       context.pop();
       showErrorNotification(
         message: e.toString().replaceFirst("Exception: ", ""),
       );
+      if (e.toString().replaceFirst("Exception: ", "") == verifyMessage) {
+        appConfirmationButton(
+          context: context,
+          title: "Verify Account",
+          subTitle: "Do you want to verify your account now",
+          textButtonTextLeft: "Cancel",
+          textButtonTextRight: "Yes",
+          functionRight: () async {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => LoadingScreen(),
+            );
+
+            try {
+              await userNotifier.reSendOtp(email, "signup");
+              if (!context.mounted) return;
+              context.pop();
+              AppNavigatorHelper.pushReplacement(
+                context,
+                AppRoute.accountVerification,
+                extra: email,
+              );
+            } catch (e) {
+              if (!context.mounted) return;
+              context.pop();
+              showErrorNotification(
+                message: e.toString().replaceFirst("Exception: ", ""),
+              );
+            }
+          },
+        );
+      }
     }
   }
 

@@ -16,7 +16,9 @@ class PasswordResetController {
       debugPrint("Code Successfully sent");
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => AccountVerificationScreen()),
+        MaterialPageRoute(
+          builder: (context) => AccountVerificationScreen(userMail: ''),
+        ),
       );
     }
   }
