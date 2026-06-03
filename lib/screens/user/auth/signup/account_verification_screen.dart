@@ -13,9 +13,14 @@ import '../../../../utilities/app_button.dart';
 import '../../../../widget/app_text.dart';
 
 class AccountVerificationScreen extends StatefulWidget {
-  const AccountVerificationScreen({super.key, required this.userMail});
+  const AccountVerificationScreen({
+    super.key,
+    required this.userMail,
+    required this.verificationType,
+  });
 
   final String userMail;
+  final VerificationType verificationType;
 
   @override
   State<AccountVerificationScreen> createState() =>
@@ -28,6 +33,7 @@ class _AccountVerificationScreenState extends State<AccountVerificationScreen> {
   int secondLeft = 60;
   Timer? timer;
   bool canResend = false;
+  late String purpose;
 
   @override
   void initState() {
@@ -70,6 +76,18 @@ class _AccountVerificationScreenState extends State<AccountVerificationScreen> {
     });
   }
 
+  void savedPurpose(VerificationType verificationType) {
+    if (verificationType == VerificationType.signUp) {
+      setState(() {
+        purpose = "signup";
+      });
+    } else if (verificationType == VerificationType.resetPassword) {
+      setState(() {
+        purpose = "reset-password";
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _accountVerificationController.userMail = widget.userMail;
@@ -78,7 +96,7 @@ class _AccountVerificationScreenState extends State<AccountVerificationScreen> {
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBarHolder(title: "Mail Verification"),
+        appBar: AppBarHolder(title: " Verification"),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Column(
@@ -116,10 +134,16 @@ class _AccountVerificationScreenState extends State<AccountVerificationScreen> {
                     TextButton(
                       onPressed: canResend
                           ? () async {
-                              await _accountVerificationController.resendCode(
-                                context,
-                              );
-                              startCountdown();
+                              savedPurpose(widget.verificationType);
+                              final response =
+                                  await _accountVerificationController
+                                      .resendCode(context, purpose);
+                              if (response) {
+                                _accountVerificationController.otpController
+                                    .clear();
+                                _accountVerificationController.otpCode = "";
+                                startCountdown();
+                              }
                             }
                           : null,
                       child: primaryText(
@@ -139,7 +163,12 @@ class _AccountVerificationScreenState extends State<AccountVerificationScreen> {
                   width: double.infinity,
                   fontSize: 18.sp,
                   function: () {
-                    _accountVerificationController.submitCode(context);
+                    if (widget.verificationType == VerificationType.signUp) {
+                      _accountVerificationController.mailVerification(context);
+                    } else if (widget.verificationType ==
+                        VerificationType.resetPassword) {
+                      _accountVerificationController.verifyPasswordOtp(context);
+                    }
                   },
                 ),
               ],

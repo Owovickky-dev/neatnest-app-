@@ -16,6 +16,18 @@ class OtpVerificationRepo {
     return response;
   }
 
+  Future<Response> verifyPasswordOtp({
+    required String email,
+    required String otpCode,
+  }) async {
+    final response = await _dio.post(
+      ConstantData.PASSWORDCODEVERIFICATION,
+      data: {"email": email, "otp": otpCode},
+    );
+
+    return response;
+  }
+
   Future<Response> resendOTP({required String email, required String purpose}) {
     final response = _dio.post(
       ConstantData.RESENDMAILOTP,

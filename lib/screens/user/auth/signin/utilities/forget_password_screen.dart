@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:neat_nest/controller/password_reset_controller.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
+import 'package:neat_nest/widget/app_bar_holder.dart';
+import 'package:neat_nest/widget/app_text.dart';
 
+import '../../../../../controller/password_controller.dart';
 import '../../../../../utilities/app_button.dart';
 import '../../../../../utilities/constant/colors.dart';
-import '../../../../../widget/app_text.dart';
 import '../../../utilities/auth_text_filed.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
@@ -16,11 +17,11 @@ class ForgetPasswordScreen extends StatefulWidget {
 }
 
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
-  late PasswordResetController _passwordResetController;
+  late PasswordController _passwordResetController;
 
   @override
   void didChangeDependencies() {
-    _passwordResetController = PasswordResetController();
+    _passwordResetController = PasswordController();
     super.didChangeDependencies();
   }
 
@@ -31,22 +32,18 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(Icons.arrow_back),
-          ),
-        ),
+        appBar: AppBarHolder(title: 'Forgot Password'),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                10.ht,
-                Center(child: primaryText(text: 'Forgot Password')),
+                20.ht,
+                secondaryText(
+                  text:
+                      "Please kindly enter your mail to get the reset token to reset your account password",
+                  fontSize: 15.sp,
+                ),
                 20.ht,
                 AuthTextFiled(
                   titleText: 'Email Address',
@@ -61,7 +58,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   width: double.infinity,
                   fontSize: 18.sp,
                   function: () {
-                    _passwordResetController.submitMail(context);
+                    _passwordResetController.forgotPassword(context);
                   },
                 ),
               ],

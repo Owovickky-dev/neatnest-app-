@@ -27,4 +27,7 @@ class ConstantData {
   static const SERVICECATEGORIES = "/user/service-categories";
   static const OTPMAILVERIFICATION = "/auth/verifymail";
   static const RESENDMAILOTP = "/auth/resendotp";
+  static const FORGOTPASSWORD = "/auth/forgotpassword";
+  static const PASSWORDCODEVERIFICATION = "/auth/passwordcodeverification";
+  static const RESETPASSWORD = "/auth/resetpassword";
 }

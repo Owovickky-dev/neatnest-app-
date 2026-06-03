@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:neat_nest/controller/sign_in_controller.dart';
+import 'package:neat_nest/controller/profile_security_controller.dart';
 import 'package:neat_nest/screens/user/widgets/row_data_holder.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
@@ -29,7 +29,8 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   File? selectedImage;
-  final SignInController signInController = SignInController();
+  final ProfileSecurityController profileSecurityController =
+      ProfileSecurityController();
   bool isLoading = false;
   String? userImageLink;
 
@@ -63,7 +64,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
 
     try {
-      final updatedUser = await signInController.uploadProfilePic(file.path);
+      final updatedUser = await profileSecurityController.uploadProfilePic(
+        file.path,
+      );
 
       if (updatedUser != null) {
         setState(() {

@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:neat_nest/screens/message/utilities/chatting_state.dart';
 import 'package:neat_nest/utilities/app_data.dart';
 import 'package:neat_nest/utilities/app_time_conversion.dart';
@@ -87,8 +86,8 @@ class ChatListDataHolder extends ConsumerWidget {
                     ),
                     Icon(
                       isMe
-                          ? Ionicons.arrow_forward_circle_outline
-                          : Ionicons.arrow_back_circle_outline,
+                          ? Icons.arrow_forward_ios_rounded
+                          : Icons.arrow_back_ios_new_outlined,
                       color: AppColors.secondaryTextColor,
                     ),
                   ],

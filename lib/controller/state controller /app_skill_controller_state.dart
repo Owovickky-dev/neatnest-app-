@@ -22,7 +22,7 @@ class AppSkillControllerState extends _$AppSkillControllerState {
 
   Future<void> getSkills() async {
     try {
-      final response = await _userDataRepo.getSkillsAvailbale();
+      final response = await _userDataRepo.getSkillsAvailable();
 
       if (response.statusCode == 200) {
         final responseData = response.data["data"];

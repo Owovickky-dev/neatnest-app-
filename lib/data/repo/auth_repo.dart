@@ -54,10 +54,28 @@ class AuthRepo {
     return response;
   }
 
-  Future<Response> reSendOtp({required String email, required String purpose}) {
-    final response = _dio.post(
-      ConstantData.RESENDMAILOTP,
-      data: {"email": email, "purpose": purpose},
+  Future<Response> forgotPassword(String email) async {
+    final response = await _dio.post(
+      ConstantData.FORGOTPASSWORD,
+      data: {"email": email},
+    );
+    return response;
+  }
+
+  Future<Response> resetPassword({
+    required String resetToken,
+    required String password,
+    required String confirmPassword,
+    required String email,
+  }) async {
+    final response = await _dio.patch(
+      ConstantData.RESETPASSWORD,
+      data: {
+        "resetToken": resetToken,
+        "password": password,
+        "confirmPassword": confirmPassword,
+        "email": email,
+      },
     );
 
     return response;

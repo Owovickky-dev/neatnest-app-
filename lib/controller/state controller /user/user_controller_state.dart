@@ -72,25 +72,6 @@ class UserControllerState extends _$UserControllerState {
     }
   }
 
-  Future<void> reSendOtp(String email, String purpose) async {
-    try {
-      final response = await _authRepo.reSendOtp(
-        email: email,
-        purpose: purpose,
-      );
-
-      if (response.statusCode != 200) {
-        throw Exception(
-          response.data["message"] ?? "Failed to send OTP, Try again",
-        );
-      }
-    } on DioException catch (e) {
-      throw Exception(ApiErrorHandler.getErrorMessage(e));
-    } catch (e) {
-      rethrow;
-    }
-  }
-
   Future<void> logOut() async {
     await SecureStorageHelper.deleteToken();
     await SecureStorageHelper.deleteUserData();

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:neat_nest/models/user_model.dart';
 
@@ -9,6 +10,7 @@ class SecureStorageHelper {
   static const String accessTokenKey = "token";
   static const String refreshTokenKey = "refresh_token";
   static const String _userDataKey = "user_data";
+  static const String resetPasswordToken = "reset_password_token";
 
   static Future<void> saveToken(String token) async {
     await _storage.write(key: accessTokenKey, value: token);
@@ -16,6 +18,10 @@ class SecureStorageHelper {
 
   static Future<void> saveRefreshToken(String refreshToken) async {
     await _storage.write(key: refreshTokenKey, value: refreshToken);
+  }
+
+  static Future<void> savePasswordResetToken(String resetToken) async {
+    await _storage.write(key: resetPasswordToken, value: resetToken);
   }
 
   static Future<String?> getToken() async {
@@ -26,6 +32,10 @@ class SecureStorageHelper {
     return await _storage.read(key: refreshTokenKey);
   }
 
+  static Future<String?> getResetPasswordToken() async {
+    return await _storage.read(key: resetPasswordToken);
+  }
+
   static Future<void> deleteToken() async {
     return await _storage.delete(key: accessTokenKey);
   }
@@ -34,12 +44,18 @@ class SecureStorageHelper {
     return await _storage.delete(key: refreshTokenKey);
   }
 
+  static Future<void> deletePasswordToken() async {
+    return await _storage.delete(key: resetPasswordToken);
+  }
+
   static Future<void> saveUserData(UserModel user) async {
     try {
       final userJson = jsonEncode(user.toFullJson());
       await _storage.write(key: _userDataKey, value: userJson);
     } catch (e) {
-      print("Error in saving the User data $e");
+      if (kDebugMode) {
+        print("Error in saving the User data $e");
+      }
     }
   }
 

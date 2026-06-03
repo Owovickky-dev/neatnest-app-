@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:neat_nest/controller/account_verification_controller.dart';
 import 'package:neat_nest/models/ads_model.dart';
 import 'package:neat_nest/models/booking_navigation_args.dart';
 import 'package:neat_nest/screens/booking/ads_details_screen.dart';
@@ -20,6 +21,7 @@ import 'package:neat_nest/screens/user/auth/security/widget/change_phone_number_
 import 'package:neat_nest/screens/user/auth/security/widget/update_password_screen.dart';
 import 'package:neat_nest/screens/user/auth/signin/sign_in_screen.dart';
 import 'package:neat_nest/screens/user/auth/signin/utilities/forget_password_screen.dart';
+import 'package:neat_nest/screens/user/auth/signin/utilities/new_password_screen.dart';
 import 'package:neat_nest/screens/user/auth/signup/account_verification_screen.dart';
 import 'package:neat_nest/screens/user/auth/signup/sign_up_screen.dart';
 import 'package:neat_nest/screens/user/model/booking_data_model.dart';
@@ -65,6 +67,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             functionLeft: data.functionLeft,
             functionRight: data.functionRight,
           );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.newPasswordScreen.path,
+        name: AppRoute.newPasswordScreen.name,
+        builder: (context, state) {
+          final data = state.extra as String;
+          return NewPasswordScreen(userMail: data);
         },
       ),
       GoRoute(
@@ -265,8 +275,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoute.accountVerification.path,
         name: AppRoute.accountVerification.name,
         builder: (context, state) {
-          final userMail = state.extra as String;
-          return AccountVerificationScreen(userMail: userMail);
+          final data = state.extra as VerificationCodeModel;
+          return AccountVerificationScreen(
+            userMail: data.userMail,
+            verificationType: data.verificationType,
+          );
         },
       ),
       GoRoute(
