@@ -121,7 +121,7 @@ class UserProfileScreen extends ConsumerWidget {
                   if (userData.role == "worker") {
                     AppNavigatorHelper.push(
                       context,
-                      AppRoute.workerVerificationScreen,
+                      AppRoute.verificationStartScreen,
                     );
                   } else {
                     print("This is user profile");

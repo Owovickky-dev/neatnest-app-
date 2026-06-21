@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:neat_nest/screens/user/notifiers/data_flow_state.dart';
 import 'package:neat_nest/screens/user/utilities/verification_options_items_holder.dart';
 import 'package:neat_nest/screens/user/widgets/verification/widget/Id_upload_screen.dart';
 import 'package:neat_nest/utilities/app_button.dart';
@@ -13,7 +12,9 @@ import '../../../../../widget/app_text.dart';
 import '../../../../history/utilities/app_bar_icon.dart';
 
 class VerificationPickerScreen extends ConsumerStatefulWidget {
-  const VerificationPickerScreen({super.key});
+  const VerificationPickerScreen({super.key, required this.index});
+
+  final int index;
 
   @override
   ConsumerState<VerificationPickerScreen> createState() =>
@@ -22,25 +23,28 @@ class VerificationPickerScreen extends ConsumerStatefulWidget {
 
 class _VerificationPickerScreenState
     extends ConsumerState<VerificationPickerScreen> {
+  int selectedIndex = 0;
+
   List<String> appBarTitle = [
     "ID Card Verification",
     "Address Verification",
     "Selfie Verification",
   ];
   List<List<String>> title = [
-    ["Passport", "ID Card", "Driver Licence"],
+    ["Passport", "National Id", "Voter Card", "Driver Licence"],
     ["Utility Bills", "Official Bank Statement"],
-    ["selfie", "selfie"],
   ];
   List<String> subTitle = [
     "International Passport",
-    "NIN or Any Valid Id card",
+    "Valid National Identity Card",
+    "Valid Voters  Card",
     "Valid Driver Licence",
   ];
   List<dynamic> icons = [
     FontAwesomeIcons.passport,
     FontAwesomeIcons.idCard,
-    FontAwesomeIcons.idCard,
+    FontAwesomeIcons.personBooth,
+    FontAwesomeIcons.idCardClip,
   ];
   List<String> header = [
     "Please choose the ID Card means you'd like to use to verify your identity. ",
@@ -50,14 +54,11 @@ class _VerificationPickerScreenState
 
   @override
   Widget build(BuildContext context) {
-    final methodScreen = ref.watch(dataFlowStateProvider);
-    final methodeScreenIndex = methodScreen[0].methodVerifyIndex;
-    final identityScreenIndex = methodScreen[0].identityVerifyIndex;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: primaryText(text: appBarTitle[methodeScreenIndex]),
+        title: primaryText(text: appBarTitle[widget.index]),
         leading: AppBarIcon(
           icons: Icons.arrow_back,
           function: () {
@@ -74,21 +75,18 @@ class _VerificationPickerScreenState
               child: Column(
                 children: [
                   10.ht,
-                  secondaryText(
-                    text: header[methodeScreenIndex],
-                    color: Colors.red,
-                  ),
+                  secondaryText(text: header[widget.index], color: Colors.red),
                   20.ht,
                   Expanded(
                     child: ListView.builder(
-                      itemCount: title[methodeScreenIndex].length,
+                      itemCount: title[widget.index].length,
                       itemBuilder: (context, index) {
-                        final yes = identityScreenIndex == index;
+                        final yes = selectedIndex == index;
                         return GestureDetector(
                           onTap: () {
-                            ref
-                                .read(dataFlowStateProvider.notifier)
-                                .updateIdentityIndex(index);
+                            setState(() {
+                              selectedIndex = index;
+                            });
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -97,7 +95,7 @@ class _VerificationPickerScreenState
                             );
                           },
                           child: VerificationOptionsItemsHolder(
-                            title: title[methodeScreenIndex][index],
+                            title: title[widget.index][index],
                             subTitle: subTitle[index],
                             icons: icons[index],
                             isClicked: yes,

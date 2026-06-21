@@ -40,6 +40,8 @@ import 'package:neat_nest/screens/user/widgets/payment/user_payment_method.dart'
 import 'package:neat_nest/screens/user/widgets/payment/widgets/add_payment_method.dart';
 import 'package:neat_nest/screens/user/widgets/payment/worker_payment_method.dart';
 import 'package:neat_nest/screens/user/widgets/settings/settings_screen.dart';
+import 'package:neat_nest/screens/user/widgets/verification/widget/verification_method_screen.dart';
+import 'package:neat_nest/screens/user/widgets/verification/widget/verification_start_screen.dart';
 import 'package:neat_nest/screens/user/widgets/verification/worker_verification_screen.dart';
 import 'package:neat_nest/utilities/bottom_nav/bottom_navigation_screen.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
@@ -81,6 +83,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoute.splash.path,
         name: AppRoute.splash.name,
         builder: (context, state) => SplashScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.verificationStartScreen.path,
+        name: AppRoute.verificationStartScreen.name,
+        builder: (context, state) => VerificationStartScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.verificationMethodScreen.path,
+        name: AppRoute.verificationMethodScreen.name,
+        builder: (context, state) => VerificationMethodScreen(),
       ),
       GoRoute(
         path: AppRoute.welcome.path,

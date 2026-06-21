@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -78,7 +77,7 @@ class SignUpController {
 
       showDialog(
         context: context,
-        barrierDismissible: false, // Prevent user from dismissing
+        barrierDismissible: false,
         builder: (context) => LoadingScreen(),
       );
       try {
@@ -97,10 +96,6 @@ class SignUpController {
         showErrorNotification(
           message: e.toString().replaceFirst("Exception: ", ""),
         );
-
-        if (kDebugMode) {
-          print(e);
-        }
         if (e is DioException) {
           showErrorNotification(
             message: e.error.toString().replaceFirst("Exception: ", ""),
