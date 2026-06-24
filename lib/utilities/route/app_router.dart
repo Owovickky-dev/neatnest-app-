@@ -40,7 +40,10 @@ import 'package:neat_nest/screens/user/widgets/payment/user_payment_method.dart'
 import 'package:neat_nest/screens/user/widgets/payment/widgets/add_payment_method.dart';
 import 'package:neat_nest/screens/user/widgets/payment/worker_payment_method.dart';
 import 'package:neat_nest/screens/user/widgets/settings/settings_screen.dart';
+import 'package:neat_nest/screens/user/widgets/verification/widget/documents_display_screen.dart';
+import 'package:neat_nest/screens/user/widgets/verification/widget/verification_image_upload_helper.dart';
 import 'package:neat_nest/screens/user/widgets/verification/widget/verification_method_screen.dart';
+import 'package:neat_nest/screens/user/widgets/verification/widget/verification_picker_screen.dart';
 import 'package:neat_nest/screens/user/widgets/verification/widget/verification_start_screen.dart';
 import 'package:neat_nest/screens/user/widgets/verification/worker_verification_screen.dart';
 import 'package:neat_nest/utilities/bottom_nav/bottom_navigation_screen.dart';
@@ -93,6 +96,30 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoute.verificationMethodScreen.path,
         name: AppRoute.verificationMethodScreen.name,
         builder: (context, state) => VerificationMethodScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.verificationImageUploadHelper.path,
+        name: AppRoute.verificationImageUploadHelper.name,
+        builder: (context, state) {
+          final data = state.extra as String;
+          return VerificationImageUploadHelper(title: data);
+        },
+      ),
+      GoRoute(
+        path: AppRoute.documentDisplayScreen.path,
+        name: AppRoute.documentDisplayScreen.name,
+        builder: (context, state) {
+          final data = state.extra as String;
+          return DocumentsDisplayScreen(title: data);
+        },
+      ),
+      GoRoute(
+        path: AppRoute.verificationPickerScreen.path,
+        name: AppRoute.verificationPickerScreen.name,
+        builder: (context, state) {
+          final data = state.extra as int;
+          return VerificationPickerScreen(index: data);
+        },
       ),
       GoRoute(
         path: AppRoute.welcome.path,

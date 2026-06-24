@@ -42,7 +42,7 @@ final class AppSkillControllerStateProvider
 }
 
 String _$appSkillControllerStateHash() =>
-    r'5e677203f2ee85bba7a4896ceaee787f9ef567ae';
+    r'59a28e8c9a0a1c15e921b3fdc92ec431fb1a581e';
 
 abstract class _$AppSkillControllerState extends $Notifier<List<String>> {
   List<String> build();

@@ -7,8 +7,8 @@ import 'package:neat_nest/data/repo/auth_repo.dart';
 import 'package:neat_nest/data/storage/secure_storage_helper.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
 
+import '../widget/app_notification.dart';
 import '../widget/loading_screen.dart';
 
 class PasswordController {

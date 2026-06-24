@@ -5,7 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:neat_nest/screens/user/model/user_payment_method_model.dart';
 import 'package:neat_nest/screens/user/notifiers/user_payment_method_state.dart';
 import 'package:neat_nest/utilities/app_data.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
+
+import '../widget/app_notification.dart';
 
 class AddUserPaymentController {
   final Ref ref;

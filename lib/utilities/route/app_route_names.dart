@@ -39,6 +39,9 @@ enum AppRoute {
   newPasswordScreen,
   verificationStartScreen,
   verificationMethodScreen,
+  verificationImageUploadHelper,
+  verificationPickerScreen,
+  documentDisplayScreen,
 }
 
 extension AppRouteNamesExtension on AppRoute {
@@ -124,6 +127,12 @@ extension AppRouteNamesExtension on AppRoute {
         return "/verificationStartScreen";
       case AppRoute.verificationMethodScreen:
         return "/verificationMethodScreen";
+      case AppRoute.verificationImageUploadHelper:
+        return "/verificationImageUploadHelper";
+      case AppRoute.verificationPickerScreen:
+        return "/verificationPickerScreen";
+      case AppRoute.documentDisplayScreen:
+        return "/documentDisplayScreen";
     }
   }
 }

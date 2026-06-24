@@ -3,8 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:neat_nest/data/repo/user_data_repo.dart';
 import 'package:neat_nest/screens/user/model/user_payment_method_model.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../../widget/app_notification.dart';
 
 part 'user_payment_method_state.g.dart';
 

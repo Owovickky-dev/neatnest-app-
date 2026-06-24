@@ -4,11 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:neat_nest/controller/state controller /booking/booking_state_controller.dart';
 import 'package:neat_nest/models/booking_model.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
 
 import '../data/repo/texting_data_repo.dart';
 import '../utilities/route/app_naviation_helper.dart';
 import '../utilities/route/app_route_names.dart';
+import '../widget/app_notification.dart';
 import '../widget/loading_screen.dart';
 
 class BookingFormController {

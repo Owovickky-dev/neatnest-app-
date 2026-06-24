@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:neat_nest/data/repo/booking_repo.dart';
 import 'package:neat_nest/models/booking_model.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../../widget/app_notification.dart';
 
 part 'booking_state_controller.g.dart';
 

@@ -14,10 +14,10 @@ import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/app_bar_holder.dart';
 import 'package:neat_nest/widget/image_upload_helper.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
 import 'package:neat_nest/widget/small_reusable_loader.dart';
 
 import '../../../../data/storage/secure_storage_helper.dart';
+import '../../../../widget/app_notification.dart';
 import '../../../../widget/app_text.dart';
 
 class EditProfileScreen extends StatefulWidget {

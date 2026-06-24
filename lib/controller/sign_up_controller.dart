@@ -5,10 +5,10 @@ import 'package:go_router/go_router.dart';
 import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
 import 'package:neat_nest/models/user_model.dart';
 import 'package:neat_nest/models/user_skills_model.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
 
 import '../utilities/route/app_naviation_helper.dart';
 import '../utilities/route/app_route_names.dart';
+import '../widget/app_notification.dart';
 import '../widget/loading_screen.dart';
 
 class SignUpController {

@@ -8,10 +8,10 @@ import 'package:neat_nest/data/repo/otp_verification_repo.dart';
 import 'package:neat_nest/providers/is_logged_in_state.dart';
 import 'package:neat_nest/widget/app_confirmation_button.dart';
 import 'package:neat_nest/widget/loading_screen.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
 
 import '../utilities/route/app_naviation_helper.dart';
 import '../utilities/route/app_route_names.dart';
+import '../widget/app_notification.dart';
 
 class SignInController {
   SignInController();

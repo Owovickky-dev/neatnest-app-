@@ -2,10 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/utilities/route/app_router_key.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
 
 import '../../utilities/api_error_handler.dart';
 import '../../utilities/constant/constant_data.dart';
+import '../../widget/app_notification.dart';
 import '../storage/secure_storage_helper.dart';
 
 class DioClient {
@@ -20,7 +20,7 @@ class DioClient {
           "Accept": "application/json",
         },
         validateStatus: (status) {
-          return status! < 500;
+          return status != null && status < 400;
         },
       ),
     );
@@ -29,55 +29,57 @@ class DioClient {
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           final token = await SecureStorageHelper.getToken();
+
           if (token != null && token.isNotEmpty) {
             options.headers["Authorization"] = "Bearer $token";
-          } else {
-            print("❌ Request without token");
           }
+
           return handler.next(options);
         },
+
         onResponse: (response, handler) {
           return handler.next(response);
         },
-        onError: (DioException e, handler) async {
-          if (e.response?.statusCode == 500) {
-            final responseData = e.response?.data;
-            final message = responseData?["message"];
-            final error = responseData?["error"];
 
-            if (message == "jwt expired" &&
-                error is Map &&
-                error["name"] == "TokenExpiredError") {
-              final newToken = await _refreshToken();
-              if (newToken != null) {
-                // print("✅ AUTO-REFRESH SUCCESSFUL");
-                // Update the request with new token
-                e.requestOptions.headers["Authorization"] = "Bearer $newToken";
-                // Retry the original request
-                try {
-                  final response = await dio.request(
-                    e.requestOptions.path,
-                    data: e.requestOptions.data,
-                    options: Options(
-                      method: e.requestOptions.method,
-                      headers: e.requestOptions.headers,
-                    ),
-                    queryParameters: e.requestOptions.queryParameters,
-                  );
-                  return handler.resolve(response);
-                } catch (retryError) {
-                  print("❌ Retry failed: $retryError");
-                  return handler.next(e);
-                }
-              } else {
-                print("❌ AUTO-REFRESH FAILED - Logging out");
-                await _logoutUser();
+        onError: (DioException e, handler) async {
+          final statusCode = e.response?.statusCode;
+          final data = e.response?.data;
+          final backendStatusCode = data?["error"]?["statusCode"];
+
+          final isTokenExpired = statusCode == 401 || backendStatusCode == 401;
+
+          //  HANDLE TOKEN EXPIRY
+          if (isTokenExpired) {
+            final newToken = await _refreshToken();
+
+            if (newToken != null) {
+              // retry request with new token
+              e.requestOptions.headers["Authorization"] = "Bearer $newToken";
+
+              try {
+                final response = await dio.request(
+                  e.requestOptions.path,
+                  data: e.requestOptions.data,
+                  queryParameters: e.requestOptions.queryParameters,
+                  options: Options(
+                    method: e.requestOptions.method,
+                    headers: e.requestOptions.headers,
+                  ),
+                );
+
+                return handler.resolve(response);
+              } catch (retryError) {
                 return handler.next(e);
               }
+            } else {
+              await _logoutUser();
+              return handler.next(e);
             }
           }
 
+          //  OTHER ERRORS
           final errorMessage = ApiErrorHandler.getErrorMessage(e);
+
           return handler.reject(
             DioException(
               requestOptions: e.requestOptions,
@@ -89,12 +91,14 @@ class DioClient {
         },
       ),
     );
+
     return dio;
   }
 
   Future<String?> _refreshToken() async {
     try {
       final refreshToken = await SecureStorageHelper.getRefreshToken();
+
       final dio = Dio(
         BaseOptions(
           baseUrl: ConstantData.BASE_URL,
@@ -114,18 +118,18 @@ class DioClient {
         if (newToken != null) {
           await SecureStorageHelper.saveToken(newToken);
         }
+
         if (newRefreshToken != null) {
           await SecureStorageHelper.saveRefreshToken(newRefreshToken);
         }
+
         return newToken;
-      } else {
-        return null;
       }
-    } catch (e) {
-      print('❌ TOKEN REFRESH FAILED: $e');
+
       return null;
-    } finally {
-      print("=== REFRESH TOKEN PROCESS END ===");
+    } catch (e) {
+      print(" TOKEN REFRESH FAILED: $e");
+      return null;
     }
   }
 

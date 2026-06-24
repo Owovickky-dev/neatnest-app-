@@ -30,4 +30,6 @@ class ConstantData {
   static const FORGOTPASSWORD = "/auth/forgotpassword";
   static const PASSWORDCODEVERIFICATION = "/auth/passwordcodeverification";
   static const RESETPASSWORD = "/auth/resetpassword";
+  static const USERVERIFICATION = "/verification";
+  static const GETUSERVERIFICATION = "$USERVERIFICATION/user";
 }

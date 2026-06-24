@@ -9,10 +9,10 @@ import 'package:intl/intl.dart';
 import 'package:neat_nest/controller/state%20controller%20/ads/ads_state_controller.dart';
 import 'package:neat_nest/controller/state%20controller%20/ads/user_ads_state_controller.dart';
 import 'package:neat_nest/models/ads_model.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
 
 import '../utilities/route/app_naviation_helper.dart';
 import '../utilities/route/app_route_names.dart';
+import '../widget/app_notification.dart';
 import '../widget/loading_screen.dart';
 
 class AdsController {

@@ -17,7 +17,7 @@ import 'package:neat_nest/widget/multiple_select_image.dart';
 
 import '../../../../controller/state controller /user/user_controller_state.dart';
 import '../../../../widget/app_bar_holder.dart';
-import '../../../../widget/notificaiton_content.dart';
+import '../../../../widget/app_notification.dart';
 import '../../../history/utilities/text_filed_holder.dart';
 import '../../utilities/auth_text_filed.dart';
 

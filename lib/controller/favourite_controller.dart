@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neat_nest/controller/state%20controller%20/favourite/favourite_state_controller.dart';
 
-import '../widget/notificaiton_content.dart';
+import '../widget/app_notification.dart';
 
 class FavouriteController {
   FavouriteController();

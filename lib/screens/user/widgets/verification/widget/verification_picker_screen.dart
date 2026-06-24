@@ -3,10 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neat_nest/screens/user/utilities/verification_options_items_holder.dart';
-import 'package:neat_nest/screens/user/widgets/verification/widget/Id_upload_screen.dart';
 import 'package:neat_nest/utilities/app_button.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
+import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
+import 'package:neat_nest/utilities/route/app_route_names.dart';
 
 import '../../../../../widget/app_text.dart';
 import '../../../../history/utilities/app_bar_icon.dart';
@@ -87,11 +88,10 @@ class _VerificationPickerScreenState
                             setState(() {
                               selectedIndex = index;
                             });
-                            Navigator.push(
+                            AppNavigatorHelper.push(
                               context,
-                              MaterialPageRoute(
-                                builder: (_) => IdUploadScreen(),
-                              ),
+                              AppRoute.verificationImageUploadHelper,
+                              extra: title[widget.index][index],
                             );
                           },
                           child: VerificationOptionsItemsHolder(

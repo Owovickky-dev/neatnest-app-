@@ -8,9 +8,9 @@ import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/app_text.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
 
 import '../../../../utilities/constant/colors.dart';
+import '../../../../widget/app_notification.dart';
 
 class ViewAdsTemplate extends ConsumerStatefulWidget {
   const ViewAdsTemplate({

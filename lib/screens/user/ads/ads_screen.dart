@@ -4,11 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neat_nest/screens/booking/widgets/group_booking_data.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
 
 import '../../../utilities/route/app_naviation_helper.dart';
 import '../../../utilities/route/app_route_names.dart';
 import '../../../widget/app_bar_holder.dart';
+import '../../../widget/app_notification.dart';
 import '../../../widget/app_text.dart';
 import '../widgets/row_data_holder.dart';
 

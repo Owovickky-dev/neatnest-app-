@@ -19,10 +19,10 @@ import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/widget/app_confirmation_button.dart';
 import 'package:neat_nest/widget/app_text.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
 
 import '../../controller/state controller /ads/ads_state_controller.dart';
 import '../../utilities/route/app_route_names.dart';
+import '../../widget/app_notification.dart';
 import '../../widget/capitalize_first_character.dart';
 
 class AdsDetailsScreen extends ConsumerStatefulWidget {

@@ -1,0 +1,210 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:neat_nest/utilities/app_button.dart';
+import 'package:neat_nest/utilities/constant/colors.dart';
+import 'package:neat_nest/widget/app_bar_holder.dart';
+import 'package:neat_nest/widget/app_text.dart';
+import 'package:neat_nest/widget/image_upload_helper.dart';
+
+import '../../../../../utilities/constant/extension.dart';
+
+class VerificationImageUploadHelper extends StatefulWidget {
+  const VerificationImageUploadHelper({super.key, required this.title});
+
+  final String title;
+
+  @override
+  State<VerificationImageUploadHelper> createState() =>
+      _VerificationImageUploadHelperState();
+}
+
+class _VerificationImageUploadHelperState
+    extends State<VerificationImageUploadHelper> {
+  File? frontImagePicked;
+  File? backImagePicked;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBarHolder(title: widget.title),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10.w),
+        child: Column(
+          children: [
+            20.ht,
+            primaryText(
+              text:
+                  (widget.title != "Passport" &&
+                      widget.title != "Utility Bills" &&
+                      widget.title != "Official Bank Statement" &&
+                      widget.title != "Selfie")
+                  ? "Please kindly upload a clear picture of the front and back of your ${widget.title} showing the four corners "
+                  : (widget.title == "Utility Bills" ||
+                        widget.title == "Official Bank Statement")
+                  ? "Please kindly upload a clear picture of your  ${widget.title} not less than 3 months "
+                  : (widget.title == "Selfie")
+                  ? "Please take a clear, well-lit selfie with your face fully visible for verification purposes."
+                  : "Please kindly upload a clear picture of your  ${widget.title} ",
+              color: Colors.redAccent,
+              fontSize: 14.sp,
+            ),
+            20.ht,
+            GestureDetector(
+              onTap: () async {
+                if (frontImagePicked != null) {
+                  final imageRepick = await ImageUploadHelper.pickAndProcess(
+                    ImageSource.gallery,
+                    ImageType.verification,
+                  );
+                  if (imageRepick != null) {
+                    setState(() {
+                      frontImagePicked = imageRepick;
+                    });
+                  }
+                }
+              },
+              child: Container(
+                width: double.infinity,
+                height: 170.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.r),
+                  border: BoxBorder.all(
+                    width: 3,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+                child: frontImagePicked == null
+                    ? GestureDetector(
+                        onTap: () async {
+                          final frontFile =
+                              await ImageUploadHelper.pickAndProcess(
+                                ImageSource.gallery,
+                                ImageType.verification,
+                              );
+                          if (frontFile != null) {
+                            setState(() {
+                              frontImagePicked = frontFile;
+                            });
+                          }
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.camera_alt_outlined, size: 30.sp),
+                            secondaryText(text: "Upload the front Image"),
+                          ],
+                        ),
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadiusGeometry.circular(10.r),
+                        child: Image.file(
+                          frontImagePicked!,
+                          width: double.infinity,
+                          height: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+              ),
+            ),
+            20.ht,
+            ?(widget.title != "Passport" &&
+                    widget.title != "Utility Bills" &&
+                    widget.title != "Official Bank Statement" &&
+                    widget.title != "Selfie")
+                ? GestureDetector(
+                    onTap: () async {
+                      if (backImagePicked != null) {
+                        final imageRepick =
+                            await ImageUploadHelper.pickAndProcess(
+                              ImageSource.gallery,
+                              ImageType.verification,
+                            );
+                        if (imageRepick != null) {
+                          setState(() {
+                            backImagePicked = imageRepick;
+                          });
+                        }
+                      }
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 170.h,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.r),
+                        border: BoxBorder.all(
+                          width: 3,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                      child: backImagePicked == null
+                          ? GestureDetector(
+                              onTap: () async {
+                                final frontFile =
+                                    await ImageUploadHelper.pickAndProcess(
+                                      ImageSource.gallery,
+                                      ImageType.verification,
+                                    );
+                                if (frontFile != null) {
+                                  setState(() {
+                                    backImagePicked = frontFile;
+                                  });
+                                }
+                              },
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.camera_alt_outlined, size: 30.sp),
+                                  secondaryText(text: "Upload the back Image"),
+                                ],
+                              ),
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadiusGeometry.circular(10.r),
+                              child: Image.file(
+                                backImagePicked!,
+                                width: double.infinity,
+                                height: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                    ),
+                  )
+                : null,
+            20.ht,
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  frontImagePicked = null;
+                  backImagePicked = null;
+                });
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.lock_reset_outlined,
+                    size: 30.sp,
+                    color: AppColors.secondaryTextColor,
+                  ),
+                  secondaryText(text: "Reset Image Picked"),
+                ],
+              ),
+            ),
+            50.ht,
+            AppButton(
+              text: "Submit",
+              fontSize: 18.sp,
+              bckColor: AppColors.primaryColor,
+              textColor: Colors.white,
+              width: double.infinity,
+              function: () {},
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
