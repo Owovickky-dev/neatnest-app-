@@ -40,12 +40,12 @@ import 'package:neat_nest/screens/user/widgets/payment/user_payment_method.dart'
 import 'package:neat_nest/screens/user/widgets/payment/widgets/add_payment_method.dart';
 import 'package:neat_nest/screens/user/widgets/payment/worker_payment_method.dart';
 import 'package:neat_nest/screens/user/widgets/settings/settings_screen.dart';
+import 'package:neat_nest/screens/user/widgets/verification/model/display_data_model.dart';
 import 'package:neat_nest/screens/user/widgets/verification/widget/documents_display_screen.dart';
 import 'package:neat_nest/screens/user/widgets/verification/widget/verification_image_upload_helper.dart';
 import 'package:neat_nest/screens/user/widgets/verification/widget/verification_method_screen.dart';
 import 'package:neat_nest/screens/user/widgets/verification/widget/verification_picker_screen.dart';
 import 'package:neat_nest/screens/user/widgets/verification/widget/verification_start_screen.dart';
-import 'package:neat_nest/screens/user/widgets/verification/worker_verification_screen.dart';
 import 'package:neat_nest/utilities/bottom_nav/bottom_navigation_screen.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/utilities/route/app_router_key.dart';
@@ -90,7 +90,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoute.verificationStartScreen.path,
         name: AppRoute.verificationStartScreen.name,
-        builder: (context, state) => VerificationStartScreen(),
+        builder: (context, state) {
+          final start = state.extra as bool;
+          return VerificationStartScreen(isStart: start);
+        },
       ),
       GoRoute(
         path: AppRoute.verificationMethodScreen.path,
@@ -109,8 +112,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoute.documentDisplayScreen.path,
         name: AppRoute.documentDisplayScreen.name,
         builder: (context, state) {
-          final data = state.extra as String;
-          return DocumentsDisplayScreen(title: data);
+          final data = state.extra as DisplayDatHolderModel;
+          return DocumentsDisplayScreen(title: data.title, status: data.status);
         },
       ),
       GoRoute(
@@ -149,11 +152,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoute.signIn.path,
         name: AppRoute.signIn.name,
         builder: (context, state) => SignInScreen(),
-      ),
-      GoRoute(
-        path: AppRoute.workerVerificationScreen.path,
-        name: AppRoute.workerVerificationScreen.name,
-        builder: (context, state) => WorkerVerificationScreen(),
       ),
       GoRoute(
         path: AppRoute.editProfile.path,

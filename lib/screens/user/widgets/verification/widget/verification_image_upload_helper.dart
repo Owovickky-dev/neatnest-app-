@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:neat_nest/controller/verification_controller.dart';
 import 'package:neat_nest/utilities/app_button.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/widget/app_bar_holder.dart';
@@ -23,6 +24,8 @@ class VerificationImageUploadHelper extends StatefulWidget {
 
 class _VerificationImageUploadHelperState
     extends State<VerificationImageUploadHelper> {
+  final VerificationController _verificationController =
+      VerificationController();
   File? frontImagePicked;
   File? backImagePicked;
 
@@ -200,7 +203,13 @@ class _VerificationImageUploadHelperState
               bckColor: AppColors.primaryColor,
               textColor: Colors.white,
               width: double.infinity,
-              function: () {},
+              function: () {
+                _verificationController.idType = widget.title.trim();
+                _verificationController.backImage = backImagePicked;
+                _verificationController.frontImage = frontImagePicked;
+
+                _verificationController.submitData(context);
+              },
             ),
           ],
         ),

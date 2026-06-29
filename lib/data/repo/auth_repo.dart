@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:neat_nest/controller/sign_in_controller.dart';
 import 'package:neat_nest/data/api/api_client.dart';
 import 'package:neat_nest/models/update_personal_profile_model.dart';
 import 'package:neat_nest/models/user_model.dart';
@@ -7,14 +8,13 @@ import 'package:neat_nest/utilities/constant/constant_data.dart';
 class AuthRepo {
   final Dio _dio = DioClient().createDio();
 
-  Future<Response> signIn({
-    required String email,
-    required String password,
-  }) async {
-    final response = await _dio.post(
-      ConstantData.LOGIN,
-      data: {"email": email, "password": password},
-    );
+  Future<Response> signIn(LoginModel data) async {
+    final response = await _dio.post(ConstantData.LOGIN, data: data.toJson());
+    return response;
+  }
+
+  Future<Response> signOut() async {
+    final response = await _dio.post(ConstantData.LOGOUT);
     return response;
   }
 

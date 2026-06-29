@@ -50,12 +50,10 @@ class FavouriteDataHolder extends ConsumerWidget {
           color: AppColors.containerLightBackground,
         ),
 
-        //  FIX: prevent overflow by using natural sizing
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            //  IMAGE (safe fixed height)
             SizedBox(
               width: double.infinity,
               height: 120.h,
@@ -68,14 +66,12 @@ class FavouriteDataHolder extends ConsumerWidget {
               ),
             ),
 
-            //  CONTENT SECTION
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // USER + RATING
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -107,7 +103,6 @@ class FavouriteDataHolder extends ConsumerWidget {
 
                   6.ht,
 
-                  // TITLE
                   primaryText(
                     text: ads.title!,
                     overflow: TextOverflow.ellipsis,
@@ -117,7 +112,6 @@ class FavouriteDataHolder extends ConsumerWidget {
 
                   6.ht,
 
-                  // CATEGORY
                   secondaryText(
                     text: capitalizeFirstCharacter(ads.category),
                     overflow: TextOverflow.ellipsis,
@@ -127,7 +121,6 @@ class FavouriteDataHolder extends ConsumerWidget {
 
                   8.ht,
 
-                  // PRICE + FAVORITE BUTTON
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

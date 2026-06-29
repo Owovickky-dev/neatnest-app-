@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:neat_nest/controller/account_verification_controller.dart';
 import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
 import 'package:neat_nest/models/user_model.dart';
 import 'package:neat_nest/models/user_skills_model.dart';
@@ -88,7 +89,10 @@ class SignUpController {
         AppNavigatorHelper.pushReplacement(
           context,
           AppRoute.accountVerification,
-          extra: mail,
+          extra: VerificationCodeModel(
+            userMail: mail,
+            verificationType: VerificationType.signUp,
+          ),
         );
       } catch (e) {
         if (!context.mounted) return;

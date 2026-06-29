@@ -6,6 +6,7 @@ import 'package:neat_nest/controller/account_verification_controller.dart';
 import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
 import 'package:neat_nest/data/repo/otp_verification_repo.dart';
 import 'package:neat_nest/providers/is_logged_in_state.dart';
+import 'package:neat_nest/utilities/device_helper.dart';
 import 'package:neat_nest/widget/app_confirmation_button.dart';
 import 'package:neat_nest/widget/loading_screen.dart';
 
@@ -35,27 +36,38 @@ class SignInController {
 
     final userNotifier = ref.read(userControllerStateProvider.notifier);
 
+    final deviceData = await DeviceHelper.getDeviceInfo();
+
+    final loginData = LoginModel(
+      email: email,
+      password: password,
+      deviceData: deviceData,
+    );
+
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => LoadingScreen(),
     );
-
+    print("I got here");
     try {
-      await userNotifier.login(email, password);
+      await userNotifier.login(loginData);
+      print("After ruinng to server");
       if (!context.mounted) return;
       ref.read(isLoggedInStateProvider.notifier).yesLogged(true);
       context.pop();
       showSuccessNotification(message: "Login Successful");
       AppNavigatorHelper.pushReplacement(context, AppRoute.bottomNavigation);
     } catch (e) {
-      String verifyMessage = "Please kindly verify your account";
       if (!context.mounted) return;
       context.pop();
+      final errorMessage = e.toString().replaceFirst("Exception: ", "");
       showErrorNotification(
-        message: e.toString().replaceFirst("Exception: ", ""),
+        message: errorMessage == "ACCOUNT_NOT_VERIFIED"
+            ? "Please your email need to ve verify"
+            : errorMessage,
       );
-      if (e.toString().replaceFirst("Exception: ", "") == verifyMessage) {
+      if (errorMessage == "ACCOUNT_NOT_VERIFIED") {
         appConfirmationButton(
           context: context,
           title: "Verify Account",
@@ -76,7 +88,7 @@ class SignInController {
               );
               if (!context.mounted) return;
               context.pop();
-              AppNavigatorHelper.pushReplacement(
+              AppNavigatorHelper.push(
                 context,
                 AppRoute.accountVerification,
                 extra: VerificationCodeModel(
@@ -117,5 +129,29 @@ class SignInController {
       context.pop();
       showErrorNotification(message: "Logout failed");
     }
+  }
+}
+
+class LoginModel {
+  final String email;
+  final String password;
+  final Map<String, dynamic> deviceData;
+
+  LoginModel({
+    required this.email,
+    required this.password,
+    required this.deviceData,
+  });
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    if (email.isNotEmpty) {
+      data["email"] = email;
+    }
+    if (password.isNotEmpty) {
+      data["password"] = password;
+    }
+    data["deviceData"] = deviceData;
+    return data;
   }
 }

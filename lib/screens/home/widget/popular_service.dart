@@ -172,7 +172,7 @@ class _PopularServiceState extends ConsumerState<PopularService> {
                           } else {
                             await ref
                                 .read(favouriteStateControllerProvider.notifier)
-                                .addFavourite(ads.id!);
+                                .addFavourite(ads.id!, context);
                           }
                         },
                         child: Icon(

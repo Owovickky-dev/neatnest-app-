@@ -20,6 +20,7 @@ class UserModel {
   final double? ratingQuantity;
   final String? joinedAt;
   final String? profilePicPublicId;
+  final bool? verificationStarted;
   final List<UserSkillModel>? userSkills;
 
   UserModel({
@@ -41,6 +42,7 @@ class UserModel {
     this.profilePic,
     this.profilePicPublicId,
     this.userSkills,
+    this.verificationStarted,
   }) : locations = locations ?? [];
 
   Map<String, dynamic> toJson() {
@@ -101,6 +103,7 @@ class UserModel {
       ratingQuantity: (json["ratingQuantity"] as num?)?.toDouble() ?? 0.0,
       username: json["username"]?.toString() ?? "",
       isVerified: json["isVerified"] == true,
+      verificationStarted: json["verificationStarted"] == true,
       userSkills: json["userSkills"] != null
           ? (json["userSkills"] as List)
                 .map((userSkill) => UserSkillModel.fromJson(userSkill))
@@ -132,6 +135,51 @@ class UserModel {
       "profilePic": profilePic,
       "profilePicPublicId": profilePicPublicId,
       "userSkills": userSkills,
+      "verificationStarted": verificationStarted,
     };
+  }
+
+  UserModel copyWith({
+    String? id,
+    String? name,
+    String? email,
+    String? password,
+    String? passwordConfirm,
+    String? username,
+    String? gender,
+    String? role,
+    String? profilePic,
+    String? phoneNumber,
+    List<UserLocationModel>? locations,
+    WorkerStatisticsModel? workerStatistics,
+    bool? isVerified,
+    double? ratingAverage,
+    double? ratingQuantity,
+    String? joinedAt,
+    String? profilePicPublicId,
+    bool? verificationStarted,
+    List<UserSkillModel>? userSkills,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      passwordConfirm: passwordConfirm ?? this.passwordConfirm,
+      username: username ?? this.username,
+      gender: gender ?? this.gender,
+      role: role ?? this.role,
+      profilePic: profilePic ?? this.profilePic,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      locations: locations ?? this.locations,
+      workerStatistics: workerStatistics ?? this.workerStatistics,
+      isVerified: isVerified ?? this.isVerified,
+      ratingAverage: ratingAverage ?? this.ratingAverage,
+      ratingQuantity: ratingQuantity ?? this.ratingQuantity,
+      joinedAt: joinedAt ?? this.joinedAt,
+      profilePicPublicId: profilePicPublicId ?? this.profilePicPublicId,
+      verificationStarted: verificationStarted ?? this.verificationStarted,
+      userSkills: userSkills ?? this.userSkills,
+    );
   }
 }

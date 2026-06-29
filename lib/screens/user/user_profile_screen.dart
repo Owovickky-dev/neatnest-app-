@@ -32,7 +32,6 @@ class UserProfileScreen extends ConsumerWidget {
     if (userData == null) {
       return const Scaffold(body: Center(child: LoadingScreen()));
     }
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBarHolder(
@@ -122,6 +121,7 @@ class UserProfileScreen extends ConsumerWidget {
                     AppNavigatorHelper.push(
                       context,
                       AppRoute.verificationStartScreen,
+                      extra: userData.verificationStarted,
                     );
                   } else {
                     print("This is user profile");

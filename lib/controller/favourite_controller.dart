@@ -16,7 +16,7 @@ class FavouriteController {
     try {
       final response = await ref
           .read(favouriteStateControllerProvider.notifier)
-          .addFavourite(adsId);
+          .addFavourite(adsId, context);
       if (response.statusCode == 201) {
         if (!context.mounted) return;
         showSuccessNotification(message: "Added to your favourite");

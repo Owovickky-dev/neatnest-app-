@@ -5,6 +5,7 @@ class ConstantData {
       "https://sevenfold-chance-giggle.ngrok-free.dev/api/v1";
   static final SOCKET_IO = "https://sevenfold-chance-giggle.ngrok-free.dev";
   static const LOGIN = "/auth/login";
+  static const LOGOUT = "/auth/logout";
   static const ABOUTME = "/auth/me";
   static const REGISTER = "/auth/register";
   static const REFRESHTOKEN = "/auth/refreshtoken";

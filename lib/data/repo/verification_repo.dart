@@ -9,9 +9,11 @@ class VerificationRepo {
   Future<Response> uploadUserId(
     UserUploadVerificationModel verification,
   ) async {
+    final formData = await verification.toFormData();
+
     final response = await _dio.patch(
       ConstantData.USERVERIFICATION,
-      data: verification.toFormData(),
+      data: formData,
     );
     return response;
   }
@@ -23,7 +25,6 @@ class VerificationRepo {
 
   Future<Response> getUserId() async {
     final response = await _dio.get(ConstantData.USERVERIFICATION);
-
     return response;
   }
 }

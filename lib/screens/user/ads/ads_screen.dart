@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neat_nest/screens/booking/widgets/group_booking_data.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
+import 'package:neat_nest/widget/app_confirmation_button.dart';
 
 import '../../../utilities/route/app_naviation_helper.dart';
 import '../../../utilities/route/app_route_names.dart';
@@ -54,8 +55,21 @@ class AdsScreen extends ConsumerWidget {
                             AppRoute.postAdsScreen,
                           )
                         : showErrorNotification(
-                            message: "Please verify your account first",
+                            message: "Please verify your Identity first",
                           );
+                    appConfirmationButton(
+                      context: context,
+                      title: "Identity Verification",
+                      subTitle: "Do you want to verify your Identity now",
+                      textButtonTextLeft: "Cancel",
+                      textButtonTextRight: "Yes",
+                      functionRight: () {
+                        AppNavigatorHelper.push(
+                          context,
+                          AppRoute.verificationMethodScreen,
+                        );
+                      },
+                    );
                   },
                 ),
                 30.ht,

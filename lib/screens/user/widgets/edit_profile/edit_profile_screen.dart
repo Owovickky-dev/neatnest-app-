@@ -33,6 +33,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ProfileSecurityController();
   bool isLoading = false;
   String? userImageLink;
+  String? userName;
 
   @override
   void initState() {
@@ -43,9 +44,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void loadUserImage() async {
     final userData = await SecureStorageHelper.getUserData();
 
-    if (userData != null && userData.profilePic != null) {
+    if (userData != null) {
+      if (userData.profilePic != null) {
+        setState(() {
+          userImageLink = userData.profilePic;
+        });
+      }
       setState(() {
-        userImageLink = userData.profilePic;
+        userName = userData.username;
       });
     }
   }
@@ -90,158 +96,150 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBarHolder(title: 'Edit Profile'),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                height: 200.h,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(20.r),
-                  ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              height: 200.h,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: AppColors.primaryColor.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(20.r),
                 ),
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            height: 130,
-                            width: 130,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: AppColors.primaryColor,
-                                width: 3,
-                              ),
+              ),
+              child: Stack(
+                children: [
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 150,
+                          width: 150,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: AppColors.primaryColor,
+                              width: 3,
                             ),
-                            child: ClipOval(
-                              child: selectedImage != null
-                                  ? Opacity(
-                                      opacity: 0.5,
-                                      child: Image.file(
-                                        selectedImage!,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    )
-                                  : (userImageLink != null &&
-                                        userImageLink!.isNotEmpty)
-                                  ? CachedNetworkImage(
-                                      imageUrl: userImageLink!,
+                          ),
+                          child: ClipOval(
+                            child: selectedImage != null
+                                ? Opacity(
+                                    opacity: 0.5,
+                                    child: Image.file(
+                                      selectedImage!,
                                       fit: BoxFit.cover,
-                                      placeholder: (context, url) =>
-                                          SmallLoader(),
-                                      errorWidget: (context, url, error) =>
-                                          Icon(
-                                            Icons.person,
-                                            size: 60,
-                                            color: Colors.grey,
-                                          ),
-                                    )
-                                  : Icon(
+                                    ),
+                                  )
+                                : (userImageLink != null &&
+                                      userImageLink!.isNotEmpty)
+                                ? CachedNetworkImage(
+                                    imageUrl: userImageLink!,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        SmallLoader(),
+                                    errorWidget: (context, url, error) => Icon(
                                       Icons.person,
                                       size: 60,
                                       color: Colors.grey,
                                     ),
-                            ),
+                                  )
+                                : Icon(
+                                    Icons.person,
+                                    size: 60,
+                                    color: Colors.grey,
+                                  ),
                           ),
-                          10.ht,
-                          primaryText(text: "Owovickky"),
-                        ],
-                      ),
+                        ),
+                        10.ht,
+                        primaryText(text: userName ?? "No Username Set"),
+                      ],
                     ),
+                  ),
 
-                    Positioned(
-                      top: 35.h,
-                      right: 90.w,
-                      child: GestureDetector(
-                        onTap: pickAndUploadImage,
-                        child: Container(
-                          height: 50.h,
-                          width: 50.w,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25.r),
-                            color: Colors.white,
-                          ),
-                          child: Center(
-                            child: Icon(
-                              Icons.edit_outlined,
-                              color: AppColors.primaryColor,
-                              size: 30,
-                            ),
+                  Positioned(
+                    top: 35.h,
+                    right: 85.w,
+                    child: GestureDetector(
+                      onTap: pickAndUploadImage,
+                      child: Container(
+                        height: 50.h,
+                        width: 50.w,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25.r),
+                          color: Colors.white,
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.edit_outlined,
+                            color: AppColors.primaryColor,
+                            size: 30,
                           ),
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+            ),
 
-              20.ht,
+            20.ht,
 
-              DottedLine(
-                dashColor: AppColors.primaryColor.withValues(alpha: .5),
+            DottedLine(dashColor: AppColors.primaryColor.withValues(alpha: .5)),
+
+            10.ht,
+
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              child: Column(
+                children: [
+                  RowDataHolder(
+                    text: 'Personal Information',
+                    icons: FontAwesomeIcons.user,
+                    function: () {
+                      AppNavigatorHelper.push(
+                        context,
+                        AppRoute.personalInfoEdit,
+                      );
+                    },
+                  ),
+                  15.ht,
+                  RowDataHolder(
+                    text: 'Payment Methods',
+                    icons: FontAwesomeIcons.buildingColumns,
+                    function: () {
+                      AppNavigatorHelper.push(
+                        context,
+                        AppRoute.userPaymentMethod,
+                      );
+                    },
+                  ),
+                  15.ht,
+                  RowDataHolder(
+                    text: 'Address Information',
+                    icons: FontAwesomeIcons.locationDot,
+                    function: () {
+                      AppNavigatorHelper.push(context, AppRoute.userAddresses);
+                    },
+                  ),
+                  15.ht,
+                  RowDataHolder(
+                    text: 'About MySelf',
+                    icons: FontAwesomeIcons.user,
+                    function: () {
+                      AppNavigatorHelper.push(
+                        context,
+                        AppRoute.viewAboutMeScreen,
+                      );
+                    },
+                  ),
+                  30.ht,
+                ],
               ),
-
-              10.ht,
-
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                child: Column(
-                  children: [
-                    RowDataHolder(
-                      text: 'Personal Information',
-                      icons: FontAwesomeIcons.user,
-                      function: () {
-                        AppNavigatorHelper.push(
-                          context,
-                          AppRoute.personalInfoEdit,
-                        );
-                      },
-                    ),
-                    15.ht,
-                    RowDataHolder(
-                      text: 'Payment Methods',
-                      icons: FontAwesomeIcons.buildingColumns,
-                      function: () {
-                        AppNavigatorHelper.push(
-                          context,
-                          AppRoute.userPaymentMethod,
-                        );
-                      },
-                    ),
-                    15.ht,
-                    RowDataHolder(
-                      text: 'Address Information',
-                      icons: FontAwesomeIcons.locationDot,
-                      function: () {
-                        AppNavigatorHelper.push(
-                          context,
-                          AppRoute.userAddresses,
-                        );
-                      },
-                    ),
-                    15.ht,
-                    RowDataHolder(
-                      text: 'About MySelf',
-                      icons: FontAwesomeIcons.user,
-                      function: () {
-                        AppNavigatorHelper.push(
-                          context,
-                          AppRoute.viewAboutMeScreen,
-                        );
-                      },
-                    ),
-                    30.ht,
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

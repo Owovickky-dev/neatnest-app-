@@ -33,7 +33,7 @@ final class UserIdentityCardProvider
   UserIdentityCard create() => UserIdentityCard();
 }
 
-String _$userIdentityCardHash() => r'efd95936eff4a3909784aa2cf21ab32358b73294';
+String _$userIdentityCardHash() => r'b5d318cf3c4135b5e144b150283b9c9bf4b3064d';
 
 abstract class _$UserIdentityCard extends $AsyncNotifier<DisplayDataModel?> {
   FutureOr<DisplayDataModel?> build();

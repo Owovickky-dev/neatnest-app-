@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neat_nest/models/verification_model.dart';
+import 'package:neat_nest/screens/user/widgets/verification/model/display_data_model.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
@@ -25,6 +26,14 @@ class VerificationMethodScreen extends ConsumerStatefulWidget {
 class _VerificationMethodScreenState
     extends ConsumerState<VerificationMethodScreen> {
   int selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    ref
+        .read(userVerificationStateProvider.notifier)
+        .getUserVerificationStatus();
+  }
 
   FaIcon getIconStatus(VerificationStatus status) {
     switch (status) {
@@ -56,6 +65,19 @@ class _VerificationMethodScreenState
           color: AppColors.secondaryTextColor,
           size: 30.sp,
         );
+    }
+  }
+
+  String getDisplayMessage(VerificationStatus status, String title) {
+    switch (status) {
+      case VerificationStatus.pending:
+        return "Awaiting your $title result";
+      case VerificationStatus.approved:
+        return "$title is verified";
+      case VerificationStatus.rejected:
+        return "Your $title Identity";
+      case VerificationStatus.notStarted:
+        return "Your $title yet to start";
     }
   }
 
@@ -127,14 +149,22 @@ class _VerificationMethodScreenState
                                 extra: "Selfie",
                               );
                             } else {
-                              if (item.status == VerificationStatus.approved) {
+                              if (item.status == VerificationStatus.approved ||
+                                  item.status == VerificationStatus.pending ||
+                                  item.status == VerificationStatus.rejected) {
                                 showSuccessNotification(
-                                  message: "Already Verified",
+                                  message: getDisplayMessage(
+                                    item.status,
+                                    item.title,
+                                  ),
                                 );
                                 AppNavigatorHelper.push(
                                   context,
                                   AppRoute.documentDisplayScreen,
-                                  extra: item.title,
+                                  extra: DisplayDatHolderModel(
+                                    title: item.title,
+                                    status: item.status,
+                                  ),
                                 );
                               } else {
                                 AppNavigatorHelper.push(

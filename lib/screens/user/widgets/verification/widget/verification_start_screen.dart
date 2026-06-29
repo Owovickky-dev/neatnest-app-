@@ -11,7 +11,9 @@ import '../../../../../widget/app_bar_holder.dart';
 import '../../../../../widget/app_text.dart';
 
 class VerificationStartScreen extends StatelessWidget {
-  const VerificationStartScreen({super.key});
+  const VerificationStartScreen({super.key, required this.isStart});
+
+  final bool isStart;
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +44,18 @@ class VerificationStartScreen extends StatelessWidget {
                 children: [
                   Column(
                     children: [
-                      primaryText(text: "Verify Your Identity"),
+                      primaryText(
+                        text: isStart == true
+                            ? "Continue your verification"
+                            : "Verify Your Identity",
+                      ),
                       10.ht,
                       secondaryText(
-                        text:
-                            "As a part of the KYC (Know your customer) process, we request all our customers to verify their identity. "
-                            "This helps us ensure the safety and authenticity of all professionals workers on our platform. "
-                            "Please provide a valid government-issued ID, Utility Bills and a clear profile photo to complete verification. and valid document to verify each skills you you pledge in for",
+                        text: isStart == true
+                            ? "You’ve already started your verification. Continue where you left off by submitting the remaining required documents. Once completed, we’ll review your information and notify you of the result as soon as possible."
+                            : "As a part of the KYC (Know your customer) process, we request all our customers to verify their identity. "
+                                  "This helps us ensure the safety and authenticity of all professionals workers on our platform. "
+                                  "Please provide a valid government-issued ID, Utility Bills and a clear profile photo to complete verification. and valid document to verify each skills you you pledge in for",
                         textAlign: TextAlign.justify,
                       ),
                     ],
@@ -58,7 +65,7 @@ class VerificationStartScreen extends StatelessWidget {
                     right: 0,
                     bottom: 40,
                     child: AppButton(
-                      text: "Start",
+                      text: isStart == true ? "Continue" : "Start",
                       width: double.infinity,
                       fontSize: 24.sp,
                       bckColor: AppColors.primaryColor,
@@ -80,26 +87,3 @@ class VerificationStartScreen extends StatelessWidget {
     );
   }
 }
-
-// Column(
-// children: [
-// primaryText(text: "Verify Your Identity"),
-// 10.ht,
-// secondaryText(
-// text:
-// "As a part of the KYC (Know your customer) process, we request all our customers to verify their identity. "
-// "This helps us ensure the safety and authenticity of all professionals workers on our platform. "
-// "Please provide a valid government-issued ID, Utility Bills and a clear profile photo to complete verification. and valid document to verify each skills you you pledge in for",
-// textAlign: TextAlign.justify,
-// ),
-// 100.ht,
-// AppButton(
-// text: "Start",
-// width: double.infinity,
-// fontSize: 24.sp,
-// bckColor: AppColors.primaryColor,
-// textColor: Colors.white,
-// function: () {},
-// ),
-// ],
-// )

@@ -25,11 +25,9 @@ class AddressStateController extends _$AddressStateController {
     try {
       final response = await _addressDataRepo.saveAddress(userAddress);
       if (response.statusCode == 201) {
-        final responseData = response.data["data"]["userNewAddress"];
+        final responseData = response.data["data"];
         final saveUserAddress = UserLocationModel.fromJson(responseData);
         state = [...state, saveUserAddress];
-        if (!context.mounted) return;
-        getUserAddress(context);
       }
     } catch (e) {
       rethrow;
@@ -84,7 +82,6 @@ class AddressStateController extends _$AddressStateController {
       );
       if (response.statusCode == 201) {
         if (!context.mounted) return;
-        getUserAddress(context);
       }
     } catch (e) {
       rethrow;

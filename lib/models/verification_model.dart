@@ -15,21 +15,27 @@ class UserUploadVerificationModel {
   });
 
   Future<FormData> toFormData() async {
-    return FormData.fromMap({
-      "idType": idType,
+    final files = <MultipartFile>[];
 
-      if (frontImage != null)
-        "frontImage": await MultipartFile.fromFile(
+    if (frontImage != null) {
+      files.add(
+        await MultipartFile.fromFile(
           frontImage!.path,
-          filename: frontImage!.path.split("/").last,
+          filename: frontImage!.path.split('/').last,
         ),
+      );
+    }
 
-      if (backImage != null)
-        "backImage": await MultipartFile.fromFile(
+    if (backImage != null) {
+      files.add(
+        await MultipartFile.fromFile(
           backImage!.path,
-          filename: backImage!.path.split("/").last,
+          filename: backImage!.path.split('/').last,
         ),
-    });
+      );
+    }
+
+    return FormData.fromMap({"idType": idType, "images": files});
   }
 }
 

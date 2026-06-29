@@ -9,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neat_nest/controller/filter_search_controller.dart';
 import 'package:neat_nest/controller/state%20controller%20/ads/popular_service_controller.dart';
 import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
+import 'package:neat_nest/data/storage/secure_storage_helper.dart';
 import 'package:neat_nest/screens/home/filter/notifier/filter_state.dart';
 import 'package:neat_nest/screens/home/notifier/home_display_data_state.dart';
 import 'package:neat_nest/screens/home/utilities/home_screen_index_state.dart';
@@ -51,10 +52,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   void _getPopularService() async {
     await ref.read(popularServiceControllerProvider.notifier).getPopularAds();
+
+    final token = await SecureStorageHelper.getToken();
     if (!mounted) return;
-    await ref
-        .read(addressStateControllerProvider.notifier)
-        .getUserAddress(context);
+    if (token != null && token.isNotEmpty) {
+      await ref
+          .read(addressStateControllerProvider.notifier)
+          .getUserAddress(context);
+    }
   }
 
   @override
@@ -99,7 +104,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final userData = ref.watch(userControllerStateProvider);
     final addresses = ref.watch(addressStateControllerProvider);
     final popularServices = ref.watch(popularServiceControllerProvider);
-    final debouncer = Debouncer(delay: Duration(milliseconds: 500));
+    final debouncer = Debouncer(delay: Duration(milliseconds: 1000));
 
     return GestureDetector(
       onTap: () {
@@ -207,6 +212,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     if (value.isNotEmpty) {
                       setState(() {
                         isSearchingData = true;
+                      });
+                    } else {
+                      setState(() {
+                        isSearchingData = false;
                       });
                     }
 

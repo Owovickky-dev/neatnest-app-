@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/screens/booking/utilities/select_address_container.dart';
-import 'package:neat_nest/screens/booking/widgets/select_address.dart';
 import 'package:neat_nest/utilities/app_button.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
@@ -51,7 +50,7 @@ class SelectRooms extends ConsumerWidget {
               function: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SelectAddress()),
+                  MaterialPageRoute(builder: (context) => Container()),
                 );
               },
             ),

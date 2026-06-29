@@ -205,10 +205,11 @@ class _AdsDetailsScreenState extends ConsumerState<AdsDetailsScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          primaryText(
-                            text: adsInfo.title!,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
+                          Expanded(
+                            child: primaryText(
+                              text: adsInfo.title!,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
 
                           Icon(

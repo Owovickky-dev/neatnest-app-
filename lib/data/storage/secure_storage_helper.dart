@@ -102,6 +102,12 @@ class SecureStorageHelper {
     return isData != null;
   }
 
+  static Future<bool> isLoggedIn() async {
+    final token = await getToken();
+    final user = await getUserData();
+    return token != null && token.isNotEmpty && user != null;
+  }
+
   static Future<void> deleteUserData() async {
     await _storage.delete(key: _userDataKey);
   }

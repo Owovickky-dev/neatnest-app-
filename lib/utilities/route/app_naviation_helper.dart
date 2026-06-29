@@ -19,7 +19,6 @@ class AppNavigatorHelper {
     );
   }
 
-  //  Push (add new screen on top)
   static void push(
     BuildContext context,
     AppRoute appRoute, {
@@ -90,24 +89,4 @@ class AppNavigatorHelper {
   static bool canPop(BuildContext context) {
     return context.canPop();
   }
-
-  //  Debug logging
-  //   static void _debugLog(String action, String routeName, Object? extra) {
-  //     print('🧭 NAVIGATION: $action -> $routeName');
-  //     if (extra != null) {
-  //       print('🧭 EXTRA: $extra (${extra.runtimeType})');
-  //     }
-  //   }
-  // }
-
-  // Optional: Extension methods for easier navigation
-  // extension NavigationExtension on BuildContext {
-  //   void goToBookingForm({required int index, required bool isMe}) {
-  //     AppNavigatorHelper.push(
-  //       this,
-  //       AppRoute.bookingFormScreen,
-  //       extra: BookingNavigationArgs(index: index, isMe: isMe),
-  //     );
-  //   }
-  // }
 }

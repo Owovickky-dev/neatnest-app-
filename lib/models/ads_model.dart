@@ -104,8 +104,8 @@ class AdsModel {
                 .toList()
           : [],
       isActive: json["isActive"] == true,
-      country: json["country"] ?? "",
-      state: json["state"] ?? "",
+      country: json["location"]["country"] ?? "",
+      state: json["location"]["state"] ?? "",
       availableSchedule: json["workerAvailableInfo"] != null
           ? (json["workerAvailableInfo"] as List)
                 .map((e) => WorkerAvailableInfoModel.fromJson(e))

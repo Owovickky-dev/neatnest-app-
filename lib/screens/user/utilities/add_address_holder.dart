@@ -151,7 +151,9 @@ class _AddAddressHolderState extends ConsumerState<AddAddressHolder> {
             children: [
               20.ht,
               primaryText(
-                text: "Kindly Fill in the Correct Address details",
+                text: widget.preUserAddress != null
+                    ? "Kindly update your address details"
+                    : "Kindly Fill in the Correct Address details",
                 color: Colors.red,
               ),
               20.ht,

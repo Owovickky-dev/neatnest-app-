@@ -32,14 +32,14 @@ class _VerificationPickerScreenState
     "Selfie Verification",
   ];
   List<List<String>> title = [
-    ["Passport", "National Id", "Voter Card", "Driver Licence"],
+    ["Passport", "National Id", "Voter Card", "Driver License"],
     ["Utility Bills", "Official Bank Statement"],
   ];
   List<String> subTitle = [
     "International Passport",
     "Valid National Identity Card",
     "Valid Voters  Card",
-    "Valid Driver Licence",
+    "Valid Driver License",
   ];
   List<dynamic> icons = [
     FontAwesomeIcons.passport,

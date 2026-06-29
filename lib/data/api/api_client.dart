@@ -41,19 +41,53 @@ class DioClient {
           return handler.next(response);
         },
 
-        onError: (DioException e, handler) async {
-          final statusCode = e.response?.statusCode;
+        onError: (DioException e, ErrorInterceptorHandler handler) async {
           final data = e.response?.data;
-          final backendStatusCode = data?["error"]?["statusCode"];
 
-          final isTokenExpired = statusCode == 401 || backendStatusCode == 401;
+          String? message;
+          int? backendStatusCode;
+          String? backendMessage;
 
-          //  HANDLE TOKEN EXPIRY
+          // Safely parse response
+          if (data is Map<String, dynamic>) {
+            message = data["message"]?.toString();
+
+            final error = data["error"];
+            if (error is Map<String, dynamic>) {
+              final code = error["statusCode"];
+
+              if (code is int) {
+                backendStatusCode = code;
+              } else if (code is String) {
+                backendStatusCode = int.tryParse(code);
+              }
+            }
+
+            backendMessage = message?.trim().toLowerCase();
+          } else if (data is String) {
+            message = data;
+            backendMessage = message.trim().toLowerCase();
+          }
+
+          // Only refresh token for genuine token-expiration/authentication errors.
+          const tokenExpiredMessages = {
+            "jwt expired",
+            "your token has expired! please log in again.",
+            "your token has expired! please log in again",
+            "token expired",
+            "invalid token",
+            "jwt malformed",
+            "invalid signature",
+          };
+
+          final isTokenExpired =
+              backendMessage != null &&
+              tokenExpiredMessages.contains(backendMessage);
+
           if (isTokenExpired) {
             final newToken = await _refreshToken();
 
             if (newToken != null) {
-              // retry request with new token
               e.requestOptions.headers["Authorization"] = "Bearer $newToken";
 
               try {
@@ -64,11 +98,21 @@ class DioClient {
                   options: Options(
                     method: e.requestOptions.method,
                     headers: e.requestOptions.headers,
+                    responseType: e.requestOptions.responseType,
+                    contentType: e.requestOptions.contentType,
+                    sendTimeout: e.requestOptions.sendTimeout,
+                    receiveTimeout: e.requestOptions.receiveTimeout,
+                    extra: e.requestOptions.extra,
                   ),
+                  cancelToken: e.requestOptions.cancelToken,
+                  onSendProgress: e.requestOptions.onSendProgress,
+                  onReceiveProgress: e.requestOptions.onReceiveProgress,
                 );
 
                 return handler.resolve(response);
-              } catch (retryError) {
+              } on DioException {
+                return handler.next(e);
+              } catch (_) {
                 return handler.next(e);
               }
             } else {
@@ -77,7 +121,20 @@ class DioClient {
             }
           }
 
-          //  OTHER ERRORS
+          // ===========================
+          // DEBUG LOGS
+          // ===========================
+          print("========== API ERROR ==========");
+          print("Type: ${e.type}");
+          print("HTTP Status Code: ${e.response?.statusCode}");
+          print("Backend Status Code: $backendStatusCode");
+          print("Message: $message");
+          print("Response Type: ${data.runtimeType}");
+          print("Response Data: $data");
+          print("Request Path: ${e.requestOptions.path}");
+          print("===============================");
+
+          // Convert Dio error into friendly message
           final errorMessage = ApiErrorHandler.getErrorMessage(e);
 
           return handler.reject(
