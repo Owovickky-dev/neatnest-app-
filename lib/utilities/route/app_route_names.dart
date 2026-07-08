@@ -32,6 +32,16 @@ enum AppRoute {
   setAboutMe,
   viewAboutMeScreen,
   chattingScreen,
+  adsDetailsScreen,
+  myBookingScreen,
+  bookingDataBuilder,
+  accountVerification,
+  newPasswordScreen,
+  verificationStartScreen,
+  verificationMethodScreen,
+  verificationImageUploadHelper,
+  verificationPickerScreen,
+  documentDisplayScreen,
 }
 
 extension AppRouteNamesExtension on AppRoute {
@@ -103,6 +113,26 @@ extension AppRouteNamesExtension on AppRoute {
         return "/viewAboutMeScreen";
       case AppRoute.chattingScreen:
         return "/chattingScreen";
+      case AppRoute.adsDetailsScreen:
+        return "/adsDetailsScreen";
+      case AppRoute.myBookingScreen:
+        return "/myBookingScreen";
+      case AppRoute.bookingDataBuilder:
+        return "/bookingDataBuilder";
+      case AppRoute.accountVerification:
+        return "/accountVerification";
+      case AppRoute.newPasswordScreen:
+        return "/newPasswordScreen";
+      case AppRoute.verificationStartScreen:
+        return "/verificationStartScreen";
+      case AppRoute.verificationMethodScreen:
+        return "/verificationMethodScreen";
+      case AppRoute.verificationImageUploadHelper:
+        return "/verificationImageUploadHelper";
+      case AppRoute.verificationPickerScreen:
+        return "/verificationPickerScreen";
+      case AppRoute.documentDisplayScreen:
+        return "/documentDisplayScreen";
     }
   }
 }

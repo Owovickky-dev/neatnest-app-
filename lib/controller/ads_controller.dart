@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,10 +9,10 @@ import 'package:intl/intl.dart';
 import 'package:neat_nest/controller/state%20controller%20/ads/ads_state_controller.dart';
 import 'package:neat_nest/controller/state%20controller%20/ads/user_ads_state_controller.dart';
 import 'package:neat_nest/models/ads_model.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
 
 import '../utilities/route/app_naviation_helper.dart';
 import '../utilities/route/app_route_names.dart';
+import '../widget/app_notification.dart';
 import '../widget/loading_screen.dart';
 
 class AdsController {
@@ -25,8 +26,9 @@ class AdsController {
   bool? status;
   String? country;
   String? state;
-  File? imageSelected;
+  List<File>? imageSelected;
   String? id;
+  String? addressId;
   List<WorkerAvailableInfoModel>? timeAvailable;
 
   void updateStatus(String isActive) {
@@ -50,14 +52,12 @@ class AdsController {
   }
 
   Future<void> postAds(BuildContext context, WidgetRef ref) async {
-    print("the selected image details is $imageSelected");
     final String title;
     final String price;
     final String aboutAds;
 
     title = adsTitleController.text.trim();
     price = adsPriceController.text.trim();
-
     aboutAds = adsAboutController.text.trim();
     if (category == null || category!.isEmpty || status == null) {
       return showErrorNotification(message: "All field must be filed");
@@ -71,10 +71,9 @@ class AdsController {
     final newAds = AdsModel(
       title: title,
       about: aboutAds,
-      basePrice: int.parse(price),
+      basePrice: int.tryParse(price),
       category: category!.toLowerCase(),
-      country: country,
-      state: state,
+      addressId: addressId,
       image: imageSelected,
       isActive: status!,
       availableSchedule: timeAvailable,
@@ -92,11 +91,13 @@ class AdsController {
         );
       },
     );
-    print(timeAvailable);
+
     try {
+      print("about to  enter the post ads");
       final response = await ref
           .read(adsStateControllerProvider.notifier)
           .postAds(newAds);
+      print("I enter the post ads");
       if (response.statusCode == 201) {
         if (!context.mounted) return;
         AppNavigatorHelper.go(context, AppRoute.bottomNavigation);
@@ -105,13 +106,16 @@ class AdsController {
         final errorMessage = response.data["message"];
         if (!context.mounted) return;
         context.pop();
+        print(errorMessage);
         showErrorNotification(message: errorMessage);
       }
     } catch (e) {
       if (!context.mounted) return;
-      AppNavigatorHelper.go(context, AppRoute.bottomNavigation);
+      context.pop();
       if (e is DioException) {
-        print(e.error);
+        if (kDebugMode) {
+          print(e.error);
+        }
         showErrorNotification(message: e.error.toString());
       }
     }
@@ -120,10 +124,17 @@ class AdsController {
   Future<void> deleteAds(WidgetRef ref, String adsId) async {
     try {
       await ref.read(userAdsStateControllerProvider.notifier).deleteAds(adsId);
+      await ref.read(userAdsStateControllerProvider.notifier).getUserAds();
       showSuccessNotification(message: "Ads successfully deleted");
     } catch (e) {
+      showErrorNotification(
+        message: e.toString().replaceFirst("Exception: ", ""),
+      );
+      print(e);
       if (e is DioException) {
-        showErrorNotification(message: e.error.toString());
+        showErrorNotification(
+          message: e.error.toString().replaceFirst("Exception: ", ""),
+        );
       }
     }
   }
@@ -217,9 +228,6 @@ class AdsController {
     WidgetRef ref,
     String adsId,
   ) async {
-    print("The new ads Status is $active");
-    print("The ID of the ads is $adsId");
-
     try {
       final response = await ref
           .read(userAdsStateControllerProvider.notifier)

@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:neat_nest/screens/user/notifiers/data_flow_state.dart';
-import 'package:neat_nest/screens/user/utilities/verification_options_items_holder.dart';
-import 'package:neat_nest/screens/user/widgets/verification/widget/Id_upload_screen.dart';
-import 'package:neat_nest/screens/user/widgets/verification/widget/verification_picker_screen.dart';
+import 'package:neat_nest/models/verification_model.dart';
+import 'package:neat_nest/screens/user/widgets/verification/model/display_data_model.dart';
+import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
+import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
+import 'package:neat_nest/utilities/route/app_route_names.dart';
+import 'package:neat_nest/widget/app_bar_holder.dart';
+import 'package:neat_nest/widget/app_notification.dart';
 import 'package:neat_nest/widget/app_text.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
+import 'package:neat_nest/widget/loading_screen.dart';
+
+import '../../../../../controller/state controller /user/user_verification_state.dart';
 
 class VerificationMethodScreen extends ConsumerStatefulWidget {
   const VerificationMethodScreen({super.key});
@@ -19,80 +25,225 @@ class VerificationMethodScreen extends ConsumerStatefulWidget {
 
 class _VerificationMethodScreenState
     extends ConsumerState<VerificationMethodScreen> {
-  List<String> title = [
-    "ID Card Verification",
-    "Address Verification",
-    "Selfie Verification",
-  ];
+  int selectedIndex = 0;
 
-  List<String> subTitle = [
-    "Government Issued ID Card",
-    "Kindly Upload your Utility Bills",
-    "Kindly take a selfie",
-  ];
+  @override
+  void initState() {
+    super.initState();
+    ref
+        .read(userVerificationStateProvider.notifier)
+        .getUserVerificationStatus();
+  }
 
-  List<dynamic> icons = [
-    FontAwesomeIcons.file,
-    FontAwesomeIcons.locationDot,
-    FontAwesomeIcons.cameraRotate,
-  ];
+  FaIcon getIconStatus(VerificationStatus status) {
+    switch (status) {
+      case VerificationStatus.approved:
+        return FaIcon(
+          FontAwesomeIcons.circleCheck,
+          color: AppColors.primaryColor,
+          size: 30.sp,
+        );
+
+      case VerificationStatus.pending:
+        return FaIcon(
+          FontAwesomeIcons.spinner,
+          color: Colors.orangeAccent,
+          size: 30.sp,
+        );
+
+      case VerificationStatus.rejected:
+        return FaIcon(
+          FontAwesomeIcons.circleXmark,
+          color: Colors.red,
+          size: 30.sp,
+        );
+        ;
+
+      case VerificationStatus.notStarted:
+        return FaIcon(
+          FontAwesomeIcons.hourglassStart,
+          color: AppColors.secondaryTextColor,
+          size: 30.sp,
+        );
+    }
+  }
+
+  String getDisplayMessage(VerificationStatus status, String title) {
+    switch (status) {
+      case VerificationStatus.pending:
+        return "Awaiting your $title result";
+      case VerificationStatus.approved:
+        return "$title is verified";
+      case VerificationStatus.rejected:
+        return "Your $title Identity";
+      case VerificationStatus.notStarted:
+        return "Your $title yet to start";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final indent = ref.watch(dataFlowStateProvider);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        10.ht,
-        secondaryText(
-          text:
-              "Kindly Kick start your verification, below is the verification required ",
-          color: Colors.red,
-        ),
-        20.ht,
-        Expanded(
-          child: ListView.builder(
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              final yes = indent[0].methodVerifyIndex == index;
-              final verificationStatus = indent[index].verificationStatus;
-              return GestureDetector(
-                onTap: verificationStatus == "Pending"
-                    ? () {
-                        showErrorNotification(
-                          message: "Your data is under verification",
-                        );
-                      }
-                    : () {
-                        ref
-                            .read(dataFlowStateProvider.notifier)
-                            .updateMethodIndex(index);
+    final verificationAsync = ref.watch(userVerificationStateProvider);
+    return Scaffold(
+      appBar: AppBarHolder(title: "Verification Method"),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10.w),
+        child: verificationAsync.when(
+          loading: () => const Center(child: LoadingScreen()),
+          error: (e, _) => Center(child: secondaryText(text: e.toString())),
+          data: (verification) {
+            if (verification != null) {
+              final methods = [
+                VerificationMethod(
+                  title: "ID Card Verification",
+                  subTitle: "Government Issued ID Card",
+                  icon: FontAwesomeIcons.idCard,
+                  status: verification.idVerification,
+                ),
+                VerificationMethod(
+                  title: "Address Verification",
+                  subTitle: "Kindly Upload your Utility Bills",
+                  icon: FontAwesomeIcons.locationDot,
+                  status: verification.addressVerification,
+                ),
+                VerificationMethod(
+                  title: "Selfie Verification",
+                  subTitle: "Kindly take a selfie",
+                  icon: FontAwesomeIcons.cameraRotate,
+                  status: verification.selfieVerification,
+                ),
+                VerificationMethod(
+                  title: "Skills Verification",
+                  subTitle: "Kindly verify your skills",
+                  icon: FontAwesomeIcons.wirsindhandwerk,
+                  status: verification.skillsVerification,
+                ),
+              ];
 
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) {
-                              if (index < title.length - 1) {
-                                return VerificationPickerScreen();
+              return Column(
+                children: [
+                  20.ht,
+                  secondaryText(
+                    text:
+                        "Kindly pick the verification method you want to kick start, please kindly note only valid document is require",
+                    color: Colors.redAccent,
+                  ),
+                  20.ht,
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: methods.length,
+                      itemBuilder: (context, index) {
+                        final item = methods[index];
+                        final current = selectedIndex == index;
+
+                        return GestureDetector(
+                          onTap: () async {
+                            setState(() {
+                              selectedIndex = index;
+                            });
+
+                            if (index == 2) {
+                              AppNavigatorHelper.push(
+                                context,
+                                AppRoute.verificationImageUploadHelper,
+                                extra: "Selfie",
+                              );
+                            } else {
+                              if (item.status == VerificationStatus.approved ||
+                                  item.status == VerificationStatus.pending ||
+                                  item.status == VerificationStatus.rejected) {
+                                showSuccessNotification(
+                                  message: getDisplayMessage(
+                                    item.status,
+                                    item.title,
+                                  ),
+                                );
+                                AppNavigatorHelper.push(
+                                  context,
+                                  AppRoute.documentDisplayScreen,
+                                  extra: DisplayDatHolderModel(
+                                    title: item.title,
+                                    status: item.status,
+                                  ),
+                                );
                               } else {
-                                return IdUploadScreen();
+                                AppNavigatorHelper.push(
+                                  context,
+                                  AppRoute.verificationPickerScreen,
+                                  extra: index,
+                                );
                               }
-                            },
+                            }
+                          },
+                          child: Container(
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10.w,
+                              vertical: 5.h,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.r),
+                              color: current ? Colors.grey.shade200 : null,
+                              border: Border.all(
+                                width: 2,
+                                color: current
+                                    ? AppColors.primaryColor
+                                    : Colors.grey,
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(25.r),
+                                    color: AppColors.primaryColor.withValues(
+                                      alpha: 0.25,
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: FaIcon(
+                                      item.icon,
+                                      size: 24,
+                                      color: AppColors.primaryColor,
+                                    ),
+                                  ),
+                                ),
+
+                                10.wt,
+
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      primaryText(
+                                        text: item.title,
+                                        fontSize: 16.sp,
+                                      ),
+                                      secondaryText(
+                                        text: item.subTitle,
+                                        fontSize: 12.sp,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                getIconStatus(item.status),
+                              ],
+                            ),
                           ),
                         );
                       },
-                child: VerificationOptionsItemsHolder(
-                  title: title[index],
-                  subTitle: subTitle[index],
-                  icons: icons[index],
-                  isClicked: yes,
-                  textIn: verificationStatus,
-                ),
+                    ),
+                  ),
+                ],
               );
-            },
-          ),
+            }
+          },
         ),
-      ],
+      ),
     );
   }
 }

@@ -2,13 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:neat_nest/controller/account_verification_controller.dart';
 import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
 import 'package:neat_nest/models/user_model.dart';
-import 'package:neat_nest/providers/is_logged_in_state.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
+import 'package:neat_nest/models/user_skills_model.dart';
 
 import '../utilities/route/app_naviation_helper.dart';
 import '../utilities/route/app_route_names.dart';
+import '../widget/app_notification.dart';
 import '../widget/loading_screen.dart';
 
 class SignUpController {
@@ -24,6 +25,7 @@ class SignUpController {
   bool isChecked = false;
   String? role;
   String? gender;
+  List<UserSkillModel>? userSkills;
 
   void setChecked(bool val) {
     isChecked = val;
@@ -56,6 +58,9 @@ class SignUpController {
       showErrorNotification(message: "Please kindly select a role ");
     } else if (gender == null || gender!.isEmpty) {
       showErrorNotification(message: "Please select gender");
+    } else if ((userSkills == null || userSkills!.isEmpty) &&
+        (role == "Worker")) {
+      showErrorNotification(message: "Atleast one skill is required");
     } else if (!isChecked) {
       showErrorNotification(message: "Please agree to the terms");
     } else {
@@ -68,26 +73,37 @@ class SignUpController {
         role: role!,
         username: username,
         phoneNumber: phoneNumber,
+        userSkills: userSkills,
       );
+
       showDialog(
         context: context,
-        barrierDismissible: false, // Prevent user from dismissing
+        barrierDismissible: false,
         builder: (context) => LoadingScreen(),
       );
       try {
         await ref.read(userControllerStateProvider.notifier).register(user);
         if (!context.mounted) return;
-
         context.pop();
-        if (!context.mounted) return;
-        showSuccessNotification(message: "Registration Successful");
-        ref.read(isLoggedInStateProvider.notifier).yesLogged(true);
-        AppNavigatorHelper.pushReplacement(context, AppRoute.bottomNavigation);
+        showSuccessNotification(message: "Verification Code sent to your mail");
+        AppNavigatorHelper.pushReplacement(
+          context,
+          AppRoute.accountVerification,
+          extra: VerificationCodeModel(
+            userMail: mail,
+            verificationType: VerificationType.signUp,
+          ),
+        );
       } catch (e) {
         if (!context.mounted) return;
         context.pop();
+        showErrorNotification(
+          message: e.toString().replaceFirst("Exception: ", ""),
+        );
         if (e is DioException) {
-          showErrorNotification(message: e.error.toString());
+          showErrorNotification(
+            message: e.error.toString().replaceFirst("Exception: ", ""),
+          );
         }
       }
     }

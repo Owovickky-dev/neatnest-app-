@@ -9,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neat_nest/controller/filter_search_controller.dart';
 import 'package:neat_nest/controller/state%20controller%20/ads/popular_service_controller.dart';
 import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
+import 'package:neat_nest/data/storage/secure_storage_helper.dart';
 import 'package:neat_nest/screens/home/filter/notifier/filter_state.dart';
 import 'package:neat_nest/screens/home/notifier/home_display_data_state.dart';
 import 'package:neat_nest/screens/home/utilities/home_screen_index_state.dart';
@@ -22,6 +23,7 @@ import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/app_text.dart';
 import 'package:neat_nest/widget/app_text_field.dart';
+import 'package:neat_nest/widget/small_reusable_loader.dart';
 
 import '../../controller/state controller /address/address_state_controller.dart';
 import '../../utilities/constant/colors.dart';
@@ -50,10 +52,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   void _getPopularService() async {
     await ref.read(popularServiceControllerProvider.notifier).getPopularAds();
+
+    final token = await SecureStorageHelper.getToken();
     if (!mounted) return;
-    await ref
-        .read(addressStateControllerProvider.notifier)
-        .getUserAddress(context);
+    if (token != null && token.isNotEmpty) {
+      await ref
+          .read(addressStateControllerProvider.notifier)
+          .getUserAddress(context);
+    }
   }
 
   @override
@@ -98,7 +104,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final userData = ref.watch(userControllerStateProvider);
     final addresses = ref.watch(addressStateControllerProvider);
     final popularServices = ref.watch(popularServiceControllerProvider);
-    final debouncer = Debouncer(delay: Duration(milliseconds: 500));
+    final debouncer = Debouncer(delay: Duration(milliseconds: 1000));
 
     return GestureDetector(
       onTap: () {
@@ -124,14 +130,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 child: CachedNetworkImage(
                                   height: 40.h,
                                   width: 40.w,
-                                  placeholder: (context, url) => Container(
-                                    height: 40.h,
-                                    width: 40.w,
-                                    color: Colors.grey.shade200,
-                                    child: CircularProgressIndicator.adaptive(
-                                      backgroundColor: AppColors.primaryColor,
-                                    ),
-                                  ),
+                                  placeholder: (context, url) => SmallLoader(),
                                   errorWidget: (context, url, error) =>
                                       Container(
                                         color: Colors.grey.shade200,
@@ -144,8 +143,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   fit: BoxFit.cover,
                                   fadeInDuration: Duration(milliseconds: 500),
                                   fadeOutDuration: Duration(milliseconds: 300),
-                                  imageUrl:
-                                      'https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL3BsYXlcLzBiN2Y0ZTliLWY1OWMtNDAyNC05ZjA2LWIzZGMxMjg1MGFiNy0xOTIwLTEwODAuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo4Mjh9fX0=',
+                                  imageUrl: userData.profilePic!,
                                 ),
                               ),
                               10.wt,
@@ -214,6 +212,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     if (value.isNotEmpty) {
                       setState(() {
                         isSearchingData = true;
+                      });
+                    } else {
+                      setState(() {
+                        isSearchingData = false;
                       });
                     }
 

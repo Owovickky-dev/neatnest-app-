@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:neat_nest/screens/user/notifiers/about_me_controller_state.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
+import 'package:neat_nest/widget/app_notification.dart';
 
 import '../widget/loading_screen.dart';
 

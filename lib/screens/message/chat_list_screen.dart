@@ -50,7 +50,6 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
 
     if (userDataExist) {
       await ref.read(chatStateControllerProvider.notifier).getChatRooms();
-
       if (!mounted) return;
       setState(() {
         isLoading = false;
@@ -110,8 +109,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
                                       );
                                     },
                                     child: ChatListDataHolder(
-                                      senderUsername:
-                                          chatData.partnerUsername ?? "",
+                                      senderUsername: chatData.chatName ?? "",
                                       timeSent:
                                           chatData.lastMessage?.sentAt ?? "",
                                       lastMessageContent:

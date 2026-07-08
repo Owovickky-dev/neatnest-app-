@@ -33,6 +33,11 @@ class UserDataRepo {
     return response;
   }
 
+  Future<Response> getSkillsAvailable() async {
+    final response = await _dio.get(ConstantData.SERVICECATEGORIES);
+    return response;
+  }
+
   Future<Response> updatePaymentMethod(
     UserPaymentMethodModel updatePayment,
   ) async {
@@ -40,6 +45,17 @@ class UserDataRepo {
       ConstantData.PAYMENTMETHOd,
       data: updatePayment.toJson(),
     );
+    return response;
+  }
+
+  Future<Response> uploadProfilePics(String picPath) async {
+    FormData formData = FormData.fromMap({
+      "image": await MultipartFile.fromFile(
+        picPath,
+        filename: picPath.split("/").last,
+      ),
+    });
+    final response = await _dio.patch(ConstantData.PROFILEPICS, data: formData);
     return response;
   }
 }

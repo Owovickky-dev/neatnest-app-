@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neat_nest/controller/state%20controller%20/favourite/favourite_state_controller.dart';
 
-import '../widget/notificaiton_content.dart';
+import '../widget/app_notification.dart';
 
 class FavouriteController {
   FavouriteController();
@@ -16,7 +16,7 @@ class FavouriteController {
     try {
       final response = await ref
           .read(favouriteStateControllerProvider.notifier)
-          .addFavourite(adsId);
+          .addFavourite(adsId, context);
       if (response.statusCode == 201) {
         if (!context.mounted) return;
         showSuccessNotification(message: "Added to your favourite");

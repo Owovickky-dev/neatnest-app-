@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:neat_nest/data/repo/texting_data_repo.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -15,6 +16,22 @@ class ChatStateController extends _$ChatStateController {
     return state.value ?? [];
   }
 
+  Future<Response> createChatRoom({
+    required String bookingId,
+    required String recipientId,
+  }) async {
+    try {
+      final response = await _textingDataRepo.createChatRoom(
+        bookingId: bookingId,
+        recipientId: recipientId,
+      );
+      return response;
+    } catch (e) {
+      print("The error message is $e");
+      rethrow;
+    }
+  }
+
   Future<void> getChatRooms() async {
     state = const AsyncLoading();
 
@@ -23,6 +40,7 @@ class ChatStateController extends _$ChatStateController {
       if (response.data is! Map<String, dynamic>) {
         throw Exception("Invalid response format: ${response.data}");
       }
+      print(response.data["data"]);
       final List data = response.data["data"] ?? [];
       final chats = data.map((e) => ChatRoomModel.fromJson(e)).toList();
 
@@ -31,5 +49,25 @@ class ChatStateController extends _$ChatStateController {
       print(e);
       state = AsyncError(e, st);
     }
+  }
+
+  Future<void> updateLastMessage({
+    required String chatId,
+    required LastMessage newMessage,
+  }) async {
+    state = state.whenData((chats) {
+      final updatedChats = chats.map((chat) {
+        if (chat.chatId == chatId) {
+          return chat.copyWith(lastMessage: newMessage);
+        }
+        return chat;
+      }).toList();
+      updatedChats.sort((a, b) {
+        final aTime = a.lastMessage?.sentAt ?? "";
+        final bTime = b.lastMessage?.sentAt ?? "";
+        return bTime.compareTo(aTime);
+      });
+      return updatedChats;
+    });
   }
 }

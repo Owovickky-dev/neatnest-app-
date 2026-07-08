@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neat_nest/controller/state%20controller%20/ads/query_ads_state.dart';
 import 'package:neat_nest/models/filter_search_model.dart';
 import 'package:neat_nest/screens/home/filter/notifier/filter_state.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
+
+import '../widget/app_notification.dart';
 
 class FilterSearchController {
   FilterSearchController();

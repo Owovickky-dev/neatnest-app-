@@ -3,8 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:neat_nest/data/repo/address_data_repo.dart';
 import 'package:neat_nest/screens/user/model/user_location_model.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../../widget/app_notification.dart';
 
 part 'address_state_controller.g.dart';
 
@@ -24,11 +25,9 @@ class AddressStateController extends _$AddressStateController {
     try {
       final response = await _addressDataRepo.saveAddress(userAddress);
       if (response.statusCode == 201) {
-        final responseData = response.data["data"]["userNewAddress"];
+        final responseData = response.data["data"];
         final saveUserAddress = UserLocationModel.fromJson(responseData);
         state = [...state, saveUserAddress];
-        if (!context.mounted) return;
-        getUserAddress(context);
       }
     } catch (e) {
       rethrow;
@@ -83,7 +82,6 @@ class AddressStateController extends _$AddressStateController {
       );
       if (response.statusCode == 201) {
         if (!context.mounted) return;
-        getUserAddress(context);
       }
     } catch (e) {
       rethrow;

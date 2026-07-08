@@ -9,8 +9,8 @@ class AdsModel {
   final String? title;
   final String? about;
   final num? basePrice;
-  final String? imageFrmServer;
-  final File? image;
+  final List<ServerImageModel>? imageFrmServer;
+  final List<File>? image;
   final String? country;
   final String? state;
   final JobPosterModel? jobPoster;
@@ -18,6 +18,8 @@ class AdsModel {
   final bool? isActive;
   final String? workerId;
   final DateTime? createdAt;
+  final String? addressId;
+  final String? address;
   final List<WorkerAvailableInfoModel>? availableSchedule;
 
   AdsModel({
@@ -35,6 +37,8 @@ class AdsModel {
     this.state,
     this.availableSchedule,
     this.image,
+    this.address,
+    this.addressId,
   });
 
   Map<String, dynamic> toJson() {
@@ -55,18 +59,17 @@ class AdsModel {
     if (category != null && category!.isNotEmpty) {
       data["category"] = category;
     }
-    if (country != null && country!.isNotEmpty) {
-      data["country"] = country;
-    }
-    if (state != null && state!.isNotEmpty) {
-      data["state"] = state;
+    if (addressId != null && addressId!.isNotEmpty) {
+      data["addressId"] = addressId;
     }
     if (id != null && id!.isNotEmpty) {
       data["adsId"] = id;
     }
 
     if (availableSchedule != null && availableSchedule!.isNotEmpty) {
-      data["availableSchedule"] = availableSchedule;
+      data["availableSchedule"] = availableSchedule!
+          .map((e) => e.toJson())
+          .toList();
     }
 
     return data;
@@ -75,10 +78,14 @@ class AdsModel {
   Future<FormData> toFormData() async {
     final map = toJson();
 
-    if (image != null) {
-      map["image"] = await MultipartFile.fromFile(
-        image!.path,
-        filename: image!.path.split("/").last,
+    if (image != null && image!.isNotEmpty) {
+      map["images"] = await Future.wait(
+        image!.map(
+          (img) async => MultipartFile.fromFile(
+            img.path,
+            filename: img.path.split("/").last,
+          ),
+        ),
       );
     }
     return FormData.fromMap(map);
@@ -90,17 +97,23 @@ class AdsModel {
       title: json["title"] ?? "",
       about: json["about"] ?? "",
       basePrice: json["basePrice"] ?? 0,
-      category: json["category"] ?? "",
-      imageFrmServer: json["image"] ?? "",
-      isActive: json["isActive"] ?? false,
-      country: json["country"] ?? "",
-      state: json["state"] ?? "",
+      category: json["category"] ?? [],
+      imageFrmServer: json["images"] != null
+          ? (json["images"] as List)
+                .map((img) => ServerImageModel.fromJson(img))
+                .toList()
+          : [],
+      isActive: json["isActive"] == true,
+      country: json["location"]["country"] ?? "",
+      state: json["location"]["state"] ?? "",
       availableSchedule: json["workerAvailableInfo"] != null
           ? (json["workerAvailableInfo"] as List)
                 .map((e) => WorkerAvailableInfoModel.fromJson(e))
                 .toList()
           : [],
-      jobPoster: JobPosterModel.fromJson(json["jobPoster"] ?? {}),
+      jobPoster: json["jobPoster"] != null
+          ? JobPosterModel.fromJson(json["jobPoster"])
+          : null,
       createdAt: json["createdAt"] != null
           ? DateTime.parse(json["createdAt"])
           : null,
@@ -118,17 +131,10 @@ class WorkerAvailableInfoModel {
   });
 
   Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-
-    if (workerAvailableDates.isNotEmpty) {
-      data["workerAvailableDates"] = workerAvailableDates;
-    }
-
-    if (workerAvailableTimes.isNotEmpty) {
-      data["workerAvailableTimes"] = workerAvailableTimes;
-    }
-
-    return data;
+    return {
+      "availableDate": workerAvailableDates,
+      "availableTime": workerAvailableTimes.map((e) => e.time).toList(),
+    };
   }
 
   factory WorkerAvailableInfoModel.fromJson(Map<String, dynamic> json) {
@@ -150,14 +156,39 @@ class WorkerAvailableTime {
   WorkerAvailableTime({required this.time, this.isBooked = false});
 
   Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    if (time.isNotEmpty) {
-      data["time"] = time;
-    }
-    return data;
+    return {"time": time, "isBooked": isBooked};
   }
 
   factory WorkerAvailableTime.fromJson(Map<String, dynamic> json) {
-    return WorkerAvailableTime(time: json["time"], isBooked: json["isBooked"]);
+    return WorkerAvailableTime(
+      time: json["time"] ?? "",
+      isBooked: json["isBooked"] == true,
+    );
+  }
+}
+
+class RoutingAdsModel {
+  final int index;
+  final bool isPopular;
+  final bool isFavourite;
+
+  RoutingAdsModel({
+    required this.index,
+    required this.isPopular,
+    required this.isFavourite,
+  });
+}
+
+class ServerImageModel {
+  final String imageUrl;
+  final String imageId;
+
+  ServerImageModel({required this.imageUrl, required this.imageId});
+
+  factory ServerImageModel.fromJson(Map<String, dynamic> json) {
+    return ServerImageModel(
+      imageUrl: json["imageUrl"] ?? "",
+      imageId: json["_id"] ?? json["id"] ?? "",
+    );
   }
 }

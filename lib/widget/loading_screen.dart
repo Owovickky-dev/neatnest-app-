@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
-import 'package:neat_nest/utilities/constant/extension.dart';
-import 'package:neat_nest/widget/app_text.dart';
 
 class LoadingScreen extends StatelessWidget {
   const LoadingScreen({super.key});
@@ -13,22 +11,15 @@ class LoadingScreen extends StatelessWidget {
       body: Container(
         color: Colors.transparent,
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 80,
-                width: 80,
-                child: FittedBox(
-                  child: CircularProgressIndicator.adaptive(
-                    backgroundColor: AppColors.primaryColor,
-                    strokeWidth: 6,
-                  ),
-                ),
+          child: SizedBox(
+            height: 80,
+            width: 80,
+            child: FittedBox(
+              child: CircularProgressIndicator.adaptive(
+                backgroundColor: AppColors.primaryColor,
+                strokeWidth: 6,
               ),
-              20.ht,
-              primaryText(text: "loading........"),
-            ],
+            ),
           ), // spinner
         ),
       ),

@@ -37,10 +37,13 @@ class AdsStateController extends _$AdsStateController {
   }
 
   Future<Response> postAds(AdsModel adsData) async {
+    print("now im getting in touch to the server");
     try {
       final response = await _adsRepo.postAds(adsData);
+      print("done getting touch to the server");
       return response;
     } catch (e) {
+      print("There is an error in the catch block ");
       print("The server error is $e");
       if (e is DioException && e.response != null) {
         return e.response!;

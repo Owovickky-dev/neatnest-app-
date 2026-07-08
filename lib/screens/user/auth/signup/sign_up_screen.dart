@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:neat_nest/controller/sign_up_controller.dart';
+import 'package:neat_nest/controller/state%20controller%20/app_skill_controller_state.dart';
+import 'package:neat_nest/models/user_skills_model.dart';
 import 'package:neat_nest/screens/user/auth/icon_holder.dart';
 import 'package:neat_nest/screens/user/utilities/auth_text_filed.dart';
 import 'package:neat_nest/utilities/app_button.dart';
@@ -15,6 +18,7 @@ import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/app_text.dart';
 
 import '../../../../widget/app_bar_holder.dart';
+import '../../../../widget/app_notification.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
@@ -28,11 +32,14 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   bool isChecked = false;
   final _formKey = GlobalKey<FormState>();
 
-  final List<String> roles = const ["User", "Worker"];
+  List<String> skills = [];
+
+  final List<String> roles = const ["user", "worker"];
   final List<String> gender = const ["Male", "Female"];
   String? positionGen;
   String? position;
   String? enteredPassword;
+  List<String> selectedSkills = [];
 
   @override
   void didChangeDependencies() {
@@ -40,8 +47,81 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     super.didChangeDependencies();
   }
 
+  void _showSkillsSelector(BuildContext context, List<String> skills) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              padding: EdgeInsets.all(16),
+              height: 500,
+              child: Column(
+                children: [
+                  Center(
+                    child: Text(
+                      "Select up to 5 skills",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+
+                  SizedBox(height: 10),
+
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: skills.length,
+                      itemBuilder: (context, index) {
+                        final skill = skills[index];
+                        final isSelected = selectedSkills.contains(skill);
+
+                        return CheckboxListTile(
+                          value: isSelected,
+                          title: Text(skill),
+                          onChanged: (value) {
+                            setState(() {
+                              if (value == true) {
+                                if (selectedSkills.length < 5) {
+                                  selectedSkills.add(skill);
+                                } else {
+                                  showErrorNotification(
+                                    message: "You can only add 5 max skills",
+                                  );
+                                }
+                              } else {
+                                selectedSkills.remove(skill);
+                              }
+                            });
+                            setModalState(() {});
+                          },
+                        );
+                      },
+                    ),
+                  ),
+
+                  ElevatedButton(
+                    onPressed: () => context.pop(),
+                    child: primaryText(text: "Done", fontSize: 15.sp),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final skillsAvailable = ref.watch(appSkillControllerStateProvider);
+
+    if (skillsAvailable.isNotEmpty) {
+      setState(() {
+        skills = skillsAvailable;
+      });
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBarHolder(
@@ -94,7 +174,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      primaryText(text: "Role", fontSize: 14.sp),
+                      primaryText(text: "Role", fontSize: 18.sp),
                       5.ht,
                       Container(
                         padding: EdgeInsets.symmetric(
@@ -124,6 +204,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                               setState(() {
                                 position = value;
                               });
+                              if (value == "user") {
+                                setState(() {
+                                  selectedSkills = [];
+                                });
+                              }
                               _signUpController.setRole(value);
                             }
                           },
@@ -131,6 +216,89 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       ),
                     ],
                   ),
+                  ?position == "worker"
+                      ? Column(
+                          children: [
+                            8.ht,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                primaryText(
+                                  text: "UserSkills",
+                                  fontSize: 18.sp,
+                                ),
+                                5.ht,
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 5.h,
+                                    horizontal: 8.w,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.textFieldBckColor
+                                        .withValues(alpha: 0.3),
+                                    borderRadius: BorderRadius.circular(8.r),
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () =>
+                                        _showSkillsSelector(context, skills),
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 10.h,
+                                        horizontal: 12.w,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.textFieldBckColor
+                                            .withValues(alpha: 0.3),
+                                        borderRadius: BorderRadius.circular(
+                                          8.r,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: Wrap(
+                                              spacing: 6,
+                                              runSpacing: 6,
+                                              children: selectedSkills.isEmpty
+                                                  ? [
+                                                      secondaryText(
+                                                        text: "Select Skills",
+                                                      ),
+                                                    ]
+                                                  : selectedSkills
+                                                        .map(
+                                                          (e) => Chip(
+                                                            label: Text(e),
+                                                            deleteIcon: Icon(
+                                                              Icons.close,
+                                                              size: 16,
+                                                            ),
+                                                            onDeleted: () {
+                                                              setState(() {
+                                                                selectedSkills
+                                                                    .remove(e);
+                                                              });
+                                                            },
+                                                          ),
+                                                        )
+                                                        .toList(),
+                                            ),
+                                          ),
+                                          Icon(
+                                            Icons.keyboard_arrow_down_outlined,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      : null,
                   8.ht,
                   AuthTextFiled(
                     titleText: 'UserName',
@@ -173,7 +341,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      primaryText(text: "Gender", fontSize: 14.sp),
+                      primaryText(text: "Gender", fontSize: 18.sp),
                       5.ht,
                       Container(
                         padding: EdgeInsets.symmetric(
@@ -293,6 +461,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                     fontSize: 18.sp,
                     function: () {
                       if (_formKey.currentState!.validate()) {
+                        _signUpController.userSkills = selectedSkills
+                            .map((skill) => UserSkillModel(skill: skill))
+                            .toList();
                         _signUpController.submit(context, ref);
                       }
                     },

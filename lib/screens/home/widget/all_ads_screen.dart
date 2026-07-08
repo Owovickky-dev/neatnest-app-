@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/controller/state%20controller%20/ads/ads_state_controller.dart';
+import 'package:neat_nest/data/storage/secure_storage_helper.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/widget/loading_screen.dart';
 
@@ -32,12 +33,15 @@ class _AllAdsScreenState extends ConsumerState<AllAdsScreen> {
     if (_initialLoad) return;
 
     final adsNotifier = ref.read(adsStateControllerProvider.notifier);
-    final favNotifier = ref.read(favouriteStateControllerProvider.notifier);
+    final tokenExist = await SecureStorageHelper.getToken();
 
     try {
       await adsNotifier.getAllAds();
       if (!mounted) return;
-      await favNotifier.getUserFavourite();
+      if (tokenExist != null && tokenExist.isNotEmpty) {
+        final favNotifier = ref.read(favouriteStateControllerProvider.notifier);
+        await favNotifier.getUserFavourite();
+      }
       if (!mounted) return;
       setState(() {
         _initialLoad = true;
@@ -85,14 +89,14 @@ class _AllAdsScreenState extends ConsumerState<AllAdsScreen> {
                         .read(homeDisplayDataStateProvider.notifier)
                         .displayData(false);
                   },
-                  child: Container(
-                    height: 30.h,
-                    width: MediaQuery.of(context).size.width * 0.55,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                      color: Colors.black12,
-                    ),
-                    child: Center(
+                  child: Center(
+                    child: Container(
+                      height: 30.h,
+                      width: MediaQuery.of(context).size.width * 0.55,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.r),
+                        color: Colors.black12,
+                      ),
                       child: primaryText(
                         text: "Back to main page",
                         textAlign: TextAlign.center,

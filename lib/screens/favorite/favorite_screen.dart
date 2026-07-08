@@ -159,7 +159,9 @@ class _FavoriteScreenState extends ConsumerState<FavoriteScreen> {
                                       price: userFavourite.adsModel!.basePrice!,
                                       image: userFavourite
                                           .adsModel!
-                                          .imageFrmServer!,
+                                          .imageFrmServer!
+                                          .first
+                                          .imageUrl,
                                       favId: userFavourite.favouriteId!,
                                     );
                                   },

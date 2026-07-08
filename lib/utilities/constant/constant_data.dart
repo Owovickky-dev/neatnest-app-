@@ -5,6 +5,7 @@ class ConstantData {
       "https://sevenfold-chance-giggle.ngrok-free.dev/api/v1";
   static final SOCKET_IO = "https://sevenfold-chance-giggle.ngrok-free.dev";
   static const LOGIN = "/auth/login";
+  static const LOGOUT = "/auth/logout";
   static const ABOUTME = "/auth/me";
   static const REGISTER = "/auth/register";
   static const REFRESHTOKEN = "/auth/refreshtoken";
@@ -16,11 +17,20 @@ class ConstantData {
   static const ADDRESS = "/user-address";
   static const GETCOUNTRIES = "/address/countries";
   static const GETSTATE = "/address/states";
-  static const UPDATEPASSWORD = "/auth/updatepassword";
-  static const UPDATEMAIL = "/auth/updateemail";
-  static const UPDATEPPHONE = "/auth/updatephonenumber";
-  static const UPDATEPERSONALINFO = "/auth/updatepersonalinfo";
+  static const UPDATEPASSWORD = "/user/updatepassword";
+  static const UPDATEMAIL = "/user/updateemail";
+  static const UPDATEPPHONE = "/user/updatephonenumber";
+  static const UPDATEPERSONALINFO = "/user/updatepersonalinfo";
   static const CHATURL = "/chats/";
   static const MESSAGEURL = "/messages/";
   static const BOOKINGURL = "/booking";
+  static const PROFILEPICS = "/user/profilepic";
+  static const SERVICECATEGORIES = "/user/service-categories";
+  static const OTPMAILVERIFICATION = "/auth/verifymail";
+  static const RESENDMAILOTP = "/auth/resendotp";
+  static const FORGOTPASSWORD = "/auth/forgotpassword";
+  static const PASSWORDCODEVERIFICATION = "/auth/passwordcodeverification";
+  static const RESETPASSWORD = "/auth/resetpassword";
+  static const USERVERIFICATION = "/verification";
+  static const GETUSERVERIFICATION = "$USERVERIFICATION/user";
 }

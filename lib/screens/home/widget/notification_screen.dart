@@ -50,8 +50,8 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
 
     if (diffDays == 0) return 'Today';
     if (diffDays == 1) return 'Yesterday';
-    if (diffDays < 7) return DateFormat('EEEE').format(date); // e.g., 'Monday'
-    return DateFormat('dd MMM yyyy').format(date); // e.g., '24 Sep 2025'
+    if (diffDays < 7) return DateFormat('EEEE').format(date);
+    return DateFormat('dd MMM yyyy').format(date);
   }
 
   @override

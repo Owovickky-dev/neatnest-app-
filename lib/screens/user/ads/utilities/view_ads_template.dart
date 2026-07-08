@@ -8,9 +8,9 @@ import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/widget/app_text.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
 
 import '../../../../utilities/constant/colors.dart';
+import '../../../../widget/app_notification.dart';
 
 class ViewAdsTemplate extends ConsumerStatefulWidget {
   const ViewAdsTemplate({
@@ -23,7 +23,7 @@ class ViewAdsTemplate extends ConsumerStatefulWidget {
     this.controller,
     required this.userCountry,
     required this.userState,
-    required this.image,
+    this.image,
     required this.isActive,
     required this.about,
   });
@@ -38,7 +38,7 @@ class ViewAdsTemplate extends ConsumerStatefulWidget {
   final String userState;
   final bool isActive;
   final String about;
-  final String image;
+  final String? image;
 
   @override
   ConsumerState<ViewAdsTemplate> createState() => _ViewAdsTemplateState();
@@ -233,7 +233,7 @@ class _ViewAdsTemplateState extends ConsumerState<ViewAdsTemplate> {
                       state: widget.userState,
                       about: widget.about,
                       isActive: widget.isActive,
-                      imageFrmServer: widget.image,
+                      // imageFrmServer: widget.image,
                     );
 
                     AppNavigatorHelper.push(

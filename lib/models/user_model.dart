@@ -1,3 +1,4 @@
+import 'package:neat_nest/models/user_skills_model.dart';
 import 'package:neat_nest/screens/user/model/user_location_model.dart';
 import 'package:neat_nest/screens/user/model/worker_statistics_model.dart';
 
@@ -10,6 +11,7 @@ class UserModel {
   final String username;
   final String gender;
   final String role;
+  final String? profilePic;
   final String phoneNumber;
   final List<UserLocationModel> locations;
   final WorkerStatisticsModel? workerStatistics;
@@ -17,6 +19,9 @@ class UserModel {
   final double? ratingAverage;
   final double? ratingQuantity;
   final String? joinedAt;
+  final String? profilePicPublicId;
+  final bool? verificationStarted;
+  final List<UserSkillModel>? userSkills;
 
   UserModel({
     this.id,
@@ -34,19 +39,42 @@ class UserModel {
     this.isVerified,
     this.ratingAverage,
     this.ratingQuantity,
+    this.profilePic,
+    this.profilePicPublicId,
+    this.userSkills,
+    this.verificationStarted,
   }) : locations = locations ?? [];
 
   Map<String, dynamic> toJson() {
-    return {
-      "name": name,
-      "email": email,
-      "password": password,
-      "passwordConfirm": passwordConfirm,
-      "username": username,
-      "gender": gender,
-      "role": role,
-      "phoneNumber": phoneNumber,
-    };
+    final data = <String, dynamic>{};
+    if (name.isNotEmpty) {
+      data["name"] = name;
+    }
+    if (username.isNotEmpty) {
+      data["username"] = username;
+    }
+    if (email.isNotEmpty) {
+      data["email"] = email;
+    }
+    if (password != null && password!.isNotEmpty) {
+      data["password"] = password;
+    }
+    if (passwordConfirm != null && passwordConfirm!.isNotEmpty) {
+      data["passwordConfirm"] = passwordConfirm;
+    }
+    if (gender.isNotEmpty) {
+      data["gender"] = gender;
+    }
+    if (role.isNotEmpty) {
+      data["role"] = role;
+    }
+    if (userSkills != null && userSkills!.isNotEmpty) {
+      data["skills"] = userSkills!.map((skill) => skill.toJson()).toList();
+    }
+    if (phoneNumber.isNotEmpty) {
+      data["phoneNumber"] = phoneNumber;
+    }
+    return data;
   }
 
   static List<UserLocationModel> _parseLocations(dynamic locationsData) {
@@ -61,27 +89,31 @@ class UserModel {
   }
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    try {
-      return UserModel(
-        id: json["_id"] ?? json["id"],
-        joinedAt: json["joinedAt"]?.toString() ?? "",
-        name: json["name"]?.toString() ?? "",
-        email: json["email"]?.toString() ?? "",
-        gender: json["gender"]?.toString() ?? "",
-        role: json["role"]?.toString() ?? "",
-        phoneNumber: json["phoneNumber"]?.toString() ?? "",
-        ratingAverage: (json["ratingAverage"] as num?)?.toDouble() ?? 0.0,
-        ratingQuantity: (json["ratingQuantity"] as num?)?.toDouble() ?? 0.0,
-        username: json["username"]?.toString() ?? "",
-        isVerified: json["isVerfied"] ?? false,
-        locations: _parseLocations(json["locations"]),
-        workerStatistics: json["workerStatistics"] != null
-            ? WorkerStatisticsModel.fromJson(json["workerStatistics"])
-            : null,
-      );
-    } catch (e) {
-      rethrow;
-    }
+    return UserModel(
+      id: json["_id"] ?? json["id"],
+      joinedAt: json["joinedAt"]?.toString() ?? "",
+      name: json["name"]?.toString() ?? "",
+      email: json["email"]?.toString() ?? "",
+      gender: json["gender"]?.toString() ?? "",
+      role: json["role"]?.toString() ?? "",
+      phoneNumber: json["phoneNumber"]?.toString() ?? "",
+      profilePic: json["profilePic"]?.toString() ?? "",
+      profilePicPublicId: json["profilePicPublicId"]?.toString() ?? "",
+      ratingAverage: (json["ratingAverage"] as num?)?.toDouble() ?? 0.0,
+      ratingQuantity: (json["ratingQuantity"] as num?)?.toDouble() ?? 0.0,
+      username: json["username"]?.toString() ?? "",
+      isVerified: json["isVerified"] == true,
+      verificationStarted: json["verificationStarted"] == true,
+      userSkills: json["userSkills"] != null
+          ? (json["userSkills"] as List)
+                .map((userSkill) => UserSkillModel.fromJson(userSkill))
+                .toList()
+          : [],
+      locations: _parseLocations(json["locations"]),
+      workerStatistics: json["workerStatistics"] != null
+          ? WorkerStatisticsModel.fromJson(json["workerStatistics"])
+          : null,
+    );
   }
 
   Map<String, dynamic> toFullJson() {
@@ -94,12 +126,60 @@ class UserModel {
       "gender": gender,
       "role": role,
       "joinedAt": joinedAt,
-      "isVerfied": isVerified,
+      "isVerified": isVerified,
       "ratingAverage": ratingAverage,
       "ratingQuantity": ratingQuantity,
       "locations": locations.map((loc) => loc.toJson()).toList(),
       "workerStatistics": workerStatistics?.toJson(),
       "phoneNumber": phoneNumber,
+      "profilePic": profilePic,
+      "profilePicPublicId": profilePicPublicId,
+      "userSkills": userSkills,
+      "verificationStarted": verificationStarted,
     };
+  }
+
+  UserModel copyWith({
+    String? id,
+    String? name,
+    String? email,
+    String? password,
+    String? passwordConfirm,
+    String? username,
+    String? gender,
+    String? role,
+    String? profilePic,
+    String? phoneNumber,
+    List<UserLocationModel>? locations,
+    WorkerStatisticsModel? workerStatistics,
+    bool? isVerified,
+    double? ratingAverage,
+    double? ratingQuantity,
+    String? joinedAt,
+    String? profilePicPublicId,
+    bool? verificationStarted,
+    List<UserSkillModel>? userSkills,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      passwordConfirm: passwordConfirm ?? this.passwordConfirm,
+      username: username ?? this.username,
+      gender: gender ?? this.gender,
+      role: role ?? this.role,
+      profilePic: profilePic ?? this.profilePic,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      locations: locations ?? this.locations,
+      workerStatistics: workerStatistics ?? this.workerStatistics,
+      isVerified: isVerified ?? this.isVerified,
+      ratingAverage: ratingAverage ?? this.ratingAverage,
+      ratingQuantity: ratingQuantity ?? this.ratingQuantity,
+      joinedAt: joinedAt ?? this.joinedAt,
+      profilePicPublicId: profilePicPublicId ?? this.profilePicPublicId,
+      verificationStarted: verificationStarted ?? this.verificationStarted,
+      userSkills: userSkills ?? this.userSkills,
+    );
   }
 }

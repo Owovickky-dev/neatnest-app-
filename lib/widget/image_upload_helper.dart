@@ -53,12 +53,10 @@ class ImageUploadHelper {
     }
   }
 
-  ///  GET FILE SIZE (KB)
   static int getFileSizeKB(File file) {
     return file.lengthSync() ~/ 1024;
   }
 
-  ///   READABLE SIZE (KB / MB)
   static String getReadableSize(File file) {
     final kb = file.lengthSync() / 1024;
     final mb = kb / 1024;
@@ -70,7 +68,6 @@ class ImageUploadHelper {
     }
   }
 
-  /// COMPRESS IMAGE (DYNAMIC BASED ON TYPE)
   static Future<File?> compressImage(File file, ImageType type) async {
     try {
       final dir = await getTemporaryDirectory();
@@ -107,12 +104,10 @@ class ImageUploadHelper {
     }
   }
 
-  ///  SMART PROCESS (SKIP SMALL IMAGES)
   static Future<File?> processImage(File file, ImageType type) async {
     try {
       final sizeKB = getFileSizeKB(file);
 
-      /// Skip compression if image is already small
       if (sizeKB < 300) {
         if (kDebugMode) {
           print("Skipping compression (small image: ${sizeKB}KB)");
@@ -127,7 +122,6 @@ class ImageUploadHelper {
     }
   }
 
-  ///  FULL FLOW: PICK → PROCESS
   static Future<File?> pickAndProcess(
     ImageSource source,
     ImageType type,

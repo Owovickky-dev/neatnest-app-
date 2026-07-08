@@ -56,7 +56,7 @@ class _ViewAdsScreenState extends ConsumerState<ViewAdsScreen> {
           : SafeArea(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15.w),
-                child: totalAds!.isNotEmpty
+                child: totalAds != null
                     ? Column(
                         children: [
                           20.ht,
@@ -102,7 +102,9 @@ class _ViewAdsScreenState extends ConsumerState<ViewAdsScreen> {
                                         aOrders: 4,
                                         userCountry: activeAd.country!,
                                         userState: activeAd.state!,
-                                        image: activeAd.imageFrmServer!,
+                                        // image: activeAd
+                                        //     .imageFrmServer![0]
+                                        //     .imageUrl,
                                         isActive: activeAd.isActive!,
                                         about: activeAd.about!,
                                       );
@@ -122,7 +124,8 @@ class _ViewAdsScreenState extends ConsumerState<ViewAdsScreen> {
                                         aOrders: 4,
                                         userCountry: allAds.country!,
                                         userState: allAds.state!,
-                                        image: allAds.imageFrmServer!,
+                                        image:
+                                            allAds.imageFrmServer![0].imageUrl,
                                         isActive: allAds.isActive!,
                                         about: allAds.about!,
                                       );

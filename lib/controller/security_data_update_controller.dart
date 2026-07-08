@@ -5,7 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:neat_nest/controller/sign_in_controller.dart';
 import 'package:neat_nest/data/repo/security_update_repo.dart';
 import 'package:neat_nest/screens/user/model/security_update_model.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
+
+import '../widget/app_notification.dart';
 
 class SecurityDataUpdateController {
   SecurityDataUpdateController();

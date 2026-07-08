@@ -11,29 +11,40 @@ import 'package:neat_nest/widget/app_text.dart';
 class DataScreen extends StatelessWidget {
   const DataScreen({
     super.key,
-    required this.text1,
-    required this.text2,
+    required this.leftButtonText,
+    this.rightButtonText,
     required this.serviceName,
     required this.serviceProvider,
     required this.imagePath,
     required this.price,
-    required this.function1,
-    required this.function2,
+    required this.functionLeft,
+    required this.functionRight,
+    required this.preferredDate,
+    this.sender,
+    required this.bookingStatus,
+    required this.event,
+    required this.userRole,
+    this.chatName,
   });
 
-  final String text1;
-  final String text2;
+  final String leftButtonText;
+  final String? rightButtonText;
   final String serviceName;
   final String serviceProvider;
   final String imagePath;
   final double price;
-  final VoidCallback function1;
-  final VoidCallback function2;
+  final VoidCallback functionLeft;
+  final VoidCallback functionRight;
+  final String preferredDate;
+  final String? sender;
+  final String bookingStatus;
+  final String event;
+  final String userRole;
+  final String? chatName;
 
-  String date() {
-    DateTime now = DateTime.now();
-    String format = DateFormat(' EEEE,dd MMM,yyyy').format(now);
-    return format;
+  String formatDate(String date) {
+    final parsedDate = DateTime.parse(date).toLocal();
+    return DateFormat('EEEE, dd, MMM, yyyy').format(parsedDate);
   }
 
   @override
@@ -55,8 +66,8 @@ class DataScreen extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      height: 70.h,
-                      width: 70.w,
+                      height: 80.h,
+                      width: 80.w,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.r),
                       ),
@@ -72,9 +83,37 @@ class DataScreen extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        primaryText(text: serviceName),
+                        Row(
+                          children: [
+                            primaryText(text: "Title: ", fontSize: 16.sp),
+                            10.wt,
+                            secondaryText(text: serviceName),
+                          ],
+                        ),
                         5.ht,
-                        secondaryText(text: serviceProvider),
+                        Row(
+                          children: [
+                            primaryText(text: "Provider: ", fontSize: 16.sp),
+                            10.wt,
+                            secondaryText(text: serviceProvider),
+                          ],
+                        ),
+                        5.ht,
+                        Row(
+                          children: [
+                            primaryText(text: "Sender: ", fontSize: 16.sp),
+                            10.wt,
+                            secondaryText(text: sender ?? ""),
+                          ],
+                        ),
+                        5.ht,
+                        Row(
+                          children: [
+                            primaryText(text: "Chat Name: ", fontSize: 16.sp),
+                            10.wt,
+                            secondaryText(text: chatName ?? ""),
+                          ],
+                        ),
                       ],
                     ),
                   ],
@@ -87,19 +126,28 @@ class DataScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         primaryText(
-                          text: date(),
+                          text: formatDate(preferredDate),
                           fontSize: 10.sp,
-                          color: AppColors.blackTextColor.withValues(
-                            alpha: 0.75,
-                          ),
+                          color: AppColors.primaryColor,
                         ),
-                        secondaryText(text: 'Date'),
+                        primaryText(text: 'Agreed Date', fontSize: 16.sp),
                       ],
                     ),
-                    Row(
+                    Column(
                       children: [
-                        primaryText(text: '\$${price.toString()}'),
-                        secondaryText(text: '/hour'),
+                        Row(
+                          children: [
+                            secondaryText(
+                              text: '\$${price.toString()}',
+                              color: AppColors.primaryColor,
+                            ),
+                            secondaryText(
+                              text: '/hour',
+                              color: AppColors.primaryColor,
+                            ),
+                          ],
+                        ),
+                        primaryText(text: 'Agreed Price', fontSize: 16.sp),
                       ],
                     ),
                   ],
@@ -108,24 +156,65 @@ class DataScreen extends StatelessWidget {
                 DottedLine(
                   dashColor: AppColors.secondaryTextColor.withValues(alpha: .5),
                 ),
-                25.ht,
+                20.ht,
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    AppButton(
-                      text: text1,
-                      bckColor: AppColors.primaryColor.withValues(alpha: .1),
-                      textColor: AppColors.blackTextColor,
-                      function: function1,
-                    ),
-                    AppButton(
-                      text: text2,
-                      bckColor: AppColors.primaryColor,
-                      textColor: Colors.white,
-                      function: function2,
-                    ),
+                    primaryText(text: "Status:", fontSize: 16.sp),
+                    10.wt,
+                    secondaryText(text: bookingStatus),
                   ],
                 ),
+                20.ht,
+                Row(
+                  children: [
+                    primaryText(text: "Role:", fontSize: 16.sp),
+                    10.wt,
+                    secondaryText(text: userRole),
+                  ],
+                ),
+                20.ht,
+                Row(
+                  children: [
+                    primaryText(text: "Reason:", fontSize: 16.sp),
+                    10.wt,
+                    Expanded(child: secondaryText(text: event, maxLines: null)),
+                  ],
+                ),
+                20.ht,
+                DottedLine(
+                  dashColor: AppColors.secondaryTextColor.withValues(alpha: .5),
+                ),
+                25.ht,
+                rightButtonText == null
+                    ? Center(
+                        child: AppButton(
+                          text: leftButtonText,
+                          bckColor: AppColors.primaryColor,
+                          textColor: Colors.white,
+                          function: functionLeft,
+                          fontSize: 20.sp,
+                          width: 150.w,
+                        ),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AppButton(
+                            text: leftButtonText,
+                            bckColor: AppColors.primaryColor.withValues(
+                              alpha: .1,
+                            ),
+                            textColor: AppColors.blackTextColor,
+                            function: functionLeft,
+                          ),
+                          AppButton(
+                            text: rightButtonText!,
+                            bckColor: AppColors.primaryColor,
+                            textColor: Colors.white,
+                            function: functionRight,
+                          ),
+                        ],
+                      ),
               ],
             ),
           ),

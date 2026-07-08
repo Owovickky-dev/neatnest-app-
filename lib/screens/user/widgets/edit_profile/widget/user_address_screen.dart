@@ -56,10 +56,7 @@ class _UserAddressScreenState extends ConsumerState<UserAddressScreen> {
             ),
             20.ht,
             isLoading
-                ? SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    child: Center(child: LoadingScreen()),
-                  )
+                ? Expanded(child: Center(child: LoadingScreen()))
                 : Expanded(
                     child: Stack(
                       children: [
@@ -88,7 +85,7 @@ class _UserAddressScreenState extends ConsumerState<UserAddressScreen> {
                                 ),
                               ),
                         Positioned(
-                          bottom: 0,
+                          bottom: 30,
                           left: 0,
                           right: 0,
                           child: AppButton(

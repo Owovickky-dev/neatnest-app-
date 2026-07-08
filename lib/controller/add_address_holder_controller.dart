@@ -1,11 +1,15 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:neat_nest/controller/state%20controller%20/address/address_state_controller.dart';
 import 'package:neat_nest/data/repo/address_data_repo.dart';
 import 'package:neat_nest/screens/user/model/user_location_model.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
+import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
+import 'package:neat_nest/utilities/route/app_route_names.dart';
+
+import '../widget/app_notification.dart';
+import '../widget/loading_screen.dart';
 
 class AddAddressHolderController {
   AddAddressHolderController();
@@ -76,8 +80,7 @@ class AddAddressHolderController {
     if (address.isEmpty ||
         city.isEmpty ||
         statePicked == null ||
-        countryPicked == null ||
-        isPrimary == null) {
+        countryPicked == null) {
       showErrorNotification(message: "Please fill all required field");
     } else if (postalCode != null && postalCode.length != 6) {
       showErrorNotification(message: "Postal code  need to be 6 digits");
@@ -91,17 +94,24 @@ class AddAddressHolderController {
         isPrimary: isPrimary,
       );
 
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => LoadingScreen(),
+      );
+
       try {
         await ref
             .read(addressStateControllerProvider.notifier)
             .addNewAddress(context, userAddress);
         if (!context.mounted) return;
-        showSuccessNotification(message: "Address Added successfully");
-
-        if (!context.mounted) return;
         context.pop();
+        print("I got here");
+        showSuccessNotification(message: "Address Added successfully");
+        AppNavigatorHelper.pushReplacement(context, AppRoute.userAddresses);
       } catch (e) {
         if (!context.mounted) return;
+        context.pop();
         if (e is DioException) {
           showErrorNotification(message: e.error.toString());
         }
@@ -110,14 +120,22 @@ class AddAddressHolderController {
   }
 
   void deleteAddress(BuildContext context, WidgetRef ref, String id) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => LoadingScreen(),
+    );
+
     try {
       await ref
           .read(addressStateControllerProvider.notifier)
           .deleteUserAddress(context, id);
       if (!context.mounted) return;
+      context.pop();
       showSuccessNotification(message: "Address successfully deleted");
     } catch (e) {
       if (!context.mounted) return;
+      context.pop();
       if (e is DioException) {
         showErrorNotification(message: e.error.toString());
       }
@@ -125,17 +143,28 @@ class AddAddressHolderController {
   }
 
   void setDefaultAddress(BuildContext context, WidgetRef ref, String id) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => LoadingScreen(),
+    );
     try {
       final isDefault = UserLocationModel(isPrimary: true, addressId: id);
-
+      if (!context.mounted) return;
       await ref
           .read(addressStateControllerProvider.notifier)
           .updateAddressData(context, isDefault);
+      if (!context.mounted) return;
+      await ref
+          .read(addressStateControllerProvider.notifier)
+          .getUserAddress(context);
 
       if (!context.mounted) return;
+      context.pop();
       showSuccessNotification(message: "Address successfully set to default");
     } catch (e) {
       if (!context.mounted) return;
+      context.pop();
       if (e is DioException) {
         showErrorNotification(message: e.error.toString());
       }
@@ -167,15 +196,24 @@ class AddAddressHolderController {
       isPrimary: isPrimary,
     );
 
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => LoadingScreen(),
+    );
+
     try {
       await ref
           .read(addressStateControllerProvider.notifier)
           .updateAddressData(context, updatedUserAddress);
       if (!context.mounted) return;
       context.pop();
-      showSuccessNotification(message: "Address updated");
+      print("I got here update");
+      showSuccessNotification(message: "Address Updated successfully");
+      AppNavigatorHelper.pushReplacement(context, AppRoute.userAddresses);
     } catch (e) {
       if (!context.mounted) return;
+      context.pop();
       if (e is DioException) {
         showErrorNotification(message: e.error.toString());
       }

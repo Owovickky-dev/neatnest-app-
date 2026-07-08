@@ -1,83 +1,86 @@
 import 'package:dio/dio.dart';
-import 'package:intl/intl.dart';
 
 class ApiErrorHandler {
   static String getErrorMessage(DioException e) {
-    //  Network-related errors
-    if (e.type == DioExceptionType.connectionError ||
-        e.type == DioExceptionType.unknown) {
-      return "No internet connection. Please check your network.";
-    }
+    switch (e.type) {
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.receiveTimeout:
+      case DioExceptionType.sendTimeout:
+        return "Connection timeout. Please try again.";
 
-    // ⏳ Timeout errors
-    if (e.type == DioExceptionType.connectionTimeout ||
-        e.type == DioExceptionType.receiveTimeout ||
-        e.type == DioExceptionType.sendTimeout) {
-      return "Request timed out. Please try again.";
-    }
+      case DioExceptionType.connectionError:
+        return "No internet connection.";
 
-    final status = e.response?.statusCode;
-    final responseData = e.response?.data;
+      case DioExceptionType.badResponse:
+        return _handleBadResponse(e);
 
-    if (responseData["error"]["statusCode"] == 400 &&
-        responseData["message"] != null) {
-      return responseData["message"] ?? "An error has occurred";
+      case DioExceptionType.cancel:
+        return "Request cancelled.";
+
+      case DioExceptionType.badCertificate:
+        return "Invalid server certificate.";
+
+      case DioExceptionType.unknown:
+        return "An unexpected error occurred.";
     }
-    //  Safe extraction of message
-    String getMessage() {
-      if (responseData is Map && responseData.containsKey('message')) {
-        return responseData['message']?.toString() ?? "Something went wrong";
+  }
+
+  static String _handleBadResponse(DioException e) {
+    final statusCode = e.response?.statusCode;
+    final data = e.response?.data;
+
+    // Handle ngrok errors
+    if (data is String) {
+      if (data.contains("ERR_NGROK_8012")) {
+        return "Backend server is currently unavailable.";
       }
-      return "Something went wrong";
+
+      return data;
     }
 
-    // Status-based handling
-    if (status != null) {
-      switch (status) {
-        case 400:
-          return getMessage();
-        case 401:
-          final message = getMessage();
-          try {
-            final extraData =
-                responseData?['error']?['extra']?['nextAllowedDate']
-                    ?.toString();
-            if (extraData != null && extraData.isNotEmpty) {
-              final date = DateTime.parse(extraData).toLocal();
-              final nextUpdateDate = DateFormat(
-                "dd/MM/yy hh:mm a",
-              ).format(date);
-              return "$message $nextUpdateDate";
-            }
-          } catch (e) {
-            print(' Extra data parsing failed: $e');
-          }
-          return message;
-
-        case 403:
-          return getMessage();
-
-        case 404:
-          return getMessage();
-
-        case 500:
-          //  SAFE: Only check for duplicate email if the structure exists
-          try {
-            final duplicateEmail = responseData?['error']?['keyValue']?['email']
-                ?.toString();
-            if (duplicateEmail != null) {
-              return "Email $duplicateEmail already used by another user";
-            }
-          } catch (e) {
-            print(' Duplicate email parsing failed: $e');
-          }
-          return getMessage();
-
-        default:
-          return getMessage();
+    // Handle backend JSON response
+    if (data is Map<String, dynamic>) {
+      if (data["message"] != null) {
+        return data["message"].toString();
       }
     }
 
-    return "Something went wrong. Please try again.";
+    switch (statusCode) {
+      case 400:
+        return "Bad request.";
+
+      case 401:
+        return "Unauthorized access.";
+
+      case 403:
+        return "Access denied.";
+
+      case 404:
+        return "Resource not found.";
+
+      case 409:
+        return "Conflict occurred.";
+
+      case 422:
+        return "Validation failed.";
+
+      case 429:
+        return "Too many requests. Please try again later.";
+
+      case 500:
+        return "Internal server error.";
+
+      case 502:
+        return "Backend server is currently unavailable.";
+
+      case 503:
+        return "Service temporarily unavailable.";
+
+      case 504:
+        return "Gateway timeout.";
+
+      default:
+        return "Server error.";
+    }
   }
 }

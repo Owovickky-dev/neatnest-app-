@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,22 +19,45 @@ import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/widget/app_confirmation_button.dart';
 import 'package:neat_nest/widget/app_text.dart';
-import 'package:neat_nest/widget/notificaiton_content.dart';
 
 import '../../controller/state controller /ads/ads_state_controller.dart';
 import '../../utilities/route/app_route_names.dart';
+import '../../widget/app_notification.dart';
 import '../../widget/capitalize_first_character.dart';
 
-class AdsDetailsScreen extends ConsumerWidget {
+class AdsDetailsScreen extends ConsumerStatefulWidget {
   const AdsDetailsScreen({
     super.key,
     required this.index,
     required this.isFavourite,
     required this.isPopularAds,
   });
+
   final int index;
   final bool isFavourite;
   final bool isPopularAds;
+
+  @override
+  ConsumerState<AdsDetailsScreen> createState() => _AdsDetailsScreenState();
+}
+
+class _AdsDetailsScreenState extends ConsumerState<AdsDetailsScreen> {
+  late PageController pageController;
+
+  int currentImageIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    pageController = PageController(viewportFraction: 1);
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
+
   void showConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -58,7 +82,7 @@ class AdsDetailsScreen extends ConsumerWidget {
                 AppNavigatorHelper.push(
                   dialogContext,
                   AppRoute.signIn,
-                  extra: index,
+                  extra: widget.index,
                 );
               },
               child: secondaryText(text: "Yes"),
@@ -70,15 +94,16 @@ class AdsDetailsScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final adsList = ref.watch(adsStateControllerProvider);
     final popularList = ref.watch(popularServiceControllerProvider);
     final addressExist = ref.watch(addressStateControllerProvider);
-    final ads = isPopularAds ? popularList : adsList;
-    final adsInfo = ads[index];
+    final ads = widget.isPopularAds ? popularList : adsList;
+    final adsInfo = ads[widget.index];
     final posterJoinedDate = adsInfo.jobPoster!.joinedAt;
     final user = ref.watch(userControllerStateProvider);
     final myDate = DateTime.parse(posterJoinedDate!).toLocal();
+
     final myDateFormat = DateFormat("MMMM, yyyy").format(myDate);
 
     return Scaffold(
@@ -86,19 +111,28 @@ class AdsDetailsScreen extends ConsumerWidget {
       body: SizedBox.expand(
         child: Stack(
           children: [
-            Container(
+            SizedBox(
               width: double.infinity,
-              height: 270.h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              child: ClipRRect(
-                child: CachedNetworkImage(
-                  fit: BoxFit.cover,
-                  imageUrl: adsInfo.imageFrmServer!,
-                ),
+              height: 300.h,
+              child: PageView.builder(
+                controller: pageController,
+                itemCount: adsInfo.imageFrmServer?.length ?? 0,
+                onPageChanged: (index) {
+                  setState(() {
+                    currentImageIndex = index;
+                  });
+                },
+                itemBuilder: (context, index) {
+                  return ClipRRect(
+                    child: CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      imageUrl: adsInfo.imageFrmServer![index].imageUrl,
+                    ),
+                  );
+                },
               ),
             ),
+
             Positioned(
               top: 40.h,
               left: 20.w,
@@ -109,8 +143,27 @@ class AdsDetailsScreen extends ConsumerWidget {
                 },
               ),
             ),
+
             Positioned(
-              top: 260.h,
+              top: 220.h,
+              right: 20.w,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                decoration: BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+                child: secondaryText(
+                  text:
+                      "${currentImageIndex + 1}/${adsInfo.imageFrmServer?.length ?? 0}",
+                  color: Colors.white,
+                  fontSize: 11.sp,
+                ),
+              ),
+            ),
+
+            Positioned(
+              top: 290.h,
               right: 0,
               left: 0,
               bottom: 0,
@@ -130,28 +183,55 @@ class AdsDetailsScreen extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      10.ht,
+
+                      Center(
+                        child: DotsIndicator(
+                          position: currentImageIndex.toDouble(),
+                          dotsCount: adsInfo.imageFrmServer?.length ?? 0,
+                          decorator: DotsDecorator(
+                            size: Size.square(9),
+                            activeColor: AppColors.primaryColor,
+                            activeSize: Size(20.w, 8.h),
+                            activeShape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      10.ht,
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          primaryText(
-                            text: adsInfo.title!,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
+                          Expanded(
+                            child: primaryText(
+                              text: adsInfo.title!,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
+
                           Icon(
-                            isFavourite
+                            widget.isFavourite
                                 ? Icons.favorite
                                 : Icons.favorite_border,
-                            color: isFavourite ? Colors.red : Colors.black,
+                            color: widget.isFavourite
+                                ? Colors.red
+                                : Colors.black,
                           ),
                         ],
                       ),
+
                       5.ht,
+
                       secondaryText(
                         text: capitalizeFirstCharacter(adsInfo.category),
                         fontSize: 20.sp,
                       ),
+
                       5.ht,
+
                       Row(
                         children: [
                           secondaryText(
@@ -159,32 +239,45 @@ class AdsDetailsScreen extends ConsumerWidget {
                               adsInfo.jobPoster!.username,
                             ),
                           ),
+
                           5.wt,
+
                           secondaryText(text: '|'),
+
                           5.wt,
+
                           Icon(
                             Icons.star,
                             size: 12.sp,
                             color: AppColors.ratingStarColor,
                           ),
+
                           secondaryText(
                             text: adsInfo.jobPoster!.ratingAverage.toString(),
                             color: AppColors.ratingStarColor,
                             fontSize: 10.sp,
                           ),
+
                           3.wt,
+
                           secondaryText(text: "(530 Reviews)", fontSize: 10.sp),
                         ],
                       ),
+
                       20.ht,
+
                       Row(
                         children: [
                           primaryText(text: "Joined:", fontSize: 14.sp),
+
                           10.wt,
+
                           secondaryText(text: myDateFormat, fontSize: 13.sp),
                         ],
                       ),
+
                       20.ht,
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -194,21 +287,29 @@ class AdsDetailsScreen extends ConsumerWidget {
                                 ? "${adsInfo.country}, ${adsInfo.state}"
                                 : " No location",
                           ),
+
                           10.wt,
+
                           HomeScreenIcons(
                             icons: FontAwesomeIcons.shareNodes,
                             text: "share",
                           ),
                         ],
                       ),
+
                       20.ht,
+
                       primaryText(text: "About the service"),
+
                       10.ht,
+
                       secondaryText(
                         textAlign: TextAlign.justify,
                         text: adsInfo.about!,
                       ),
+
                       20.ht,
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -224,10 +325,12 @@ class AdsDetailsScreen extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 primaryText(text: "200k +"),
+
                                 secondaryText(text: "Happy Customer"),
                               ],
                             ),
                           ),
+
                           Container(
                             padding: EdgeInsets.only(left: 10.w, top: 10.h),
                             height: 70.h,
@@ -240,17 +343,21 @@ class AdsDetailsScreen extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 primaryText(text: "99 %"),
+
                                 secondaryText(text: "client Satisfaction"),
                               ],
                             ),
                           ),
                         ],
                       ),
+
                       10.ht,
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           primaryText(text: "Reviews"),
+
                           TextButton(
                             onPressed: () {
                               debugPrint("ViewAll Clicked");
@@ -262,6 +369,7 @@ class AdsDetailsScreen extends ConsumerWidget {
                           ),
                         ],
                       ),
+
                       SizedBox(
                         height: 150.h,
                         child: ListView.builder(
@@ -272,16 +380,20 @@ class AdsDetailsScreen extends ConsumerWidget {
                           },
                         ),
                       ),
+
                       15.ht,
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
                             children: [
                               primaryText(text: "\$${adsInfo.basePrice}"),
+
                               secondaryText(text: "/hour", fontSize: 11.sp),
                             ],
                           ),
+
                           AppButton(
                             text: "Book now",
                             verticalHeight: 12,
@@ -297,7 +409,7 @@ class AdsDetailsScreen extends ConsumerWidget {
                                 showConfirmationDialog(context);
                               } else if (isUser == true) {
                                 showErrorNotification(
-                                  message: "You can't pick your own ads",
+                                  message: "You can't book your own ads",
                                 );
                               } else {
                                 appConfirmationButton(
@@ -306,27 +418,30 @@ class AdsDetailsScreen extends ConsumerWidget {
                                   subTitle: "Who is the Booking for?",
                                   textButtonTextLeft: "MYSELF",
                                   textButtonTextRight: "OTHER",
+
                                   functionRight: () {
                                     AppNavigatorHelper.push(
                                       context,
                                       AppRoute.bookingFormScreen,
                                       extra: BookingNavigationArgs(
                                         isMe: false,
-                                        index: index,
-                                        isPopularAds: isPopularAds,
+                                        index: widget.index,
+                                        isPopularAds: widget.isPopularAds,
                                       ),
                                     );
                                   },
+
                                   functionLeft: () {
                                     context.pop();
+
                                     if (addressExist.isNotEmpty) {
                                       AppNavigatorHelper.push(
                                         context,
                                         AppRoute.bookingFormScreen,
                                         extra: BookingNavigationArgs(
                                           isMe: true,
-                                          index: index,
-                                          isPopularAds: isPopularAds,
+                                          index: widget.index,
+                                          isPopularAds: widget.isPopularAds,
                                         ),
                                       );
                                     } else {
@@ -334,13 +449,14 @@ class AdsDetailsScreen extends ConsumerWidget {
                                         message:
                                             "You don't have any exist address please fill in details",
                                       );
+
                                       AppNavigatorHelper.push(
                                         context,
                                         AppRoute.bookingFormScreen,
                                         extra: BookingNavigationArgs(
                                           isMe: false,
-                                          index: index,
-                                          isPopularAds: isPopularAds,
+                                          index: widget.index,
+                                          isPopularAds: widget.isPopularAds,
                                         ),
                                       );
                                     }

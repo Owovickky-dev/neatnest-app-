@@ -41,7 +41,6 @@ class UserLocationModel {
     if (addressId != null && addressId!.isNotEmpty) {
       addressData["addressId"] = addressId;
     }
-
     return addressData;
   }
 

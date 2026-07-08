@@ -42,7 +42,7 @@ final class PopularServiceControllerProvider
 }
 
 String _$popularServiceControllerHash() =>
-    r'3185d7224339e18b05b1d1c449ee792b3d28b4e5';
+    r'aaabdafda9c376f848fa99478cd2fcec50c4da9a';
 
 abstract class _$PopularServiceController extends $Notifier<List<AdsModel>> {
   List<AdsModel> build();

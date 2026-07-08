@@ -13,10 +13,8 @@ class AdsRepo {
   }
 
   Future<Response> postAds(AdsModel adsData) async {
-    final response = await _dio.post(
-      ConstantData.ADS,
-      data: adsData.toFormData(),
-    );
+    final formData = await adsData.toFormData();
+    final response = await _dio.post(ConstantData.ADS, data: formData);
     return response;
   }
 

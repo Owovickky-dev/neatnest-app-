@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:neat_nest/controller/account_verification_controller.dart';
 import 'package:neat_nest/models/ads_model.dart';
 import 'package:neat_nest/models/booking_navigation_args.dart';
+import 'package:neat_nest/screens/booking/ads_details_screen.dart';
 import 'package:neat_nest/screens/booking/widgets/booking_form_screen.dart';
 import 'package:neat_nest/screens/home/filter/filter_screen.dart';
 import 'package:neat_nest/screens/home/filter/widget/filter_result_screen.dart';
@@ -19,11 +21,16 @@ import 'package:neat_nest/screens/user/auth/security/widget/change_phone_number_
 import 'package:neat_nest/screens/user/auth/security/widget/update_password_screen.dart';
 import 'package:neat_nest/screens/user/auth/signin/sign_in_screen.dart';
 import 'package:neat_nest/screens/user/auth/signin/utilities/forget_password_screen.dart';
+import 'package:neat_nest/screens/user/auth/signin/utilities/new_password_screen.dart';
+import 'package:neat_nest/screens/user/auth/signup/account_verification_screen.dart';
 import 'package:neat_nest/screens/user/auth/signup/sign_up_screen.dart';
+import 'package:neat_nest/screens/user/model/booking_data_model.dart';
 import 'package:neat_nest/screens/user/model/user_location_model.dart';
 import 'package:neat_nest/screens/user/user_profile_screen.dart';
 import 'package:neat_nest/screens/user/user_screen.dart';
 import 'package:neat_nest/screens/user/utilities/add_address_holder.dart';
+import 'package:neat_nest/screens/user/widgets/booking/my_bookings_screen.dart';
+import 'package:neat_nest/screens/user/widgets/booking/utilities/booking_data_builder.dart';
 import 'package:neat_nest/screens/user/widgets/edit_profile/edit_profile_screen.dart';
 import 'package:neat_nest/screens/user/widgets/edit_profile/widget/about.dart';
 import 'package:neat_nest/screens/user/widgets/edit_profile/widget/personal_info_edit.dart';
@@ -33,7 +40,12 @@ import 'package:neat_nest/screens/user/widgets/payment/user_payment_method.dart'
 import 'package:neat_nest/screens/user/widgets/payment/widgets/add_payment_method.dart';
 import 'package:neat_nest/screens/user/widgets/payment/worker_payment_method.dart';
 import 'package:neat_nest/screens/user/widgets/settings/settings_screen.dart';
-import 'package:neat_nest/screens/user/widgets/verification/worker_verification_screen.dart';
+import 'package:neat_nest/screens/user/widgets/verification/model/display_data_model.dart';
+import 'package:neat_nest/screens/user/widgets/verification/widget/documents_display_screen.dart';
+import 'package:neat_nest/screens/user/widgets/verification/widget/verification_image_upload_helper.dart';
+import 'package:neat_nest/screens/user/widgets/verification/widget/verification_method_screen.dart';
+import 'package:neat_nest/screens/user/widgets/verification/widget/verification_picker_screen.dart';
+import 'package:neat_nest/screens/user/widgets/verification/widget/verification_start_screen.dart';
 import 'package:neat_nest/utilities/bottom_nav/bottom_navigation_screen.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/utilities/route/app_router_key.dart';
@@ -49,9 +61,68 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     navigatorKey: AppRouterKey.navigatorKey,
     routes: [
       GoRoute(
+        path: AppRoute.bookingDataBuilder.path,
+        name: AppRoute.bookingDataBuilder.name,
+        builder: (context, state) {
+          final data = state.extra as BookingDataModel;
+          return BookingDataBuilder(
+            topText: data.topText,
+            title: data.title,
+            status: data.status,
+            functionLeft: data.functionLeft,
+            functionRight: data.functionRight,
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.newPasswordScreen.path,
+        name: AppRoute.newPasswordScreen.name,
+        builder: (context, state) {
+          final data = state.extra as String;
+          return NewPasswordScreen(userMail: data);
+        },
+      ),
+      GoRoute(
         path: AppRoute.splash.path,
         name: AppRoute.splash.name,
         builder: (context, state) => SplashScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.verificationStartScreen.path,
+        name: AppRoute.verificationStartScreen.name,
+        builder: (context, state) {
+          final start = state.extra as bool;
+          return VerificationStartScreen(isStart: start);
+        },
+      ),
+      GoRoute(
+        path: AppRoute.verificationMethodScreen.path,
+        name: AppRoute.verificationMethodScreen.name,
+        builder: (context, state) => VerificationMethodScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.verificationImageUploadHelper.path,
+        name: AppRoute.verificationImageUploadHelper.name,
+        builder: (context, state) {
+          final data = state.extra as String;
+          return VerificationImageUploadHelper(title: data);
+        },
+      ),
+      GoRoute(
+        path: AppRoute.documentDisplayScreen.path,
+        name: AppRoute.documentDisplayScreen.name,
+        builder: (context, state) {
+          final data = state.extra as DisplayDatHolderModel;
+          return DocumentsDisplayScreen(title: data.title, status: data.status);
+        },
+      ),
+      GoRoute(
+        path: AppRoute.verificationPickerScreen.path,
+        name: AppRoute.verificationPickerScreen.name,
+        builder: (context, state) {
+          final data = state.extra as int;
+          return VerificationPickerScreen(index: data);
+        },
       ),
       GoRoute(
         path: AppRoute.welcome.path,
@@ -66,6 +137,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
+        path: AppRoute.myBookingScreen.path,
+        name: AppRoute.myBookingScreen.name,
+        builder: (context, state) {
+          return MyBookingsScreen();
+        },
+      ),
+      GoRoute(
         path: AppRoute.signUp.path,
         name: AppRoute.signUp.name,
         builder: (context, state) => SignUpScreen(),
@@ -74,11 +152,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoute.signIn.path,
         name: AppRoute.signIn.name,
         builder: (context, state) => SignInScreen(),
-      ),
-      GoRoute(
-        path: AppRoute.workerVerificationScreen.path,
-        name: AppRoute.workerVerificationScreen.name,
-        builder: (context, state) => WorkerVerificationScreen(),
       ),
       GoRoute(
         path: AppRoute.editProfile.path,
@@ -109,6 +182,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             index: args?.index ?? 0,
             isMe: args?.isMe ?? false,
             isPopularAds: args!.isPopularAds,
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.adsDetailsScreen.path,
+        name: AppRoute.adsDetailsScreen.name,
+        builder: (context, state) {
+          final args = state.extra as RoutingAdsModel;
+          return AdsDetailsScreen(
+            index: args.index,
+            isFavourite: args.isFavourite,
+            isPopularAds: args.isPopular,
           );
         },
       ),
@@ -145,11 +230,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoute.userScreenLog.path,
         name: AppRoute.userScreenLog.name,
-        builder: (context, state) {
-          final extraData = state.extra as Map<String, dynamic>?;
-          final isDataAvailable = extraData?['isDataAvailable'] ?? false;
-          return UserScreen(isDataAvailable: isDataAvailable);
-        },
+        builder: (context, state) => UserScreen(),
       ),
       GoRoute(
         path: AppRoute.workerPaymentMethod.path,
@@ -174,7 +255,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoute.adsScreen.path,
         name: AppRoute.adsScreen.name,
-        builder: (context, state) => AdsScreen(),
+        builder: (context, state) {
+          final userState = state.extra as bool;
+          return AdsScreen(isVerified: userState);
+        },
       ),
       GoRoute(
         path: AppRoute.securityScreen.path,
@@ -223,6 +307,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoute.viewAboutMeScreen.path,
         name: AppRoute.viewAboutMeScreen.name,
         builder: (context, state) => ViewAboutMe(),
+      ),
+      GoRoute(
+        path: AppRoute.accountVerification.path,
+        name: AppRoute.accountVerification.name,
+        builder: (context, state) {
+          final data = state.extra as VerificationCodeModel;
+          return AccountVerificationScreen(
+            userMail: data.userMail,
+            verificationType: data.verificationType,
+          );
+        },
       ),
       GoRoute(
         path: AppRoute.updatePhoneScreen.path,
