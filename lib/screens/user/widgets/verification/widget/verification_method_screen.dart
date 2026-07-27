@@ -148,6 +148,11 @@ class _VerificationMethodScreenState
                                 AppRoute.verificationImageUploadHelper,
                                 extra: "Selfie",
                               );
+                            } else if (index == 1) {
+                              AppNavigatorHelper.push(
+                                context,
+                                AppRoute.addressListVerificationScreen,
+                              );
                             } else {
                               if (item.status == VerificationStatus.approved ||
                                   item.status == VerificationStatus.pending ||
@@ -241,6 +246,7 @@ class _VerificationMethodScreenState
                 ],
               );
             }
+            return null;
           },
         ),
       ),

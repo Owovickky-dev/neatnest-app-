@@ -6,6 +6,7 @@ class UserLocationModel {
   final String? state;
   final String? postalCode;
   final String? addressId;
+  final bool? isVerified;
 
   UserLocationModel({
     this.address,
@@ -15,6 +16,7 @@ class UserLocationModel {
     this.state,
     this.postalCode,
     this.addressId,
+    this.isVerified,
   });
 
   Map<String, dynamic> toJson() {
@@ -53,6 +55,7 @@ class UserLocationModel {
       postalCode: json["postalCode"],
       state: json["state"],
       addressId: json["_id"],
+      isVerified: json["isVerified"] == true,
     );
   }
 }

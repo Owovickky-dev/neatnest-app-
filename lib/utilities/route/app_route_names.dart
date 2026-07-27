@@ -42,6 +42,7 @@ enum AppRoute {
   verificationImageUploadHelper,
   verificationPickerScreen,
   documentDisplayScreen,
+  addressListVerificationScreen,
 }
 
 extension AppRouteNamesExtension on AppRoute {
@@ -133,6 +134,8 @@ extension AppRouteNamesExtension on AppRoute {
         return "/verificationPickerScreen";
       case AppRoute.documentDisplayScreen:
         return "/documentDisplayScreen";
+      case AppRoute.addressListVerificationScreen:
+        return "/addressListVerificationScreen";
     }
   }
 }

@@ -41,6 +41,7 @@ import 'package:neat_nest/screens/user/widgets/payment/widgets/add_payment_metho
 import 'package:neat_nest/screens/user/widgets/payment/worker_payment_method.dart';
 import 'package:neat_nest/screens/user/widgets/settings/settings_screen.dart';
 import 'package:neat_nest/screens/user/widgets/verification/model/display_data_model.dart';
+import 'package:neat_nest/screens/user/widgets/verification/widget/address_list_verification_screen.dart';
 import 'package:neat_nest/screens/user/widgets/verification/widget/documents_display_screen.dart';
 import 'package:neat_nest/screens/user/widgets/verification/widget/verification_image_upload_helper.dart';
 import 'package:neat_nest/screens/user/widgets/verification/widget/verification_method_screen.dart';
@@ -246,6 +247,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoute.userAddresses.path,
         name: AppRoute.userAddresses.name,
         builder: (context, state) => UserAddressScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.addressListVerificationScreen.path,
+        name: AppRoute.addressListVerificationScreen.name,
+        builder: (context, state) => AddressListVerificationScreen(),
       ),
       GoRoute(
         path: AppRoute.updatePasswordScreen.path,

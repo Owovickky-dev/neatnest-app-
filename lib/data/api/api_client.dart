@@ -78,6 +78,7 @@ class DioClient {
             "invalid token",
             "jwt malformed",
             "invalid signature",
+            "invalid token. please log in again!",
           };
 
           final isTokenExpired =
@@ -184,8 +185,21 @@ class DioClient {
       }
 
       return null;
-    } catch (e) {
-      print(" TOKEN REFRESH FAILED: $e");
+    } on DioException catch (e) {
+      print("====== REFRESH TOKEN ERROR ======");
+
+      print("Status Code: ${e.response?.statusCode}");
+
+      print("Response Body: ${e.response?.data}");
+
+      print("Request Headers: ${e.requestOptions.headers}");
+
+      print("=================================");
+
+      return null;
+    } catch (e, stackTrace) {
+      print("UNEXPECTED REFRESH ERROR: $e");
+      print(stackTrace);
       return null;
     }
   }

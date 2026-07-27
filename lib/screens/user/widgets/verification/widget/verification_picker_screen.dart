@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neat_nest/screens/user/utilities/verification_options_items_holder.dart';
-import 'package:neat_nest/utilities/app_button.dart';
-import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
@@ -108,20 +106,20 @@ class _VerificationPickerScreenState
                 ],
               ),
             ),
-            Positioned(
-              left: 20.w,
-              right: 20.w,
-              bottom: 10,
-              child: AppButton(
-                text: "Continue",
-                fontSize: 18.sp,
-                bckColor: AppColors.primaryColor,
-                textColor: Colors.white,
-                function: () {
-                  setState(() {});
-                },
-              ),
-            ),
+            // Positioned(
+            //   left: 20.w,
+            //   right: 20.w,
+            //   bottom: 10,
+            //   child: AppButton(
+            //     text: "Continue",
+            //     fontSize: 18.sp,
+            //     bckColor: AppColors.primaryColor,
+            //     textColor: Colors.white,
+            //     function: () {
+            //       setState(() {});
+            //     },
+            //   ),
+            // ),
           ],
         ),
       ),

@@ -74,6 +74,7 @@ class _UserAddressScreenState extends ConsumerState<UserAddressScreen> {
                                     isDefault: myAddresses.isPrimary!,
                                     ref: ref,
                                     addressId: myAddresses.addressId!,
+                                    isVerified: myAddresses.isVerified!,
                                   );
                                 },
                               )

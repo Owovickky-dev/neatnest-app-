@@ -13,9 +13,20 @@ import 'package:neat_nest/widget/image_upload_helper.dart';
 import '../../../../../utilities/constant/extension.dart';
 
 class VerificationImageUploadHelper extends StatefulWidget {
-  const VerificationImageUploadHelper({super.key, required this.title});
+  const VerificationImageUploadHelper({
+    super.key,
+    required this.title,
+    this.address,
+    this.city,
+    this.state,
+    this.postalCode,
+  });
 
   final String title;
+  final String? address;
+  final String? city;
+  final String? state;
+  final String? postalCode;
 
   @override
   State<VerificationImageUploadHelper> createState() =>
@@ -36,7 +47,57 @@ class _VerificationImageUploadHelperState
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.w),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            (widget.title == "Utility Bills" ||
+                    widget.title == "Official Bank Statement")
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      20.ht,
+                      primaryText(
+                        text: "This is address verification for: ",
+                        fontSize: 15.sp,
+                      ),
+                      20.ht,
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 5.h,
+                        ),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.redAccent.withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.circular(5.r),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            secondaryText(
+                              text: widget.address ?? "",
+                              color: Colors.black,
+                            ),
+                            10.ht,
+                            secondaryText(
+                              text: widget.city ?? "",
+                              color: Colors.black,
+                            ),
+                            10.ht,
+                            secondaryText(
+                              text: widget.city ?? "",
+                              color: Colors.black,
+                            ),
+                            10.ht,
+                            secondaryText(
+                              text: widget.postalCode ?? "",
+                              color: Colors.black,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                : Container(),
             20.ht,
             primaryText(
               text:
@@ -184,16 +245,17 @@ class _VerificationImageUploadHelperState
                   backImagePicked = null;
                 });
               },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.lock_reset_outlined,
-                    size: 30.sp,
-                    color: AppColors.secondaryTextColor,
-                  ),
-                  secondaryText(text: "Reset Image Picked"),
-                ],
+              child: Center(
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.lock_reset_outlined,
+                      size: 30.sp,
+                      color: AppColors.secondaryTextColor,
+                    ),
+                    secondaryText(text: "Reset Image Picked"),
+                  ],
+                ),
               ),
             ),
             50.ht,

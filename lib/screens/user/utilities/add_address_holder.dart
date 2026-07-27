@@ -1,3 +1,4 @@
+import 'package:country_state_city/country_state_city.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,14 +23,13 @@ class AddAddressHolder extends ConsumerStatefulWidget {
 
 class _AddAddressHolderState extends ConsumerState<AddAddressHolder> {
   late AddAddressHolderController _addAddressHolderController;
-  List<String> isPrimaryOptions = ["Yes", "No"];
 
   List<String> countries = [];
   List<String> states = [];
+  final Map<String, String> countryIsoMap = {};
 
   String? countryPicked;
   String? statesPicked;
-  String? isPrimaryPicked;
 
   bool isLoadingCountries = false;
   bool isLoadingStates = false;
@@ -60,7 +60,6 @@ class _AddAddressHolderState extends ConsumerState<AddAddressHolder> {
     setState(() {
       countryPicked = widget.preUserAddress?.country;
       statesPicked = widget.preUserAddress?.state;
-      isPrimaryPicked = widget.preUserAddress?.isPrimary == true ? "Yes" : "No";
     });
   }
 
@@ -75,30 +74,41 @@ class _AddAddressHolderState extends ConsumerState<AddAddressHolder> {
   Future<void> loadStates() async {
     if (countryPicked == null) return;
 
+    final isoCode = countryIsoMap[countryPicked];
+
+    if (isoCode == null) return;
+
     setState(() {
       isLoadingStates = true;
     });
 
     try {
-      final statesList = await _addAddressHolderController.getStates(
-        countryPicked!,
-      );
-      if (mounted) {
-        setState(() {
-          states = statesList;
-          // Only update statesPicked if it's not already set from preload
-          if (statesPicked == null && statesList.isNotEmpty) {
-            statesPicked = statesList.first;
-          }
-          isLoadingStates = false;
-        });
-      }
+      final allStates = await getStatesOfCountry(isoCode);
+      final stateName = allStates
+          .map((state) => state.name)
+          .where((st) => st.isNotEmpty)
+          .toList();
+      stateName.sort();
+
+      if (!mounted) return;
+      setState(() {
+        states = stateName;
+
+        if (statesPicked != null && !states.contains(statesPicked)) {
+          states.insert(0, statesPicked!);
+        }
+
+        if (statesPicked == null && states.isNotEmpty) {
+          statesPicked = states.first;
+        }
+
+        isLoadingStates = false;
+      });
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          isLoadingStates = false;
-        });
-      }
+      if (!mounted) return;
+      setState(() {
+        isLoadingStates = false;
+      });
       print("Error loading states: $e");
     }
   }
@@ -109,28 +119,32 @@ class _AddAddressHolderState extends ConsumerState<AddAddressHolder> {
     });
 
     try {
-      final countryList = await _addAddressHolderController
-          .getCountriesOnline();
-      if (mounted) {
-        setState(() {
-          if (countryPicked != null && !countryList.contains(countryPicked)) {
-            countries = [countryPicked!, ...countryList];
-          } else {
-            countries = countryList;
-          }
-          isLoadingCountries = false;
-        });
+      final allCountries = await getAllCountries();
+      countries = allCountries
+          .map((country) => country.name)
+          .where((e) => e.isNotEmpty)
+          .toList();
+      countries.sort();
+      countryIsoMap.clear();
+
+      for (final country in allCountries) {
+        countryIsoMap[country.name] = country.isoCode;
       }
+
+      if (!mounted) return;
+      setState(() {
+        if (countryPicked != null && !countries.contains(countryPicked)) {
+          countries.insert(0, countryPicked!);
+        }
+        isLoadingCountries = false;
+      });
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          // Ensure we at least have the preloaded country
-          if (countries.isEmpty && countryPicked != null) {
-            countries = [countryPicked!];
-          }
-          isLoadingCountries = false;
-        });
-      }
+      if (!mounted) return;
+      setState(() {
+        isLoadingCountries = false;
+      });
+
+      print(e.toString());
     }
   }
 
@@ -183,7 +197,7 @@ class _AddAddressHolderState extends ConsumerState<AddAddressHolder> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          primaryText(text: "Country*", fontSize: 14.sp),
+                          primaryText(text: "Country*", fontSize: 18.sp),
                           Container(
                             padding: EdgeInsets.symmetric(
                               vertical: 5.h,
@@ -232,16 +246,16 @@ class _AddAddressHolderState extends ConsumerState<AddAddressHolder> {
                               }).toList(),
                               onChanged: isLoadingCountries
                                   ? null
-                                  : (value) {
+                                  : (value) async {
                                       setState(() {
                                         countryPicked = value!;
                                         _addAddressHolderController
                                                 .countryPicked =
                                             value;
+                                        states.clear();
                                         statesPicked = null;
-                                        states = [];
-                                        loadStates();
                                       });
+                                      await loadStates();
                                     },
                             ),
                           ),
@@ -251,7 +265,7 @@ class _AddAddressHolderState extends ConsumerState<AddAddressHolder> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          primaryText(text: "State*", fontSize: 14.sp),
+                          primaryText(text: "State*", fontSize: 18.sp),
                           Container(
                             padding: EdgeInsets.symmetric(
                               vertical: 5.h,
@@ -304,44 +318,7 @@ class _AddAddressHolderState extends ConsumerState<AddAddressHolder> {
                         textEditingController:
                             _addAddressHolderController.postalController,
                       ),
-                      20.ht,
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          primaryText(text: "isPrimary", fontSize: 14.sp),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 5.h,
-                              horizontal: 10.w,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade200,
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                            child: DropdownButton<String>(
-                              hint: secondaryText(text: "Select option"),
-                              icon: Icon(Icons.keyboard_arrow_down_outlined),
-                              isExpanded: true,
-                              value: isPrimaryPicked,
-                              underline: SizedBox(),
-                              items: isPrimaryOptions.map((option) {
-                                return DropdownMenuItem<String>(
-                                  value: option,
-                                  child: secondaryText(text: option),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  isPrimaryPicked = value!;
-                                  _addAddressHolderController
-                                      .getAddressCondition(value);
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      20.ht,
+                      40.ht,
                       AppButton(
                         text: widget.preUserAddress != null
                             ? "Update"

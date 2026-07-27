@@ -29,41 +29,12 @@ class AddAddressHolderController {
     postalController.text = model.postalCode ?? "no data";
   }
 
-  Future<List<String>> getCountriesOnline() async {
-    final response = await _addressDataRepo.getCountries();
-    if (response.statusCode == 200) {
-      List responseData = response.data["data"]["countries"];
-      final countries = responseData.map((country) {
-        return country["name"] as String;
-      }).toList();
-      return countries;
-    }
-    return [];
-  }
-
-  void printUserPicked(String userPicked) {
-    getStates(userPicked);
-  }
-
   void getAddressCondition(String condition) {
     if (condition == "Yes") {
       isPrimary = true;
     } else if (condition == "No") {
       isPrimary = false;
     }
-  }
-
-  Future<List<String>> getStates(String countryPicked) async {
-    final response = await _addressDataRepo.getState(country: countryPicked);
-    if (response.statusCode == 201) {
-      List responseData = response.data["data"]["states"];
-      final states = responseData.map((state) {
-        return state["name"] as String;
-      }).toList();
-      print(states);
-      return states;
-    }
-    return [];
   }
 
   void submitAddress(BuildContext context, WidgetRef ref) async {

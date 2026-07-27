@@ -22,6 +22,7 @@ class AddressHolderTemplate extends StatelessWidget {
     required this.isDefault,
     required this.ref,
     required this.addressId,
+    required this.isVerified,
   });
 
   final AddAddressHolderController addAddressHolderController =
@@ -35,6 +36,7 @@ class AddressHolderTemplate extends StatelessWidget {
   final bool isDefault;
   final WidgetRef ref;
   final String addressId;
+  final bool isVerified;
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +44,11 @@ class AddressHolderTemplate extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 10.h),
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       decoration: BoxDecoration(
-        color: isDefault
-            ? AppColors.primaryColor.withValues(alpha: 0.3)
-            : AppColors.primaryColor.withValues(alpha: 0.1),
+        color: isVerified
+            ? isDefault
+                  ? AppColors.primaryColor.withValues(alpha: 0.3)
+                  : AppColors.primaryColor.withValues(alpha: 0.1)
+            : Colors.redAccent.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: Column(
@@ -167,6 +171,23 @@ class AddressHolderTemplate extends StatelessWidget {
               ),
             ],
           ),
+          ?isVerified
+              ? null
+              : Center(
+                  child: TextButton(
+                    onPressed: () {
+                      AppNavigatorHelper.push(
+                        context,
+                        AppRoute.verificationPickerScreen,
+                        extra: 1,
+                      );
+                    },
+                    child: primaryText(
+                      text: "Click to verify address",
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                ),
         ],
       ),
     );
