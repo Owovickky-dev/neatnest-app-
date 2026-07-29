@@ -74,7 +74,7 @@ class _WorkerPaymentMethodState extends ConsumerState<WorkerPaymentMethod> {
                                   final user = methods[index];
                                   return PaymentMethodHolder(
                                     paymentType: user.paymentType!,
-                                    name: loggedUser!.name,
+                                    name: loggedUser!.firstName,
                                     accountNumber: user.accountNumber,
                                     sortCode: user.sortCode,
                                     iban: user.iban,

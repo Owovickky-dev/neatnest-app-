@@ -69,7 +69,10 @@ class UserProfileScreen extends ConsumerWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      primaryText(text: userData.name),
+                      primaryText(
+                        text:
+                            "${userData.firstName} ${userData.otherName} ${userData.lastName}",
+                      ),
                       Row(
                         children: [
                           secondaryText(text: userData.username),
@@ -102,7 +105,7 @@ class UserProfileScreen extends ConsumerWidget {
               ),
               30.ht,
               RowDataHolder(
-                text: 'Edit Profile ',
+                text: 'Edit Details ',
                 icons: FontAwesomeIcons.pencil,
                 function: () {
                   AppNavigatorHelper.push(context, AppRoute.editProfile);

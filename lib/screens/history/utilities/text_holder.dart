@@ -21,7 +21,7 @@ Widget textHolderPayment({required String titleText, required String text}) {
       Container(
         padding: EdgeInsets.symmetric(horizontal: 15.w),
         decoration: BoxDecoration(
-          color: AppColors.primaryColor.withOpacity(0.1),
+          color: AppColors.primaryColor.withValues(alpha: .1),
           borderRadius: BorderRadius.circular(5.r),
         ),
         child: Center(

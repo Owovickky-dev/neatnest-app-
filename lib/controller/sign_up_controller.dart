@@ -18,7 +18,9 @@ class SignUpController {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController otherNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
   TextEditingController userNameController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
 
@@ -43,16 +45,20 @@ class SignUpController {
     final String mail;
     final String password;
     final String confirmPassword;
-    final String name;
+    final String firstName;
     final String username;
     final String phoneNumber;
+    final String lastName;
+    final String otherName;
 
-    mail = emailController.text;
-    password = passwordController.text;
-    name = nameController.text;
-    confirmPassword = confirmPasswordController.text;
-    username = userNameController.text;
-    phoneNumber = phoneNumberController.text;
+    mail = emailController.text.trim();
+    password = passwordController.text.trim();
+    firstName = firstNameController.text.trim();
+    confirmPassword = confirmPasswordController.text.trim();
+    username = userNameController.text.trim();
+    phoneNumber = phoneNumberController.text.trim();
+    lastName = lastNameController.text.trim();
+    otherName = otherNameController.text.trim();
 
     if (role == null || role!.isEmpty) {
       showErrorNotification(message: "Please kindly select a role ");
@@ -65,7 +71,7 @@ class SignUpController {
       showErrorNotification(message: "Please agree to the terms");
     } else {
       final user = UserModel(
-        name: name,
+        firstName: firstName,
         password: password,
         passwordConfirm: confirmPassword,
         email: mail,
@@ -74,6 +80,8 @@ class SignUpController {
         username: username,
         phoneNumber: phoneNumber,
         userSkills: userSkills,
+        lastName: lastName,
+        otherName: otherName,
       );
 
       showDialog(

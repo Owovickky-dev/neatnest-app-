@@ -32,7 +32,7 @@ class HomeScreenIcons extends StatelessWidget {
           width: width ?? 50.w,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(radius ?? 25.r),
-            color: AppColors.primaryColor.withOpacity(0.1),
+            color: AppColors.primaryColor.withValues(alpha: .1),
           ),
           child: Center(
             child: FaIcon(icons, color: iconColor ?? AppColors.primaryColor),

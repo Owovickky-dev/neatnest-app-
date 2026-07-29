@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:neat_nest/controller/edit_profile_controller.dart';
 import 'package:neat_nest/controller/sign_in_controller.dart';
 import 'package:neat_nest/data/repo/auth_repo.dart';
 import 'package:neat_nest/data/storage/secure_storage_helper.dart';
-import 'package:neat_nest/models/update_personal_profile_model.dart';
 import 'package:neat_nest/models/user_model.dart';
 import 'package:neat_nest/utilities/api_error_handler.dart';
 import 'package:neat_nest/widget/app_notification.dart';
@@ -97,23 +97,31 @@ class UserControllerState extends _$UserControllerState {
     await loadUserData();
   }
 
-  Future<void> updatePersonalInfo(
-    UpdatePersonalProfileModel updatePInfo,
-  ) async {
-    try {
-      final response = await _authRepo.updateMyPersonal(updatePInfo);
-      if (response.statusCode == 201) {}
-    } on DioException catch (e) {
-      throw Exception(ApiErrorHandler.getErrorMessage(e));
-    } catch (e) {
-      rethrow;
-    }
-  }
-
   Future<void> updateVerificationStarted(bool value) async {
     if (state == null) return;
     final updatedUser = state!.copyWith(verificationStarted: value);
     state = updatedUser;
     await SecureStorageHelper.saveUserData(updatedUser);
+  }
+
+  Future<void> updateUserDetails(EditProfileModel editedData) async {
+    try {
+      final response = await _authRepo.updateDetails(editedData);
+
+      if (response.statusCode == 200) {
+        final responseData = response.data["userData"];
+        final user = UserModel.fromJson(responseData);
+        await SecureStorageHelper.saveUserData(user);
+        if (!ref.mounted) return;
+        state = user;
+      } else {
+        throw Exception(response.data["message"]);
+      }
+    } on DioException catch (e) {
+      print(e.stackTrace);
+      throw Exception(ApiErrorHandler.getErrorMessage(e));
+    } catch (e) {
+      rethrow;
+    }
   }
 }

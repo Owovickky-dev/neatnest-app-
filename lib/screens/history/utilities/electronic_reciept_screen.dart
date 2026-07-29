@@ -61,8 +61,8 @@ class ElectronicReceiptScreen extends StatelessWidget {
                       ),
                       20.ht,
                       DottedLine(
-                        dashColor: AppColors.secondaryTextColor.withOpacity(
-                          0.5,
+                        dashColor: AppColors.secondaryTextColor.withValues(
+                          alpha: 0.5,
                         ),
                       ),
                       20.ht,
@@ -93,8 +93,8 @@ class ElectronicReceiptScreen extends StatelessWidget {
                       ),
                       20.ht,
                       DottedLine(
-                        dashColor: AppColors.secondaryTextColor.withOpacity(
-                          0.5,
+                        dashColor: AppColors.secondaryTextColor.withValues(
+                          alpha: 0.5,
                         ),
                       ),
                       20.ht,

@@ -55,7 +55,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
     final userData = ref.read(userControllerStateProvider);
     final userAddressData = ref.read(addressStateControllerProvider)[0];
 
-    _bookingFormController.bookingNameController.text = userData!.name;
+    _bookingFormController.bookingNameController.text = userData!.firstName;
     _bookingFormController.bookingEmailController.text = userData.email;
     _bookingFormController.bookingUserNos.text = userData.phoneNumber.isEmpty
         ? " "

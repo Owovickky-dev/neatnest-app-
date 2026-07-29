@@ -20,7 +20,7 @@ class ConstantData {
   static const UPDATEPASSWORD = "/user/updatepassword";
   static const UPDATEMAIL = "/user/updateemail";
   static const UPDATEPPHONE = "/user/updatephonenumber";
-  static const UPDATEPERSONALINFO = "/user/updatepersonalinfo";
+  static const UPDATEUSERDETAILS = "/user/me";
   static const CHATURL = "/chats/";
   static const MESSAGEURL = "/messages/";
   static const BOOKINGURL = "/booking";

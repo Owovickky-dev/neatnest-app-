@@ -43,7 +43,7 @@ class SignInController {
       password: password,
       deviceData: deviceData,
     );
-
+    if (!context.mounted) return;
     showDialog(
       context: context,
       barrierDismissible: false,

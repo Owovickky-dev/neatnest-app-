@@ -4,7 +4,9 @@ import 'package:neat_nest/screens/user/model/worker_statistics_model.dart';
 
 class UserModel {
   final String? id;
-  final String name;
+  final String firstName;
+  final String? otherName;
+  final String lastName;
   final String email;
   final String? password;
   final String? passwordConfirm;
@@ -25,7 +27,7 @@ class UserModel {
 
   UserModel({
     this.id,
-    required this.name,
+    required this.firstName,
     this.password,
     required this.phoneNumber,
     this.passwordConfirm,
@@ -43,12 +45,20 @@ class UserModel {
     this.profilePicPublicId,
     this.userSkills,
     this.verificationStarted,
+    required this.lastName,
+    this.otherName,
   }) : locations = locations ?? [];
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
-    if (name.isNotEmpty) {
-      data["name"] = name;
+    if (firstName.isNotEmpty) {
+      data["firstName"] = firstName;
+    }
+    if (lastName.isNotEmpty) {
+      data["lastName"] = lastName;
+    }
+    if (otherName != null && otherName!.isNotEmpty) {
+      data["otherName"] = otherName;
     }
     if (username.isNotEmpty) {
       data["username"] = username;
@@ -92,7 +102,9 @@ class UserModel {
     return UserModel(
       id: json["_id"] ?? json["id"],
       joinedAt: json["joinedAt"]?.toString() ?? "",
-      name: json["name"]?.toString() ?? "",
+      firstName: json["firstName"]?.toString() ?? "",
+      lastName: json["lastName"]?.toString() ?? "",
+      otherName: json["otherName"]?.toString() ?? "",
       email: json["email"]?.toString() ?? "",
       gender: json["gender"]?.toString() ?? "",
       role: json["role"]?.toString() ?? "",
@@ -120,7 +132,9 @@ class UserModel {
     return {
       "id": id,
       "_id": id,
-      "name": name,
+      "firstName": firstName,
+      "lastName": lastName,
+      "otherName": otherName,
       "email": email,
       "username": username,
       "gender": gender,
@@ -141,7 +155,9 @@ class UserModel {
 
   UserModel copyWith({
     String? id,
-    String? name,
+    String? firstName,
+    String? lastName,
+    String? otherName,
     String? email,
     String? password,
     String? passwordConfirm,
@@ -162,7 +178,9 @@ class UserModel {
   }) {
     return UserModel(
       id: id ?? this.id,
-      name: name ?? this.name,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      otherName: otherName ?? this.otherName,
       email: email ?? this.email,
       password: password ?? this.password,
       passwordConfirm: passwordConfirm ?? this.passwordConfirm,

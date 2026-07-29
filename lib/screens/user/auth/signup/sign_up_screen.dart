@@ -139,14 +139,16 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  8.ht,
+                  10.ht,
                   AuthTextFiled(
-                    titleText: 'Name',
+                    titleText: 'First Name',
                     textInputType: TextInputType.name,
-                    hintText: 'Enter Full Name',
-                    textEditingController: _signUpController.nameController,
+                    hintText: 'first name',
+                    textEditingController:
+                        _signUpController.firstNameController,
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
+                      LengthLimitingTextInputFormatter(15),
                     ],
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -155,7 +157,36 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       return null;
                     },
                   ),
-                  8.ht,
+                  10.ht,
+                  AuthTextFiled(
+                    titleText: 'Other Name(Optional)',
+                    textInputType: TextInputType.name,
+                    hintText: 'other name',
+                    textEditingController:
+                        _signUpController.otherNameController,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
+                      LengthLimitingTextInputFormatter(15),
+                    ],
+                  ),
+                  10.ht,
+                  AuthTextFiled(
+                    titleText: 'Last Name',
+                    textInputType: TextInputType.name,
+                    hintText: 'last name',
+                    textEditingController: _signUpController.lastNameController,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
+                      LengthLimitingTextInputFormatter(15),
+                    ],
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "You need to enter Name";
+                      }
+                      return null;
+                    },
+                  ),
+                  10.ht,
                   AuthTextFiled(
                     titleText: 'Email Address',
                     hintText: 'Enter Email Address',
@@ -170,7 +201,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       return null;
                     },
                   ),
-                  8.ht,
+                  10.ht,
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -219,7 +250,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   ?position == "worker"
                       ? Column(
                           children: [
-                            8.ht,
+                            10.ht,
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -299,7 +330,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           ],
                         )
                       : null,
-                  8.ht,
+                  10.ht,
                   AuthTextFiled(
                     titleText: 'UserName',
                     hintText: 'Enter UserName',
@@ -314,7 +345,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       return null;
                     },
                   ),
-                  8.ht,
+                  10.ht,
                   AuthTextFiled(
                     titleText: 'Phone Number',
                     hintText: 'Enter Phone Number',
@@ -337,7 +368,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       return null;
                     },
                   ),
-                  8.ht,
+                  10.ht,
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -378,7 +409,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       ),
                     ],
                   ),
-                  8.ht,
+                  10.ht,
                   AuthTextFiled(
                     titleText: 'Password',
                     hintText: 'Enter Password',
@@ -408,7 +439,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       return null;
                     },
                   ),
-                  8.ht,
+                  10.ht,
                   AuthTextFiled(
                     titleText: 'Confirm Password',
                     hintText: 'Confirm Password',
@@ -426,7 +457,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       return null;
                     },
                   ),
-                  8.ht,
+                  10.ht,
                   Row(
                     children: [
                       Checkbox(

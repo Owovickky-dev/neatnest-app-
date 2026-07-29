@@ -48,7 +48,6 @@ class _DocumentsDisplayScreenState
         return "Below is your attached $idType awaiting approval";
       case VerificationStatus.approved:
         return "Below is your attached $idType approved";
-        ;
       case VerificationStatus.rejected:
         return "Your $idType was rejected because $reason";
       case VerificationStatus.notStarted:

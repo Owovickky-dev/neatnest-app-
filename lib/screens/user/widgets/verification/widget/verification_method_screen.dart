@@ -57,8 +57,6 @@ class _VerificationMethodScreenState
           color: Colors.red,
           size: 30.sp,
         );
-        ;
-
       case VerificationStatus.notStarted:
         return FaIcon(
           FontAwesomeIcons.hourglassStart,
