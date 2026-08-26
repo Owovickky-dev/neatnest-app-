@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
@@ -119,26 +120,31 @@ class EditProfileController {
       AppNavigatorHelper.pushReplacement(context, AppRoute.editProfile);
     } catch (e) {
       if (!context.mounted) return;
-
       context.pop();
 
-      final errorMessage = e.toString().replaceFirst("Exception: ", "");
-
-      showErrorNotification(message: errorMessage);
+      if (e is Map<String, dynamic>) {
+        final message = e["message"];
+        final nextNameChange = e["nextChange"];
+        if (message != null && nextNameChange != null) {
+          final date = (DateTime.parse(nextNameChange)).toLocal();
+          final dateFormat = DateFormat("dd/MM/yy    @  h:mm a").format(date);
+          showErrorNotification(message: " $message $dateFormat");
+        } else {
+          showErrorNotification(message: message);
+        }
+      } else {
+        final errorMessage = e.toString().replaceFirst("Exception: ", "");
+        showErrorNotification(message: errorMessage);
+      }
     }
   }
 
   void dispose() {
     fNameController.dispose();
-
     otherNameController.dispose();
-
     lastNameController.dispose();
-
     userNameController.dispose();
-
     userPassword.dispose();
-
     phoneNosController.dispose();
   }
 }
@@ -169,7 +175,7 @@ class EditProfileModel {
       data["lastName"] = lastName;
     }
     if (userName != null && userName!.isNotEmpty) {
-      data["userName"] = userName;
+      data["username"] = userName;
     }
     if (otherName != null && otherName!.isNotEmpty) {
       data["otherName"] = otherName;

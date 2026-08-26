@@ -114,11 +114,11 @@ class UserControllerState extends _$UserControllerState {
         await SecureStorageHelper.saveUserData(user);
         if (!ref.mounted) return;
         state = user;
-      } else {
-        throw Exception(response.data["message"]);
       }
     } on DioException catch (e) {
-      print(e.stackTrace);
+      if (e.response?.data is Map<String, dynamic>) {
+        throw e.response!.data;
+      }
       throw Exception(ApiErrorHandler.getErrorMessage(e));
     } catch (e) {
       rethrow;

@@ -101,9 +101,7 @@ class _PersonalInfoEditState extends ConsumerState<PersonalInfoEdit> {
                   titleText: "Username",
                   hintText: "Username",
                   textInputType: TextInputType.name,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
-                  ],
+                  inputFormatters: [LengthLimitingTextInputFormatter(15)],
                   textEditingController:
                       _editProfileController.userNameController,
                   validator: (value) {
@@ -119,7 +117,7 @@ class _PersonalInfoEditState extends ConsumerState<PersonalInfoEdit> {
                   hintText: "Nos",
                   textInputType: TextInputType.name,
                   inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9\s\-\(\)]')),
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9\s\-()]')),
                     LengthLimitingTextInputFormatter(20),
                   ],
                   textEditingController:
