@@ -269,18 +269,9 @@ class _GroupBookingDataState extends ConsumerState<GroupBookingData> {
                 status: BookingStatus.completed,
                 functionLeft: (bookingId, bookingStatus, userRole) {
                   /// bookingStatus coming from backend
-                  final buttonConfig =
-                      bookingStatus.toBookingStatus.buttonConfig;
-
-                  print("Leaving review for Booking number $bookingId");
                 },
 
-                functionRight: (bookingId, bookingStatus, userRole) {
-                  final buttonConfig =
-                      bookingStatus.toBookingStatus.buttonConfig;
-
-                  print("Printing Ticket for $bookingId");
-                },
+                functionRight: (bookingId, bookingStatus, userRole) {},
               ),
             );
           },

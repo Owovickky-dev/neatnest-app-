@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:neat_nest/screens/user/model/user_payment_method_model.dart';
-import 'package:neat_nest/utilities/constant/constant_data.dart';
+import 'package:neat_nest/utilities/constant/api_end_points.dart';
 
 import '../api/api_client.dart';
 
@@ -11,7 +11,7 @@ class UserDataRepo {
     UserPaymentMethodModel userPaymentMethod,
   ) async {
     final response = await _dio.post(
-      ConstantData.PAYMENTMETHOd,
+      ApiEndPoints.paymentMethod,
       data: userPaymentMethod.toJson(),
     );
 
@@ -19,7 +19,7 @@ class UserDataRepo {
   }
 
   Future<Response> getUserPaymentMethod() async {
-    final response = await _dio.get(ConstantData.PAYMENTMETHOd);
+    final response = await _dio.get(ApiEndPoints.paymentMethod);
     return response;
   }
 
@@ -27,14 +27,14 @@ class UserDataRepo {
     UserPaymentMethodModel userPaymentModel,
   ) async {
     final response = await _dio.delete(
-      ConstantData.PAYMENTMETHOd,
+      ApiEndPoints.paymentMethod,
       data: userPaymentModel.toJson(),
     );
     return response;
   }
 
   Future<Response> getSkillsAvailable() async {
-    final response = await _dio.get(ConstantData.SERVICECATEGORIES);
+    final response = await _dio.get(ApiEndPoints.serviceCategories);
     return response;
   }
 
@@ -42,7 +42,7 @@ class UserDataRepo {
     UserPaymentMethodModel updatePayment,
   ) async {
     final response = await _dio.patch(
-      ConstantData.PAYMENTMETHOd,
+      ApiEndPoints.paymentMethod,
       data: updatePayment.toJson(),
     );
     return response;
@@ -55,7 +55,13 @@ class UserDataRepo {
         filename: picPath.split("/").last,
       ),
     });
-    final response = await _dio.patch(ConstantData.PROFILEPICS, data: formData);
+    final response = await _dio.patch(ApiEndPoints.profilePics, data: formData);
+    return response;
+  }
+
+  Future<Response> getUserNotification() async {
+    final response = await _dio.get(ApiEndPoints.getUserNotifications);
+
     return response;
   }
 }

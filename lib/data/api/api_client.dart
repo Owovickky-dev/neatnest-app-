@@ -4,7 +4,7 @@ import 'package:neat_nest/utilities/route/app_route_names.dart';
 import 'package:neat_nest/utilities/route/app_router_key.dart';
 
 import '../../utilities/api_error_handler.dart';
-import '../../utilities/constant/constant_data.dart';
+import '../../utilities/constant/api_end_points.dart';
 import '../../widget/app_notification.dart';
 import '../storage/secure_storage_helper.dart';
 
@@ -12,7 +12,7 @@ class DioClient {
   Dio createDio() {
     final dio = Dio(
       BaseOptions(
-        baseUrl: ConstantData.BASE_URL,
+        baseUrl: ApiEndPoints.baseUrl,
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
         headers: {
@@ -159,13 +159,13 @@ class DioClient {
 
       final dio = Dio(
         BaseOptions(
-          baseUrl: ConstantData.BASE_URL,
+          baseUrl: ApiEndPoints.baseUrl,
           headers: {"Content-Type": "application/json"},
         ),
       );
 
       final response = await dio.post(
-        ConstantData.REFRESHTOKEN,
+        ApiEndPoints.refreshToken,
         options: Options(headers: {"Authorization": "Bearer $refreshToken"}),
       );
 

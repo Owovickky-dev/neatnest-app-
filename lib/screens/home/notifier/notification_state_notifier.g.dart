@@ -14,7 +14,10 @@ const notificationStateProvider = NotificationStateNotifierProvider._();
 
 final class NotificationStateNotifierProvider
     extends
-        $NotifierProvider<NotificationStateNotifier, List<NotificationModel>> {
+        $AsyncNotifierProvider<
+          NotificationStateNotifier,
+          List<NotificationModel>
+        > {
   const NotificationStateNotifierProvider._()
     : super(
         from: null,
@@ -32,33 +35,32 @@ final class NotificationStateNotifierProvider
   @$internal
   @override
   NotificationStateNotifier create() => NotificationStateNotifier();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(List<NotificationModel> value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<List<NotificationModel>>(value),
-    );
-  }
 }
 
 String _$notificationStateNotifierHash() =>
-    r'bf1ba5786d67d1b6d2fd63f018bb7e9769547a03';
+    r'566a4e78bf4cf3bf57114a8fe7e7c1b4e4d994a2';
 
 abstract class _$NotificationStateNotifier
-    extends $Notifier<List<NotificationModel>> {
-  List<NotificationModel> build();
+    extends $AsyncNotifier<List<NotificationModel>> {
+  FutureOr<List<NotificationModel>> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
     final ref =
-        this.ref as $Ref<List<NotificationModel>, List<NotificationModel>>;
+        this.ref
+            as $Ref<
+              AsyncValue<List<NotificationModel>>,
+              List<NotificationModel>
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<List<NotificationModel>, List<NotificationModel>>,
-              List<NotificationModel>,
+              AnyNotifier<
+                AsyncValue<List<NotificationModel>>,
+                List<NotificationModel>
+              >,
+              AsyncValue<List<NotificationModel>>,
               Object?,
               Object?
             >;

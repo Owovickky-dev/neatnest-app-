@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:neat_nest/models/message_model.dart';
-import 'package:neat_nest/utilities/constant/constant_data.dart';
+import 'package:neat_nest/utilities/constant/api_end_points.dart';
 
 import '../api/api_client.dart';
 
@@ -12,7 +12,7 @@ class TextingDataRepo {
     required String recipientId,
   }) async {
     final response = await _dio.post(
-      ConstantData.CHATURL,
+      ApiEndPoints.chatUrl,
       data: {"recipientId": recipientId, "bookingId": bookingId},
     );
     return response;
@@ -20,20 +20,20 @@ class TextingDataRepo {
 
   Future<Response> sendMessage(MessageModel messageData) async {
     final response = await _dio.post(
-      ConstantData.MESSAGEURL,
+      ApiEndPoints.messageUrl,
       data: messageData.toJson(),
     );
     return response;
   }
 
   Future<Response> getAllChatRoomList() async {
-    final response = await _dio.get(ConstantData.CHATURL);
+    final response = await _dio.get(ApiEndPoints.chatUrl);
     return response;
   }
 
   Future<Response> getMessages(String chatId, {int page = 1}) async {
     final response = await _dio.get(
-      "${ConstantData.MESSAGEURL}/$chatId?page=$page",
+      "${ApiEndPoints.messageUrl}/$chatId?page=$page",
     );
     return response;
   }

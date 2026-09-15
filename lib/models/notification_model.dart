@@ -1,42 +1,28 @@
-import 'package:uuid/uuid.dart';
-
 class NotificationModel {
   final String id;
   final String title;
   final String message;
-  final DateTime datetime;
-  bool read;
+  final bool isRead;
+  final bool isDeleted;
+  final DateTime createdAt;
 
   NotificationModel({
+    required this.id,
+    required this.createdAt,
     required this.title,
-    String? id,
-    required this.datetime,
     required this.message,
-    this.read = false,
-  }) : id = id ?? Uuid().v4();
-
-  NotificationModel copyWith({
-    String? title,
-    String? message,
-    DateTime? datetime,
-    bool? read,
-    String? id,
-  }) {
-    return NotificationModel(
-      title: title ?? this.title,
-      message: message ?? this.message,
-      datetime: datetime ?? this.datetime,
-      read: read ?? this.read,
-      id: id ?? this.id,
-    );
-  }
+    required this.isRead,
+    required this.isDeleted,
+  });
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
-      title: json["title"] ?? "",
-      datetime: json["datetime"] ?? "",
-      message: json["message"] ?? "",
-      id: json["_id"] ?? "",
+      id: json["id"] as String,
+      createdAt: DateTime.parse(json["createdAt"] as String),
+      title: json["title"] as String,
+      message: json["message"] as String,
+      isRead: json["isRead"] as bool,
+      isDeleted: json["isDeleted"] as bool,
     );
   }
 }

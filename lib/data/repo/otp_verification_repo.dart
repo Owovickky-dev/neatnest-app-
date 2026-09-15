@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:neat_nest/data/api/api_client.dart';
-import 'package:neat_nest/utilities/constant/constant_data.dart';
+import 'package:neat_nest/utilities/constant/api_end_points.dart';
 
 class OtpVerificationRepo {
   final _dio = DioClient().createDio();
@@ -10,7 +10,7 @@ class OtpVerificationRepo {
     required String otpCode,
   }) {
     final response = _dio.patch(
-      ConstantData.OTPMAILVERIFICATION,
+      ApiEndPoints.otpMailVerification,
       data: {"email": email, "otp": otpCode},
     );
     return response;
@@ -21,7 +21,7 @@ class OtpVerificationRepo {
     required String otpCode,
   }) async {
     final response = await _dio.post(
-      ConstantData.PASSWORDCODEVERIFICATION,
+      ApiEndPoints.passwordCodeVerification,
       data: {"email": email, "otp": otpCode},
     );
 
@@ -30,7 +30,7 @@ class OtpVerificationRepo {
 
   Future<Response> resendOTP({required String email, required String purpose}) {
     final response = _dio.post(
-      ConstantData.RESENDMAILOTP,
+      ApiEndPoints.resendMailOtp,
       data: {"email": email, "purpose": purpose},
     );
     return response;

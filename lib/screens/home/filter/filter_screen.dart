@@ -3,6 +3,7 @@ import 'package:flutter/material.dart' hide State;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/controller/filter_search_controller.dart';
+import 'package:neat_nest/controller/state%20controller%20/app_skill_controller_state.dart';
 import 'package:neat_nest/screens/home/filter/notifier/filter_state.dart';
 import 'package:neat_nest/screens/home/filter/widget/filter_range.dart';
 import 'package:neat_nest/screens/home/filter/widget/filter_rating.dart';
@@ -24,19 +25,6 @@ class FilterScreen extends ConsumerStatefulWidget {
 }
 
 class _FilterScreenState extends ConsumerState<FilterScreen> {
-  List<String> categories = [
-    "Cleaning",
-    "Plumbing",
-    "Electrical",
-    "Carpentry",
-    "Painting",
-    "Gardening",
-    "Moving",
-    "Assembly",
-    "Repair",
-    "Other",
-  ];
-
   late FilterSearchController _filterSearchController;
 
   List<Country> countries = [];
@@ -44,28 +32,6 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
 
   Country? countryPicked;
   State? statesPicked;
-  String? isPrimaryPicked;
-
-  @override
-  void initState() {
-    super.initState();
-    _filterSearchController = FilterSearchController();
-    _loadCountries();
-  }
-
-  Future<void> _loadCountries() async {
-    List<Country> countryList = await getAllCountries();
-    setState(() {
-      countries = countryList;
-    });
-  }
-
-  Future<void> _loadState(String countryCode) async {
-    List<State> stateList = await getStatesOfCountry(countryCode);
-    setState(() {
-      states = stateList;
-    });
-  }
 
   int? ratingIndex;
 
@@ -74,8 +40,46 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
   String? categorySelected;
 
   @override
+  void initState() {
+    super.initState();
+
+    _filterSearchController = FilterSearchController();
+
+    _loadCountries();
+    _loadCategory();
+  }
+
+  Future<void> _loadCountries() async {
+    final countryList = await getAllCountries();
+
+    if (!mounted) return;
+
+    setState(() {
+      countries = countryList;
+    });
+  }
+
+  Future<void> _loadCategory() async {
+    await ref.read(appSkillControllerStateProvider.notifier).getSkills();
+  }
+
+  Future<void> _loadState(String countryCode) async {
+    final stateList = await getStatesOfCountry(countryCode);
+
+    if (!mounted) return;
+
+    setState(() {
+      states = stateList;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final filterData = ref.read(filterStateProvider.notifier);
+
+    // Categories are stored and maintained by Riverpod.
+    final categories = ref.watch(appSkillControllerStateProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBarHolder(
@@ -91,6 +95,8 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               10.ht,
+
+              // COUNTRY
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -108,10 +114,10 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                     ),
                     child: DropdownButton<Country>(
                       hint: secondaryText(text: "select country"),
-                      icon: Icon(Icons.keyboard_arrow_down_outlined),
+                      icon: const Icon(Icons.keyboard_arrow_down_outlined),
                       isExpanded: true,
                       value: countryPicked,
-                      underline: SizedBox(),
+                      underline: const SizedBox(),
                       items: countries.map((country) {
                         return DropdownMenuItem<Country>(
                           value: country,
@@ -122,11 +128,12 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                         if (value != null) {
                           setState(() {
                             countryPicked = value;
-
                             statesPicked = null;
                             states = [];
-                            _loadState(value.isoCode);
                           });
+
+                          _loadState(value.isoCode);
+
                           filterData.setCountry(value.name);
                         }
                       },
@@ -134,7 +141,10 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                   ),
                 ],
               ),
+
               10.ht,
+
+              // STATE
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -151,10 +161,10 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                     ),
                     child: DropdownButton<State>(
                       hint: secondaryText(text: "select state"),
-                      icon: Icon(Icons.keyboard_arrow_down_outlined),
+                      icon: const Icon(Icons.keyboard_arrow_down_outlined),
                       isExpanded: true,
                       value: statesPicked,
-                      underline: SizedBox(),
+                      underline: const SizedBox(),
                       items: states.map((state) {
                         return DropdownMenuItem<State>(
                           value: state,
@@ -166,6 +176,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                           setState(() {
                             statesPicked = value;
                           });
+
                           filterData.setUserState(value.name);
                         }
                       },
@@ -173,9 +184,13 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                   ),
                 ],
               ),
+
               20.ht,
+
+              // CATEGORY
               primaryText(text: "Category"),
               10.ht,
+
               Container(
                 padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
                 decoration: BoxDecoration(
@@ -184,10 +199,10 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                 ),
                 child: DropdownButton<String>(
                   hint: secondaryText(text: "Select a category"),
-                  icon: Icon(Icons.keyboard_arrow_down_outlined),
+                  icon: const Icon(Icons.keyboard_arrow_down_outlined),
                   isExpanded: true,
                   value: categorySelected,
-                  underline: SizedBox(),
+                  underline: const SizedBox(),
                   items: categories.map((category) {
                     return DropdownMenuItem<String>(
                       value: category,
@@ -195,20 +210,31 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                     );
                   }).toList(),
                   onChanged: (value) {
-                    setState(() {
-                      categorySelected = value;
-                    });
-                    filterData.setCategory(value.toString());
+                    if (value != null) {
+                      setState(() {
+                        categorySelected = value;
+                      });
+
+                      filterData.setCategory(value);
+                    }
                   },
                 ),
               ),
+
               20.ht,
+
+              // PRICE RANGE
               primaryText(text: "Price Range"),
               5.ht,
+
               FilterRange(ref: ref),
+
               10.ht,
+
+              // RATINGS
               primaryText(text: "Ratings"),
               10.ht,
+
               SizedBox(
                 height: 50.h,
                 child: ListView.builder(
@@ -217,18 +243,24 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                   itemBuilder: (context, index) {
                     final ratingClicked = ratingIndex == index;
                     final ratingText = AppData.ratingTextRange[index];
+
                     return GestureDetector(
                       onTap: () {
                         setState(() {
                           ratingIndex = index;
                         });
-                        List<String> ranges = ratingText.split(" ");
+
+                        final ranges = ratingText.split(" ");
+
                         if (ranges.length > 1) {
                           filterData.setMinRating(double.parse(ranges[0]));
+
                           filterData.setMaxRating(double.parse(ranges[2]));
+
                           print("min ${ranges[0]} and Max ${ranges[2]}");
                         } else {
                           filterData.setMaxRating(double.parse(ranges[0]));
+
                           print("the max ranges is ${ranges[0]}");
                         }
                       },
@@ -241,7 +273,10 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                   },
                 ),
               ),
+
               20.ht,
+
+              // BUTTONS
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -256,8 +291,10 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                         countryPicked = null;
                         statesPicked = null;
                         categorySelected = null;
-                        ratingIndex = -1;
+                        ratingIndex = null;
+                        states = [];
                       });
+
                       filterData.reset();
                     },
                   ),
@@ -269,6 +306,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                     verticalHeight: 12.h,
                     function: () async {
                       AppNavigatorHelper.push(context, AppRoute.filterResult);
+
                       await _filterSearchController.submit(context, ref);
                     },
                   ),

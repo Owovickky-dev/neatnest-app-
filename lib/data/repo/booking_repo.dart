@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:neat_nest/models/booking_model.dart';
-import 'package:neat_nest/utilities/constant/constant_data.dart';
+import 'package:neat_nest/utilities/constant/api_end_points.dart';
 
 import '../api/api_client.dart';
 
@@ -9,7 +9,7 @@ class BookingRepo {
 
   Future<Response> createBooking(BookingModel bookingData) async {
     final response = _dio.post(
-      ConstantData.BOOKINGURL,
+      ApiEndPoints.bookingUrl,
       data: bookingData.toJson(),
     );
 
@@ -17,7 +17,7 @@ class BookingRepo {
   }
 
   Future<Response> getUserBookings() async {
-    final response = _dio.get(ConstantData.BOOKINGURL);
+    final response = _dio.get(ApiEndPoints.bookingUrl);
     return response;
   }
 
@@ -26,7 +26,7 @@ class BookingRepo {
     required String bookingId,
   }) {
     final response = _dio.patch(
-      "${ConstantData.BOOKINGURL}/$bookingId",
+      "${ApiEndPoints.bookingUrl}/$bookingId",
       data: bookingData.toJson(),
     );
 

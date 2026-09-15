@@ -1,7 +1,6 @@
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neat_nest/models/payment_method_model.dart';
 
-import '../models/notification_model.dart';
 import '../screens/onboarding/widgets/introduction_screens.dart';
 
 class AppData {
@@ -52,33 +51,7 @@ class AppData {
     PaymentMethodModel(title: "GooglePay", icon: FontAwesomeIcons.googlePay),
     PaymentMethodModel(title: "ApplePay", icon: FontAwesomeIcons.applePay),
   ];
-  static List<NotificationModel> allNotifications = [
-    NotificationModel(
-      title: "Welcome!",
-      message: "Texting today fata for me 🎉",
-      datetime: DateTime.now(),
-    ),
-    NotificationModel(
-      title: "Offer",
-      message: "You got 20% discount!",
-      datetime: DateTime.now().subtract(Duration(hours: 5)),
-    ),
-    NotificationModel(
-      title: "Reminder",
-      message: "Your subscription expires soon.",
-      datetime: DateTime.now().subtract(Duration(days: 1)),
-    ),
-    NotificationModel(
-      title: "Update",
-      message: "New features are available.",
-      datetime: DateTime.now().subtract(Duration(days: 4)),
-    ),
-    NotificationModel(
-      title: "Update",
-      message: "New features are available.",
-      datetime: DateTime.now().subtract(Duration(days: 10)),
-    ),
-  ];
+
   static List<String> ratingTextRange = [
     "5.0",
     "4.0 - 5.0",

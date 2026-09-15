@@ -69,6 +69,7 @@ class VerificationController {
         }
       } on DioException catch (e) {
         if (!context.mounted) return;
+        print(e);
         context.pop();
         rethrow;
       } catch (e, stack) {

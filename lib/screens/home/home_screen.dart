@@ -5,16 +5,16 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neat_nest/controller/filter_search_controller.dart';
 import 'package:neat_nest/controller/state%20controller%20/ads/popular_service_controller.dart';
+import 'package:neat_nest/controller/state%20controller%20/notification_tracking.dart';
 import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
 import 'package:neat_nest/data/storage/secure_storage_helper.dart';
 import 'package:neat_nest/screens/home/filter/notifier/filter_state.dart';
 import 'package:neat_nest/screens/home/notifier/home_display_data_state.dart';
+import 'package:neat_nest/screens/home/notifier/notification_state_notifier.dart';
 import 'package:neat_nest/screens/home/utilities/home_screen_index_state.dart';
 import 'package:neat_nest/screens/home/widget/all_ads_screen.dart';
-import 'package:neat_nest/screens/home/widget/home_screen_icons.dart';
 import 'package:neat_nest/screens/home/widget/popular_service.dart';
 import 'package:neat_nest/screens/home/widget/searching_screen.dart';
 import 'package:neat_nest/utilities/app_data.dart';
@@ -48,6 +48,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     filterSearchController = FilterSearchController();
     _startAutoScroll();
     _getPopularService();
+    _initializeNotifications();
   }
 
   void _getPopularService() async {
@@ -97,8 +98,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     _startAutoScroll();
   }
 
+  void _initializeNotifications() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(notificationStateProvider.notifier).initializeNotification();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final notifications = ref.watch(notificationTrackingProvider);
     final indexProv = ref.watch(homeScreenIndexStateProvider);
     final homePageDisplay = ref.watch(homeDisplayDataStateProvider);
     final userData = ref.watch(userControllerStateProvider);
@@ -174,26 +182,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             },
                             child: Stack(
                               children: [
-                                Icon(Icons.notifications_none),
-                                Positioned(
-                                  left: 13.w,
-                                  top: 1.h,
-                                  child: Container(
-                                    height: 10,
-                                    width: 10,
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(5.r),
-                                    ),
-                                    child: Center(
-                                      child: secondaryText(
-                                        text: '2',
-                                        fontSize: 5,
-                                        color: Colors.white,
+                                Icon(Icons.notifications_none, size: 35.sp),
+                                notifications < 1
+                                    ? Container()
+                                    : Positioned(
+                                        left: 17.w,
+                                        child: Container(
+                                          height: 20,
+                                          width: 20,
+                                          decoration: BoxDecoration(
+                                            color: Colors.red,
+                                            borderRadius: BorderRadius.circular(
+                                              10.r,
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: secondaryText(
+                                              text: notifications.toString(),
+                                              fontSize: 10.sp,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ),
                               ],
                             ),
                           ),
@@ -229,7 +240,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     AppNavigatorHelper.push(context, AppRoute.filterData);
                   },
                 ),
-                10.ht,
+                20.ht,
                 Expanded(
                   child: homePageDisplay
                       ? isSearchingData
@@ -240,7 +251,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               primaryText(text: 'Special Offer'),
-                              10.ht,
+                              20.ht,
                               SizedBox(
                                 height: 170.h,
                                 child: PageView.builder(
@@ -263,7 +274,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   },
                                 ),
                               ),
-                              10.ht,
+                              20.ht,
                               Center(
                                 child: DotsIndicator(
                                   position: indexProv.toDouble(),
@@ -291,36 +302,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   },
                                 ),
                               ),
-                              10.ht,
-                              primaryText(text: 'Categories'),
-                              10.ht,
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  HomeScreenIcons(
-                                    text: 'Cleaning',
-                                    icons: FontAwesomeIcons.broom,
-                                  ),
-                                  5.wt,
-                                  HomeScreenIcons(
-                                    text: 'Repairing',
-                                    icons: FontAwesomeIcons.hammer,
-                                  ),
-                                  5.wt,
-                                  HomeScreenIcons(
-                                    text: 'Painting',
-                                    icons: FontAwesomeIcons.paintRoller,
-                                  ),
-                                  5.wt,
-                                  HomeScreenIcons(
-                                    text: 'More',
-                                    icons: FontAwesomeIcons.grip,
-                                  ),
-                                  5.wt,
-                                ],
-                              ),
-                              10.ht,
+                              20.ht,
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -348,7 +330,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   ),
                                 ],
                               ),
-                              10.ht,
+                              20.ht,
                               SizedBox(
                                 height: 200.h,
                                 child: ListView.builder(

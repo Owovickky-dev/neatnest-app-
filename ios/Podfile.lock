@@ -45,13 +45,13 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_image_compress_common/ios"
 
 SPEC CHECKSUMS:
-  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
   flutter_image_compress_common: ec1d45c362c9d30a3f6a0426c297f47c52007e3e
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d
   SDWebImage: 9f177d83116802728e122410fb25ad88f5c7608a
   SDWebImageWebPCoder: e38c0a70396191361d60c092933e22c20d5b1380
 
-PODFILE CHECKSUM: 5ea6f68846091114c93fb01bf7c313344160c74e
+PODFILE CHECKSUM: 1568c41d837877c670d521a6cfd4610a57db3434
 
 COCOAPODS: 1.16.2

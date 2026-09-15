@@ -3,24 +3,24 @@ import 'package:neat_nest/controller/edit_profile_controller.dart';
 import 'package:neat_nest/controller/sign_in_controller.dart';
 import 'package:neat_nest/data/api/api_client.dart';
 import 'package:neat_nest/models/user_model.dart';
-import 'package:neat_nest/utilities/constant/constant_data.dart';
+import 'package:neat_nest/utilities/constant/api_end_points.dart';
 
 class AuthRepo {
   final Dio _dio = DioClient().createDio();
 
   Future<Response> signIn(LoginModel data) async {
-    final response = await _dio.post(ConstantData.LOGIN, data: data.toJson());
+    final response = await _dio.post(ApiEndPoints.login, data: data.toJson());
     return response;
   }
 
   Future<Response> signOut() async {
-    final response = await _dio.post(ConstantData.LOGOUT);
+    final response = await _dio.post(ApiEndPoints.logout);
     return response;
   }
 
   Future<Response> signUp(UserModel userModel) async {
     final response = await _dio.post(
-      ConstantData.REGISTER,
+      ApiEndPoints.register,
       data: userModel.toJson(),
     );
     return response;
@@ -28,7 +28,7 @@ class AuthRepo {
 
   Future<Response> forgotPassword(String email) async {
     final response = await _dio.post(
-      ConstantData.FORGOTPASSWORD,
+      ApiEndPoints.forgotPassword,
       data: {"email": email},
     );
     return response;
@@ -41,7 +41,7 @@ class AuthRepo {
     required String email,
   }) async {
     final response = await _dio.patch(
-      ConstantData.RESETPASSWORD,
+      ApiEndPoints.resetPassword,
       data: {
         "resetToken": resetToken,
         "password": password,
@@ -55,7 +55,7 @@ class AuthRepo {
 
   Future<Response> updateDetails(EditProfileModel editedData) async {
     final response = await _dio.patch(
-      ConstantData.UPDATEUSERDETAILS,
+      ApiEndPoints.updateUserDetails,
       data: editedData.toJson(),
     );
     return response;
@@ -63,19 +63,19 @@ class AuthRepo {
 
   Future<Response> updateAboutMe(String aboutMe) async {
     final response = await _dio.patch(
-      ConstantData.ABOUTME,
+      ApiEndPoints.aboutMe,
       data: {"aboutMe": aboutMe},
     );
     return response;
   }
 
   Future<Response> getAboutMe() async {
-    final response = await _dio.get(ConstantData.ABOUTME);
+    final response = await _dio.get(ApiEndPoints.aboutMe);
     return response;
   }
 
   Future<Response> deleAboutMe() async {
-    final response = await _dio.delete(ConstantData.ABOUTME);
+    final response = await _dio.delete(ApiEndPoints.aboutMe);
     return response;
   }
 }

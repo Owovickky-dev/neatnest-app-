@@ -11,13 +11,13 @@ class NotificationScreenHolder extends StatelessWidget {
     required this.title,
     required this.message,
     required this.date,
-    required this.read,
+    required this.isRead,
   });
 
   final String title;
   final String message;
   final DateTime date;
-  final bool read;
+  final bool isRead;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class NotificationScreenHolder extends StatelessWidget {
             height: 70.h,
             padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.w),
             decoration: BoxDecoration(
-              color: read ? Colors.white : AppColors.containerLightBackground,
+              color: isRead ? Colors.white : AppColors.containerLightBackground,
               borderRadius: BorderRadius.circular(10.r),
             ),
             child: Row(
@@ -58,7 +58,11 @@ class NotificationScreenHolder extends StatelessWidget {
                         ],
                       ),
                       5.ht,
-                      secondaryText(text: message),
+                      secondaryText(
+                        text: message,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ],
                   ),
                 ),

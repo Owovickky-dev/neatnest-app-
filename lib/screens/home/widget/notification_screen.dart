@@ -6,6 +6,7 @@ import 'package:neat_nest/screens/home/notifier/notification_state_notifier.dart
 import 'package:neat_nest/screens/home/utilities/notification_screen_holder.dart';
 import 'package:neat_nest/utilities/constant/colors.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
+import 'package:neat_nest/widget/loading_screen.dart';
 
 import '../../../models/notification_model.dart';
 import '../../../widget/app_text.dart';
@@ -25,7 +26,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
     final Map<DateTime, List<NotificationModel>> grouped = {};
 
     for (var notif in notifications) {
-      final local = notif.datetime.toLocal();
+      final local = notif.createdAt.toLocal();
 
       final dateOnly = DateTime(local.year, local.month, local.day);
 
@@ -35,31 +36,26 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
     return grouped;
   }
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(notificationStateProvider.notifier).defaultData();
-    });
-  }
-
   String friendlyLabelFromKey(DateTime date) {
     final now = DateTime.now();
+
     final today = DateTime(now.year, now.month, now.day);
+
     final diffDays = today.difference(date).inDays;
 
     if (diffDays == 0) return 'Today';
     if (diffDays == 1) return 'Yesterday';
-    if (diffDays < 7) return DateFormat('EEEE').format(date);
+    if (diffDays < 7) {
+      return DateFormat('EEEE').format(date);
+    }
+
     return DateFormat('dd MMM yyyy').format(date);
   }
 
   @override
   Widget build(BuildContext context) {
-    final notification = ref.watch(notificationStateProvider);
-    final groupedNotification = groupNotifications(notification);
-    final keys = groupedNotification.keys.toList()
-      ..sort((a, b) => b.compareTo(a));
+    final notificationState = ref.watch(notificationStateProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -78,12 +74,11 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
             icon: AppBarIcon(icons: Icons.more_vert),
             onSelected: (value) {
               if (value == "Mark All") {
-                ref.read(notificationStateProvider.notifier).markAllAsRead();
+                // Add mark all logic later.
               }
+
               if (value == "Delete All") {
-                ref
-                    .read(notificationStateProvider.notifier)
-                    .emptyNotification();
+                // Add delete all logic later.
               }
             },
             itemBuilder: (BuildContext context) => [
@@ -105,52 +100,80 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
-        child: Column(
-          children: [
-            20.ht,
-            Expanded(
-              child: ListView.builder(
-                itemCount: keys.length,
-                itemBuilder: ((context, outerIndex) {
-                  final key = keys[outerIndex]; // e.g. '2025-09-24'
-                  final items =
-                      groupedNotification[key]!; // list of NotificationModel
-                  final label = friendlyLabelFromKey(key);
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      primaryText(text: label),
-                      20.ht,
-                      ListView.builder(
-                        itemCount: items.length,
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: ((context, index) {
-                          final notif = items[index];
-                          return GestureDetector(
-                            onTap: () {
-                              ref
-                                  .read(notificationStateProvider.notifier)
-                                  .markAsRead(notif.id);
-                            },
-                            child: NotificationScreenHolder(
-                              title: notif.title,
-                              message: notif.message,
-                              date: notif.datetime,
-                              read: notif.read,
-                            ),
-                          );
-                        }),
-                      ),
-                    ],
-                  );
-                }),
-              ),
+      body: notificationState.when(
+        loading: () => LoadingScreen(),
+        error: (error, stackTrace) {
+          return Center(
+            child: secondaryText(
+              text: error.toString(),
+              color: AppColors.blackTextColor,
             ),
-          ],
-        ),
+          );
+        },
+        data: (notifications) {
+          if (notifications.isEmpty) {
+            return Center(
+              child: secondaryText(
+                text: 'No notifications yet',
+                color: AppColors.blackTextColor,
+              ),
+            );
+          }
+
+          final groupedNotification = groupNotifications(notifications);
+
+          final keys = groupedNotification.keys.toList()
+            ..sort((a, b) => b.compareTo(a));
+
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Column(
+              children: [
+                20.ht,
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: keys.length,
+                    itemBuilder: (context, outerIndex) {
+                      final key = keys[outerIndex];
+
+                      final items = groupedNotification[key]!;
+
+                      final label = friendlyLabelFromKey(key);
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          primaryText(text: label),
+                          20.ht,
+                          ListView.builder(
+                            itemCount: items.length,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              final notif = items[index];
+
+                              return GestureDetector(
+                                onTap: () {
+                                  // Mark as read later.
+                                },
+                                child: NotificationScreenHolder(
+                                  title: notif.title,
+                                  message: notif.message,
+                                  date: notif.createdAt,
+                                  isRead: notif.isRead,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

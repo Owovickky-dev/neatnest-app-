@@ -473,7 +473,7 @@ import 'package:neat_nest/models/message_model.dart';
 import 'package:neat_nest/screens/booking/widgets/booking_text_field.dart';
 import 'package:neat_nest/screens/history/utilities/app_bar_icon.dart';
 import 'package:neat_nest/screens/message/widget/chatting_screen_data.dart';
-import 'package:neat_nest/utilities/constant/constant_data.dart';
+import 'package:neat_nest/utilities/constant/api_end_points.dart';
 import 'package:neat_nest/utilities/constant/extension.dart';
 import 'package:neat_nest/widget/app_confirmation_button.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -544,11 +544,17 @@ class _ChattingScreenState extends ConsumerState<ChattingScreen> {
   }
 
   Future<void> connect() async {
+    final token = await SecureStorageHelper.getToken();
+
+    if (token == null || token.isEmpty) {
+      debugPrint("No Access token found. Socket Connect is skipped");
+    }
     socket = IO.io(
-      ConstantData.SOCKET_IO,
+      ApiEndPoints.socketIo,
       IO.OptionBuilder()
           .setTransports(['websocket'])
           .setPath('/socket.io')
+          .setAuth({"token": token})
           .disableAutoConnect()
           .build(),
     );

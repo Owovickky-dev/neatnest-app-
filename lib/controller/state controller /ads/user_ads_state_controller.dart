@@ -71,7 +71,7 @@ class UserAdsStateController extends _$UserAdsStateController {
 
   Future<Response> activateAds(bool active, String adsId) async {
     try {
-      final response = _adsRepo.activateAds(active, adsId);
+      final response = await _adsRepo.activateAds(active, adsId);
       return response;
     } catch (e) {
       rethrow;

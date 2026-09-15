@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:neat_nest/controller/state%20controller%20/address/address_state_controller.dart';
-import 'package:neat_nest/data/repo/address_data_repo.dart';
+
 import 'package:neat_nest/screens/user/model/user_location_model.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
@@ -13,8 +13,6 @@ import '../widget/loading_screen.dart';
 
 class AddAddressHolderController {
   AddAddressHolderController();
-
-  final AddressDataRepo _addressDataRepo = AddressDataRepo();
 
   TextEditingController addressController = TextEditingController();
   TextEditingController cityController = TextEditingController();
