@@ -37,4 +37,18 @@ class TextingDataRepo {
     );
     return response;
   }
+
+  Future<Response> getUnreadMessage() async {
+    final response = await _dio.get("${ApiEndPoints.messageUrl}/unread-count");
+
+    return response;
+  }
+
+  Future<Response> markAsRead(String chatId) async {
+    final response = await _dio.patch(
+      "${ApiEndPoints.messageUrl}/$chatId/read",
+    );
+
+    return response;
+  }
 }

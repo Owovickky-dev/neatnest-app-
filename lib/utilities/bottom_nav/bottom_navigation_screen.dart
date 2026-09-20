@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:neat_nest/controller/state%20controller%20/message/unread_message_tracking.dart';
 import 'package:neat_nest/data/storage/secure_storage_helper.dart';
 import 'package:neat_nest/providers/is_logged_in_state.dart';
 import 'package:neat_nest/screens/favorite/favorite_screen.dart';
@@ -40,6 +41,7 @@ class _BottomNavigationScreenState
   Widget build(BuildContext context) {
     final index = ref.watch(bottomNavNotifiersProvider);
     final isLoggedIn = ref.watch(isLoggedInStateProvider);
+    final unreadMessageCount = ref.watch(unreadMessageTrackingProvider);
 
     final screens = _buildScreens(isLoggedIn);
     return Scaffold(
@@ -61,7 +63,46 @@ class _BottomNavigationScreenState
             icon: Icon(Icons.favorite_border_rounded),
             label: 'Favorite',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.message), label: 'Message'),
+          BottomNavigationBarItem(
+            icon: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Icon(Icons.message),
+
+                if (unreadMessageCount > 0)
+                  Positioned(
+                    right: -8.w,
+                    top: -8.h,
+                    child: Container(
+                      constraints: BoxConstraints(
+                        minWidth: 18.w,
+                        minHeight: 18.h,
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 4.w,
+                        vertical: 2.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: Text(
+                        unreadMessageCount > 99
+                            ? '99+'
+                            : unreadMessageCount.toString(),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            label: 'Message',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outlined),
             label: 'User',

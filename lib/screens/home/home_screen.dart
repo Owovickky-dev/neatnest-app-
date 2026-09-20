@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neat_nest/controller/filter_search_controller.dart';
 import 'package:neat_nest/controller/state%20controller%20/ads/popular_service_controller.dart';
+import 'package:neat_nest/controller/state%20controller%20/message/message_state_controller.dart';
 import 'package:neat_nest/controller/state%20controller%20/notification_tracking.dart';
 import 'package:neat_nest/controller/state%20controller%20/user/user_controller_state.dart';
 import 'package:neat_nest/data/storage/secure_storage_helper.dart';
@@ -101,6 +102,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void _initializeNotifications() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(notificationStateProvider.notifier).initializeNotification();
+      ref.read(messageStateControllerProvider.notifier).getUnreadMessage();
     });
   }
 

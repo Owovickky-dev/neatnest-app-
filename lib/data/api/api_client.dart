@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:neat_nest/utilities/route/app_naviation_helper.dart';
 import 'package:neat_nest/utilities/route/app_route_names.dart';
@@ -9,6 +11,18 @@ import '../../widget/app_notification.dart';
 import '../storage/secure_storage_helper.dart';
 
 class DioClient {
+  DioClient._internal();
+
+  static final DioClient instance = DioClient._internal();
+
+  factory DioClient() => instance;
+
+  Timer? _refreshTimer;
+
+  Future<String?>? _refreshingToken;
+
+  Function(String newToken)? onTokenRefreshed;
+
   Dio createDio() {
     final dio = Dio(
       BaseOptions(
@@ -32,6 +46,8 @@ class DioClient {
 
           if (token != null && token.isNotEmpty) {
             options.headers["Authorization"] = "Bearer $token";
+
+            _startRefreshTimer();
           }
 
           return handler.next(options);
@@ -48,11 +64,11 @@ class DioClient {
           int? backendStatusCode;
           String? backendMessage;
 
-          // Safely parse response
           if (data is Map<String, dynamic>) {
             message = data["message"]?.toString();
 
             final error = data["error"];
+
             if (error is Map<String, dynamic>) {
               final code = error["statusCode"];
 
@@ -69,7 +85,6 @@ class DioClient {
             backendMessage = message.trim().toLowerCase();
           }
 
-          // Only refresh token for genuine token-expiration/authentication errors.
           const tokenExpiredMessages = {
             "jwt expired",
             "your token has expired! please log in again.",
@@ -122,9 +137,6 @@ class DioClient {
             }
           }
 
-          // ===========================
-          // DEBUG LOGS
-          // ===========================
           print("========== API ERROR ==========");
           print("Type: ${e.type}");
           print("HTTP Status Code: ${e.response?.statusCode}");
@@ -135,7 +147,6 @@ class DioClient {
           print("Request Path: ${e.requestOptions.path}");
           print("===============================");
 
-          // Convert Dio error into friendly message
           final errorMessage = ApiErrorHandler.getErrorMessage(e);
 
           return handler.reject(
@@ -153,9 +164,58 @@ class DioClient {
     return dio;
   }
 
+  // ============================================================
+  // AUTOMATIC TOKEN REFRESH
+  // ============================================================
+
+  void _startRefreshTimer() {
+    if (_refreshTimer != null && _refreshTimer!.isActive) {
+      return;
+    }
+
+    _refreshTimer = Timer.periodic(const Duration(minutes: 14), (_) async {
+      final token = await SecureStorageHelper.getToken();
+
+      if (token == null || token.isEmpty) {
+        _stopRefreshTimer();
+        return;
+      }
+
+      await _refreshToken();
+    });
+  }
+
+  void _stopRefreshTimer() {
+    _refreshTimer?.cancel();
+    _refreshTimer = null;
+  }
+
+  // ============================================================
+  // REFRESH TOKEN
+  // ============================================================
+
   Future<String?> _refreshToken() async {
+    // Prevent multiple refresh requests happening at the same time.
+    if (_refreshingToken != null) {
+      return _refreshingToken;
+    }
+
+    _refreshingToken = _performRefreshToken();
+
+    try {
+      return await _refreshingToken;
+    } finally {
+      _refreshingToken = null;
+    }
+  }
+
+  Future<String?> _performRefreshToken() async {
     try {
       final refreshToken = await SecureStorageHelper.getRefreshToken();
+
+      if (refreshToken == null || refreshToken.isEmpty) {
+        return null;
+      }
 
       final dio = Dio(
         BaseOptions(
@@ -181,30 +241,33 @@ class DioClient {
           await SecureStorageHelper.saveRefreshToken(newRefreshToken);
         }
 
+        // Tell the socket that a new access token is available.
+        if (newToken != null) {
+          onTokenRefreshed?.call(newToken);
+        }
+
         return newToken;
       }
 
       return null;
     } on DioException catch (e) {
       print("====== REFRESH TOKEN ERROR ======");
-
       print("Status Code: ${e.response?.statusCode}");
-
       print("Response Body: ${e.response?.data}");
-
-      print("Request Headers: ${e.requestOptions.headers}");
-
       print("=================================");
 
       return null;
     } catch (e, stackTrace) {
       print("UNEXPECTED REFRESH ERROR: $e");
       print(stackTrace);
+
       return null;
     }
   }
 
   Future<void> _logoutUser() async {
+    _stopRefreshTimer();
+
     await SecureStorageHelper.deleteToken();
     await SecureStorageHelper.deleteRefreshToken();
     await SecureStorageHelper.deleteUserData();
